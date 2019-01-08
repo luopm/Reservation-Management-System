@@ -1,0 +1,57 @@
+<section><div class="pt-wrap">
+    <div class="user-wrap">
+        <!-- header -->
+        <div class="modal-header" style="margin-bottom: 2px;">
+            <div class="zte-search-condition">
+                <div class="zte-title-list zte-clear">
+                    <div class="zte-clear">
+                        <button id="addReturn" class="btn btn-default" style="margin-top: -3px;margin-left: -10px;border:none"><i class="iconfont icon-return-a"></i></button>
+                        <label class="zte-title" id="projectName" style="margin-left: 5px;font-size:1.2em">物品管理</label>
+                        <div class="action-button zte-clear">
+                            <button type="button" class="btn" id="resEnable">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>可借用
+                            </button>
+                            <button type="button" class="btn" id="resDisable">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>不可借用
+                            </button>
+                            <button type="button" class="btn" id="OutOfUse">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>报废
+                            </button>
+                        </div>
+                        <div class="zte-search-wrap zte-clear">
+                            <div class="dropdown zte-fl">
+                                <!--<i class="zte-iconfont icon-search-a" id="searchByUserCode"></i>-->
+                                <input name="keyword" id="keywordCode" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入物品编号查询">
+                            </div>
+                            <div class="dropdown zte-fl">
+                                <i class="zte-iconfont icon-search-a" id="searchByState"></i>
+                                <input name="keyword" id="keywordState" style="width: 200px;" class="form-control" placeholder="输入物品状态查询">
+                            </div>
+                            <button type="button" class="btn btn-primary " id="addRes">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>录入物品
+                            </button>
+                            <button type="button" class="btn btn-primary " id="deleteRes">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>删除物品
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- body -->
+        <div class="modal-body">
+
+            <!-- 列表 -->
+            <div class="row" >
+                <div class="meta-table-2">
+                    <div id="ResList">
+                    </div>
+                </div>
+            </div>
+            <!--  分页 pagination-specGrp-->
+            <div id="Res-pagination" class="text-right" style="margin-top: 20px"></div>
+
+        </div>
+    </div>
+</div></section>

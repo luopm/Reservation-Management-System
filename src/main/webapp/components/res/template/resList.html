@@ -1,0 +1,48 @@
+<section><div class="pt-wrap">
+    <div class="user-wrap">
+        <!-- header -->
+        <div class="modal-header" style="margin-bottom: 2px;">
+            <div class="zte-search-condition">
+                <div class="zte-title-list zte-clear">
+                    <div class="zte-clear">
+                        <button id="addReturn" class="btn btn-default" style="margin-top: -3px;margin-left: -10px;border:none"><i class="iconfont icon-return-a"></i></button>
+                        <label class="zte-title" id="projectName" style="margin-left: 5px;font-size:1.2em">物品预约</label>
+                        <div class="action-button zte-clear">
+                            <button type="button" class="btn" id="resReserve">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>预约借用
+                            </button>
+                            <!--<button type="button" class="btn" id="disable">-->
+                                <!--<span class="glyphicon zte-iconfont icon-add-a"></span>申请转借-->
+                            <!--</button>-->
+                        </div>
+                        <div class="zte-search-wrap zte-clear">
+                            <div class="dropdown zte-fl">
+                                <!--<i class="zte-iconfont icon-search-a" id="searchByUserCode"></i>-->
+                                <input name="keyword" id="keywordCode" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入物品编号查询">
+                            </div>
+                            <div class="dropdown zte-fl">
+                                <i class="zte-iconfont icon-search-a" id="searchByUser"></i>
+                                <input name="keyword" id="keywordUser" style="width: 200px;" class="form-control" placeholder="输入用户查询">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- body -->
+        <div class="modal-body">
+
+            <!-- 列表 -->
+            <div class="row" >
+                <div class="meta-table-2">
+                    <div id="ResAbleList">
+                    </div>
+                </div>
+            </div>
+            <!--  分页 pagination-specGrp-->
+            <div id="ResAble-pagination" class="text-right" style="margin-top: 20px"></div>
+
+        </div>
+    </div>
+</div></section>

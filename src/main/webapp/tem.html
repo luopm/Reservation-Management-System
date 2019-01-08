@@ -1,0 +1,76 @@
+<section><div class="pt-wrap">
+    <!--3.30 代码找回标识-->
+    <div class="user-wrap">
+        <div class="modal-header" style="margin-bottom: 2px;">
+            <h5 class="modal-title" style="margin-bottom: 14px; font-size: 16px; font-weight: 600;">
+                <div id="dopRoleEditTitle">项目基本信息</div>
+                <span style="float: right; font-size: 10px; cursor: pointer;" class="flex-slide" fd="interface-flex1"> </span>
+            </h5>
+        </div>
+        <div class="org-select-body modal-body">
+            <form class="row" id='projectFormInfo' >
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group search-1 required">
+                            <label class="zte-form-item-label" style="width: 160px">
+                                项目名称
+                            </label>
+                            <div class="zte-form-item-content" style="margin-left: 165px">
+                                <input name="projectName" class="form-control" id="projectName" data-rule="required" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group search-1 required">
+                            <label class="zte-form-item-label" style="width: 160px">
+                                项目编码
+                            </label>
+                            <div class="zte-form-item-content" style="margin-left: 165px">
+                                <input name="projectCode" class="form-control" id="projectCode" data-rule="required" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group search-1 required">
+                            <label class="zte-form-item-label" style="width: 160px">
+                                显示名称
+                            </label>
+                            <div class="zte-form-item-content" style="margin-left: 165px">
+                                <input name="dispName" class="form-control" id="dispName" data-rule="required" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group search-1 required">
+                            <label class="zte-form-item-label" style="width: 160px">
+                                项目描述
+                            </label>
+                            <div class="zte-form-item-content" style="margin-left: 165px">
+                                <textarea name="projectDesc" class="form-control" id="projectDesc" type="text" data-rule="required" style="height: 56px"/>
+                                <input name="version" class="form-control" id="version" type="hidden">
+                                <input name="nextVersion" class="form-control" id="nextVersion" type="hidden">
+                                <input name="statusCd" class="form-control" id="statusCd" type="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+
+        </div>
+
+        <div class="attr-select-footer modal-footer">
+            <button type="button" class="btn btn-primary confirm_attention_select_btn" id="saveProject">确定</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeProject">取消</button>
+        </div>
+
+    </div>
+</div></section>
