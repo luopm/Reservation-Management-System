@@ -132,7 +132,7 @@ define(['hbs!../template/resList.html',
                 var that = this;
                 var param = that.$('#ResAbleList').grid("getSelection");
                 $.blockUI({message: '请稍后'});
-                resAction.enableRes(param, function (result) {
+                resAction.ableRes(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("生效成功");

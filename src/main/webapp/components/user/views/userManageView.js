@@ -136,7 +136,7 @@ define(['hbs!../template/userManage.html',
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
                 $.blockUI({message: '请稍后'});
-                UserAction.enableUser(param, function (result) {
+                UserAction.ableUser(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("生效成功");
@@ -152,7 +152,7 @@ define(['hbs!../template/userManage.html',
                 var param = that.$('#UserList').grid("getSelection");
                 param.admin = window.localStorage.getItem("userAccount");
                 $.blockUI({message: '请稍后'});
-                UserAction.disableUser(param, function (result) {
+                UserAction.ableUser(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("禁用成功");
@@ -167,7 +167,7 @@ define(['hbs!../template/userManage.html',
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
                 $.blockUI({message: '请稍后'});
-                UserAction.disableUser(param, function (result) {
+                UserAction.resetPassword(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("重置密码成功");
@@ -183,7 +183,7 @@ define(['hbs!../template/userManage.html',
                 var param = that.$('#UserList').grid("getSelection");
                 param.admin = window.localStorage.getItem("userAccount");
                 $.blockUI({message: '请稍后'});
-                UserAction.checkOk(param, function (result) {
+                UserAction.check(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("审核通过");
@@ -193,13 +193,13 @@ define(['hbs!../template/userManage.html',
                     }
                 })
             },
-            // 重置密码
+            // 未通过
             checkNotOk : function () {
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
                 param.admin = window.localStorage.getItem("userAccount");
                 $.blockUI({message: '请稍后'});
-                UserAction.checkNotOk(param, function (result) {
+                UserAction.check(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("审核未通过");

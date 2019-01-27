@@ -14,7 +14,7 @@ fish.View.configure({manage: true, syncRender:true}); //全局设置fish使用�
 //     }
 // });
 
-require(['components/index/views/IndexView'], function(IndexView){
+require(['components/system/index/views/IndexView'], function(IndexView){
     new IndexView({
         el : $('#app') //主视图选择器
     }).render();

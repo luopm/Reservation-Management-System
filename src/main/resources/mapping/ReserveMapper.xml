@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.luopm.reservationmanagement.Dao.ReserveMapper" >
+  <resultMap id="BaseResultMap" type="com.luopm.reservationmanagement.Model.Reserve" >
+    <id column="bor_id" property="borId" jdbcType="INTEGER" />
+    <result column="bor_code" property="borCode" jdbcType="VARCHAR" />
+    <result column="bor_rescode" property="borRescode" jdbcType="VARCHAR" />
+    <result column="bor_resname" property="borResname" jdbcType="VARCHAR" />
+    <result column="bor_useraccount" property="borUseraccount" jdbcType="VARCHAR" />
+    <result column="bor_username" property="borUsername" jdbcType="VARCHAR" />
+    <result column="bor_startdate" property="borStartdate" jdbcType="TIMESTAMP" />
+    <result column="bor_enddate" property="borEnddate" jdbcType="TIMESTAMP" />
+    <result column="bor_returndate" property="borReturndate" jdbcType="TIMESTAMP" />
+    <result column="bor_state" property="borState" jdbcType="VARCHAR" />
+    <result column="bor_admincode" property="borAdmincode" jdbcType="VARCHAR" />
+    <result column="bor_adminname" property="borAdminname" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.luopm.reservationmanagement.Model.Reserve" extends="BaseResultMap" >
+    <result column="bor_reason" property="borReason" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bor_id, bor_code, bor_rescode, bor_resname, bor_useraccount, bor_username, bor_startdate, 
+    bor_enddate, bor_returndate, bor_state, bor_admincode, bor_adminname
+  </sql>
+  <sql id="Blob_Column_List" >
+    bor_reason
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from bor_info
+    where bor_id = #{borId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bor_info
+    where bor_id = #{borId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+    insert into bor_info (bor_id, bor_code, bor_rescode, 
+      bor_resname, bor_useraccount, bor_username, 
+      bor_startdate, bor_enddate, bor_returndate, 
+      bor_state, bor_admincode, bor_adminname, 
+      bor_reason)
+    values (#{borId,jdbcType=INTEGER}, #{borCode,jdbcType=VARCHAR}, #{borRescode,jdbcType=VARCHAR}, 
+      #{borResname,jdbcType=VARCHAR}, #{borUseraccount,jdbcType=VARCHAR}, #{borUsername,jdbcType=VARCHAR}, 
+      #{borStartdate,jdbcType=TIMESTAMP}, #{borEnddate,jdbcType=TIMESTAMP}, #{borReturndate,jdbcType=TIMESTAMP}, 
+      #{borState,jdbcType=VARCHAR}, #{borAdmincode,jdbcType=VARCHAR}, #{borAdminname,jdbcType=VARCHAR}, 
+      #{borReason,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+    insert into bor_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="borId != null" >
+        bor_id,
+      </if>
+      <if test="borCode != null" >
+        bor_code,
+      </if>
+      <if test="borRescode != null" >
+        bor_rescode,
+      </if>
+      <if test="borResname != null" >
+        bor_resname,
+      </if>
+      <if test="borUseraccount != null" >
+        bor_useraccount,
+      </if>
+      <if test="borUsername != null" >
+        bor_username,
+      </if>
+      <if test="borStartdate != null" >
+        bor_startdate,
+      </if>
+      <if test="borEnddate != null" >
+        bor_enddate,
+      </if>
+      <if test="borReturndate != null" >
+        bor_returndate,
+      </if>
+      <if test="borState != null" >
+        bor_state,
+      </if>
+      <if test="borAdmincode != null" >
+        bor_admincode,
+      </if>
+      <if test="borAdminname != null" >
+        bor_adminname,
+      </if>
+      <if test="borReason != null" >
+        bor_reason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="borId != null" >
+        #{borId,jdbcType=INTEGER},
+      </if>
+      <if test="borCode != null" >
+        #{borCode,jdbcType=VARCHAR},
+      </if>
+      <if test="borRescode != null" >
+        #{borRescode,jdbcType=VARCHAR},
+      </if>
+      <if test="borResname != null" >
+        #{borResname,jdbcType=VARCHAR},
+      </if>
+      <if test="borUseraccount != null" >
+        #{borUseraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="borUsername != null" >
+        #{borUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="borStartdate != null" >
+        #{borStartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borEnddate != null" >
+        #{borEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borReturndate != null" >
+        #{borReturndate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borState != null" >
+        #{borState,jdbcType=VARCHAR},
+      </if>
+      <if test="borAdmincode != null" >
+        #{borAdmincode,jdbcType=VARCHAR},
+      </if>
+      <if test="borAdminname != null" >
+        #{borAdminname,jdbcType=VARCHAR},
+      </if>
+      <if test="borReason != null" >
+        #{borReason,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+    update bor_info
+    <set >
+      <if test="borCode != null" >
+        bor_code = #{borCode,jdbcType=VARCHAR},
+      </if>
+      <if test="borRescode != null" >
+        bor_rescode = #{borRescode,jdbcType=VARCHAR},
+      </if>
+      <if test="borResname != null" >
+        bor_resname = #{borResname,jdbcType=VARCHAR},
+      </if>
+      <if test="borUseraccount != null" >
+        bor_useraccount = #{borUseraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="borUsername != null" >
+        bor_username = #{borUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="borStartdate != null" >
+        bor_startdate = #{borStartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borEnddate != null" >
+        bor_enddate = #{borEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borReturndate != null" >
+        bor_returndate = #{borReturndate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borState != null" >
+        bor_state = #{borState,jdbcType=VARCHAR},
+      </if>
+      <if test="borAdmincode != null" >
+        bor_admincode = #{borAdmincode,jdbcType=VARCHAR},
+      </if>
+      <if test="borAdminname != null" >
+        bor_adminname = #{borAdminname,jdbcType=VARCHAR},
+      </if>
+      <if test="borReason != null" >
+        bor_reason = #{borReason,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where bor_id = #{borId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+    update bor_info
+    set bor_code = #{borCode,jdbcType=VARCHAR},
+      bor_rescode = #{borRescode,jdbcType=VARCHAR},
+      bor_resname = #{borResname,jdbcType=VARCHAR},
+      bor_useraccount = #{borUseraccount,jdbcType=VARCHAR},
+      bor_username = #{borUsername,jdbcType=VARCHAR},
+      bor_startdate = #{borStartdate,jdbcType=TIMESTAMP},
+      bor_enddate = #{borEnddate,jdbcType=TIMESTAMP},
+      bor_returndate = #{borReturndate,jdbcType=TIMESTAMP},
+      bor_state = #{borState,jdbcType=VARCHAR},
+      bor_admincode = #{borAdmincode,jdbcType=VARCHAR},
+      bor_adminname = #{borAdminname,jdbcType=VARCHAR},
+      bor_reason = #{borReason,jdbcType=LONGVARCHAR}
+    where bor_id = #{borId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+    update bor_info
+    set bor_code = #{borCode,jdbcType=VARCHAR},
+      bor_rescode = #{borRescode,jdbcType=VARCHAR},
+      bor_resname = #{borResname,jdbcType=VARCHAR},
+      bor_useraccount = #{borUseraccount,jdbcType=VARCHAR},
+      bor_username = #{borUsername,jdbcType=VARCHAR},
+      bor_startdate = #{borStartdate,jdbcType=TIMESTAMP},
+      bor_enddate = #{borEnddate,jdbcType=TIMESTAMP},
+      bor_returndate = #{borReturndate,jdbcType=TIMESTAMP},
+      bor_state = #{borState,jdbcType=VARCHAR},
+      bor_admincode = #{borAdmincode,jdbcType=VARCHAR},
+      bor_adminname = #{borAdminname,jdbcType=VARCHAR}
+    where bor_id = #{borId,jdbcType=INTEGER}
+  </update>
+</mapper>

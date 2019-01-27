@@ -5,7 +5,8 @@
  */
 define(['hbs!../template/Login.html',
         '../actions/loginAction',
-        '../../register/views/registerView'
+        '../../register/views/registerView',
+        '../style/login.css'
     ],
     function (tem, LoginAction, registerView) {
         var LoginView = fish.View.extend({
@@ -24,6 +25,14 @@ define(['hbs!../template/Login.html',
                 var params = that.$('#loginForm').form();
                 fish.info("登录成功");
 
+                // param.backUrl = "components/res/views/resManageView";
+                that.requireView({
+                    url: "components/res/views/resManageView",
+                    viewOption:{
+                        backUrl:param.backUrl
+                    }
+                });
+                that.undelegateEvents();//移除当前view的所有DOM监听事件
                 // $.blockUI({
                 //     message: "登录中"
                 // });
@@ -42,7 +51,7 @@ define(['hbs!../template/Login.html',
             register : function () {
                 var that = this;
                 var param = {};
-                param.backUrl = "components/login/views/loginView";
+                param.backUrl = "components/system/login/views/loginView";
                 that.requireView({
                     url: registerView,
                     viewOption:{

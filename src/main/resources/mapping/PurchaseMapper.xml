@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.luopm.reservationmanagement.Dao.PurchaseMapper" >
+  <resultMap id="BaseResultMap" type="com.luopm.reservationmanagement.Model.Purchase" >
+    <id column="buy_id" property="buyId" jdbcType="INTEGER" />
+    <result column="buy_code" property="buyCode" jdbcType="VARCHAR" />
+    <result column="buy_resname" property="buyResname" jdbcType="VARCHAR" />
+    <result column="buy_resstandard" property="buyResstandard" jdbcType="VARCHAR" />
+    <result column="buy_resprice" property="buyResprice" jdbcType="DECIMAL" />
+    <result column="buy_way" property="buyWay" jdbcType="VARCHAR" />
+    <result column="buy_admincode" property="buyAdmincode" jdbcType="VARCHAR" />
+    <result column="buy_adminname" property="buyAdminname" jdbcType="VARCHAR" />
+    <result column="buy_state" property="buyState" jdbcType="VARCHAR" />
+    <result column="buy_date" property="buyDate" jdbcType="TIMESTAMP" />
+    <result column="buy_applydate" property="buyApplydate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.luopm.reservationmanagement.Model.Purchase" extends="BaseResultMap" >
+    <result column="buy_reason" property="buyReason" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    buy_id, buy_code, buy_resname, buy_resstandard, buy_resprice, buy_way, buy_admincode, 
+    buy_adminname, buy_state, buy_date, buy_applydate
+  </sql>
+  <sql id="Blob_Column_List" >
+    buy_reason
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from buy_info
+    where buy_id = #{buyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from buy_info
+    where buy_id = #{buyId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
+    insert into buy_info (buy_id, buy_code, buy_resname, 
+      buy_resstandard, buy_resprice, buy_way, 
+      buy_admincode, buy_adminname, buy_state, 
+      buy_date, buy_applydate, buy_reason
+      )
+    values (#{buyId,jdbcType=INTEGER}, #{buyCode,jdbcType=VARCHAR}, #{buyResname,jdbcType=VARCHAR}, 
+      #{buyResstandard,jdbcType=VARCHAR}, #{buyResprice,jdbcType=DECIMAL}, #{buyWay,jdbcType=VARCHAR}, 
+      #{buyAdmincode,jdbcType=VARCHAR}, #{buyAdminname,jdbcType=VARCHAR}, #{buyState,jdbcType=VARCHAR}, 
+      #{buyDate,jdbcType=TIMESTAMP}, #{buyApplydate,jdbcType=TIMESTAMP}, #{buyReason,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
+    insert into buy_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="buyId != null" >
+        buy_id,
+      </if>
+      <if test="buyCode != null" >
+        buy_code,
+      </if>
+      <if test="buyResname != null" >
+        buy_resname,
+      </if>
+      <if test="buyResstandard != null" >
+        buy_resstandard,
+      </if>
+      <if test="buyResprice != null" >
+        buy_resprice,
+      </if>
+      <if test="buyWay != null" >
+        buy_way,
+      </if>
+      <if test="buyAdmincode != null" >
+        buy_admincode,
+      </if>
+      <if test="buyAdminname != null" >
+        buy_adminname,
+      </if>
+      <if test="buyState != null" >
+        buy_state,
+      </if>
+      <if test="buyDate != null" >
+        buy_date,
+      </if>
+      <if test="buyApplydate != null" >
+        buy_applydate,
+      </if>
+      <if test="buyReason != null" >
+        buy_reason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="buyId != null" >
+        #{buyId,jdbcType=INTEGER},
+      </if>
+      <if test="buyCode != null" >
+        #{buyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResname != null" >
+        #{buyResname,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResstandard != null" >
+        #{buyResstandard,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResprice != null" >
+        #{buyResprice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyWay != null" >
+        #{buyWay,jdbcType=VARCHAR},
+      </if>
+      <if test="buyAdmincode != null" >
+        #{buyAdmincode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyAdminname != null" >
+        #{buyAdminname,jdbcType=VARCHAR},
+      </if>
+      <if test="buyState != null" >
+        #{buyState,jdbcType=VARCHAR},
+      </if>
+      <if test="buyDate != null" >
+        #{buyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyApplydate != null" >
+        #{buyApplydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyReason != null" >
+        #{buyReason,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
+    update buy_info
+    <set >
+      <if test="buyCode != null" >
+        buy_code = #{buyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResname != null" >
+        buy_resname = #{buyResname,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResstandard != null" >
+        buy_resstandard = #{buyResstandard,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResprice != null" >
+        buy_resprice = #{buyResprice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyWay != null" >
+        buy_way = #{buyWay,jdbcType=VARCHAR},
+      </if>
+      <if test="buyAdmincode != null" >
+        buy_admincode = #{buyAdmincode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyAdminname != null" >
+        buy_adminname = #{buyAdminname,jdbcType=VARCHAR},
+      </if>
+      <if test="buyState != null" >
+        buy_state = #{buyState,jdbcType=VARCHAR},
+      </if>
+      <if test="buyDate != null" >
+        buy_date = #{buyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyApplydate != null" >
+        buy_applydate = #{buyApplydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyReason != null" >
+        buy_reason = #{buyReason,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where buy_id = #{buyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
+    update buy_info
+    set buy_code = #{buyCode,jdbcType=VARCHAR},
+      buy_resname = #{buyResname,jdbcType=VARCHAR},
+      buy_resstandard = #{buyResstandard,jdbcType=VARCHAR},
+      buy_resprice = #{buyResprice,jdbcType=DECIMAL},
+      buy_way = #{buyWay,jdbcType=VARCHAR},
+      buy_admincode = #{buyAdmincode,jdbcType=VARCHAR},
+      buy_adminname = #{buyAdminname,jdbcType=VARCHAR},
+      buy_state = #{buyState,jdbcType=VARCHAR},
+      buy_date = #{buyDate,jdbcType=TIMESTAMP},
+      buy_applydate = #{buyApplydate,jdbcType=TIMESTAMP},
+      buy_reason = #{buyReason,jdbcType=LONGVARCHAR}
+    where buy_id = #{buyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
+    update buy_info
+    set buy_code = #{buyCode,jdbcType=VARCHAR},
+      buy_resname = #{buyResname,jdbcType=VARCHAR},
+      buy_resstandard = #{buyResstandard,jdbcType=VARCHAR},
+      buy_resprice = #{buyResprice,jdbcType=DECIMAL},
+      buy_way = #{buyWay,jdbcType=VARCHAR},
+      buy_admincode = #{buyAdmincode,jdbcType=VARCHAR},
+      buy_adminname = #{buyAdminname,jdbcType=VARCHAR},
+      buy_state = #{buyState,jdbcType=VARCHAR},
+      buy_date = #{buyDate,jdbcType=TIMESTAMP},
+      buy_applydate = #{buyApplydate,jdbcType=TIMESTAMP}
+    where buy_id = #{buyId,jdbcType=INTEGER}
+  </update>
+</mapper>

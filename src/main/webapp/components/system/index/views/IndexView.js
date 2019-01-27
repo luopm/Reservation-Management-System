@@ -11,7 +11,7 @@ define([
             initialize: function () {
                 //监听登录状态改变
                 // portal.appGlobal.on("change:currentStatus", this.currentStatusChange, this);
-                this.requireView('components/login/views/LoginView');
+                this.requireView('components/system/login/views/LoginView');
             },
 
             // 如果已经登录了，则修改成main IndexView，否则变成LoginView

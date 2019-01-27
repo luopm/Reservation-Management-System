@@ -24,7 +24,7 @@ define(['hbs!../template/user.html',
             getUserInfo : function (param) {
                 var that = this;
                 UserAction.getUserInfo(param, function (result) {
-                    if (result & result.resultCode == 0) {
+                    if (result && result.resultCode == 0) {
                         that.$('#userFormInfo').form(result.resultObject)
                     }
                 })

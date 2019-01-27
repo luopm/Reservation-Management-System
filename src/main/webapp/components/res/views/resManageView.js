@@ -57,6 +57,10 @@ define(['hbs!../template/resManage.html',
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
 
+                var resData = [
+                    {resName:"car", resCode:10000, resStandard:"middle car", resPrice:"$10000", resLocation:"warehouse", resState:1},
+                    {resName:"car", resCode:10001, resStandard:"big car", resPrice:"$20000", resLocation:"warehouse", resState:1}
+                ];
                 if(that.$("#keyword").val() !=''){
                     params.userName = that.$("#keyword").val();
                 }
@@ -138,7 +142,7 @@ define(['hbs!../template/resManage.html',
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
                 $.blockUI({message: '请稍后'});
-                resAction.enableRes(param, function (result) {
+                resAction.ableRes(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("生效成功");
@@ -154,7 +158,7 @@ define(['hbs!../template/resManage.html',
                 var param = that.$('#ResList').grid("getSelection");
                 param.admin = window.localStorage.getItem("userAccount");
                 $.blockUI({message: '请稍后'});
-                resAction.disableRes(param, function (result) {
+                resAction.ableRes(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==0){
                         fish.success("禁用成功");

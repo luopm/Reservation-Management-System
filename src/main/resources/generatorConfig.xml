@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <!-- 数据库驱动:选择你的本地硬盘上面的数据库驱动包-->
+    <classPathEntry  location="C:\Users\luopm\.m2\repository\mysql\mysql-connector-java\8.0.11\mysql-connector-java-8.0.11.jar"/>
+
+    <!-- 一个数据库一个context -->
+    <context id="DB2Tables"  targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--数据库链接URL，用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://39.108.148.184:3306/app_reservemanage?serverTimezone=UTC"
+                        userId="root" password="root">
+        </jdbcConnection>
+
+        <!--指定生成的类型为java类型，避免数据库中number等类型字段 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成模型的包名和位置-->
+        <javaModelGenerator targetPackage="com.luopm.reservationmanagement.Model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成映射文件的包名和位置-->
+        <sqlMapGenerator targetPackage="mapping" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- 生成DAO的包名和位置-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.luopm.reservationmanagement.Dao" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
+        <table tableName="user_info"
+               domainObjectName="User">
+        </table>
+        <table tableName="res_info"
+               domainObjectName="Res">
+        </table>
+        <table tableName="bor_info"
+               domainObjectName="Reserve">
+        </table>
+        <table tableName="buy_info"
+               domainObjectName="Purchase">
+        </table>
+    </context>
+</generatorConfiguration>
+        <!--enableCountByExample="true"-->
+        <!--enableUpdateByExample="true"-->
+        <!--enableDeleteByExample="true"-->
+        <!--enableSelectByExample="true"-->
+        <!--selectByExampleQueryId="true"-->
