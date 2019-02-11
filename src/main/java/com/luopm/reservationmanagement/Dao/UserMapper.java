@@ -28,4 +28,6 @@ public interface UserMapper {
     User selectByUserAccount(String userAccount);
 
     List<User> selectAllUser();
+
+    int getUser(User user);
 }

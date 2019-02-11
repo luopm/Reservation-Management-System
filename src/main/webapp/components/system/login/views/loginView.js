@@ -23,29 +23,26 @@ define(['hbs!../template/Login.html',
             login : function () {
                 var that = this;
                 var params = that.$('#loginForm').form();
-                fish.info("登录成功");
 
-                // param.backUrl = "components/res/views/resManageView";
-                that.requireView({
-                    url: "components/res/views/resManageView",
-                    viewOption:{
-                        backUrl:param.backUrl
-                    }
+                $.blockUI({
+                    message: "登录中"
                 });
-                that.undelegateEvents();//移除当前view的所有DOM监听事件
-                // $.blockUI({
-                //     message: "登录中"
-                // });
-                // if (params.userAccount != undefined && params.userPassword != undefined){
-                //     LoginAction.login(params, function (result) {
-                //         $.unblockUI();
-                //         if (result){
-                //             if (result.resultCode == 0){
-                //
-                //             }
-                //         }
-                //     })
-                // }
+                if (params.userAccount != undefined && params.userPassword != undefined){
+                    LoginAction.login(params, function (result) {
+                        $.unblockUI();
+                        if (result && result.resultCode == 1){
+                            window.localStorage.setItem("User",result.resultObject.User);
+                            // param.backUrl = "components/res/views/resManageView";
+                            that.requireView({
+                                url: "components/res/views/resManageView",
+                                viewOption:{
+                                    // backUrl:param.backUrl
+                                }
+                            });
+                            that.undelegateEvents();//移除当前view的所有DOM监听事件
+                        }else fish.error("账号或密码错误！");
+                    })
+                }else fish.info("请检查输入！");
             },
             // 前往注册页面
             register : function () {

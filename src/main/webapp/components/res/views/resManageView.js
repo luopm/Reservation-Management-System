@@ -57,10 +57,10 @@ define(['hbs!../template/resManage.html',
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
 
-                var resData = [
-                    {resName:"car", resCode:10000, resStandard:"middle car", resPrice:"$10000", resLocation:"warehouse", resState:1},
-                    {resName:"car", resCode:10001, resStandard:"big car", resPrice:"$20000", resLocation:"warehouse", resState:1}
-                ];
+                // var resData = [
+                //     {resName:"car", resCode:10000, resStandard:"middle car", resPrice:"$10000", resLocation:"warehouse", resState:1},
+                //     {resName:"car", resCode:10001, resStandard:"big car", resPrice:"$20000", resLocation:"warehouse", resState:1}
+                // ];
                 if(that.$("#keyword").val() !=''){
                     params.userName = that.$("#keyword").val();
                 }
@@ -83,7 +83,6 @@ define(['hbs!../template/resManage.html',
                                     {name:'resPrice',    label:'价格',         width: 80, sortable: false},
                                     {name:'resLocation', label:'存放地',     width: 80, sortable: false},
                                     {name:'resState',    label:'物品状态', width: 80, sortable: false}
-
 
                                     // {name: 'createDate',   label: '创建日期', width: 80,       sortable: false,
                                     //     formatter: function(cellval, opts, rwdat, _act) {

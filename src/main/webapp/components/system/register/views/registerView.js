@@ -31,21 +31,25 @@ define(['hbs!../template/register.html',
             register : function () {
                 var that = this;
                 var params = that.$('#registerForm').form();
-                fish.info("注册成功");
-
-                // $.blockUI({
-                //     message: "注册中"
-                // });
-                // if (params.userAccount != undefined && params.userPassword != undefined){
-                //     RegisterAction.login(params, function (result) {
-                //         $.unblockUI();
-                //         if (result){
-                //             if (result.resultCode == 0){
-                //
-                //             }
-                //         }
-                //     })
-                // }
+                $.blockUI({
+                    message: "注册中"
+                });
+                if (params.userAccount != undefined && params.userPassword != undefined){
+                    RegisterAction.register(params, function (result) {
+                        $.unblockUI();
+                        if (result && result.resultCode == 1){
+                            window.localStorage.setItem("User",result.resultObject.User);
+                            // param.backUrl = "components/res/views/resManageView";
+                            that.requireView({
+                                url: "components/res/views/resManageView",
+                                viewOption:{
+                                    // backUrl:param.backUrl
+                                }
+                            });
+                            that.undelegateEvents();//移除当前view的所有DOM监听事件
+                        }else fish.error("注册失败！");
+                    })
+                }else fish.info("请检查输入！");
             },
 
         });

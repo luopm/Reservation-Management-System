@@ -197,4 +197,75 @@
       buy_applydate = #{buyApplydate,jdbcType=TIMESTAMP}
     where buy_id = #{buyId,jdbcType=INTEGER}
   </update>
+
+  <insert id="add" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
+    insert into buy_info (buy_id, buy_code, buy_resname,
+      buy_resstandard, buy_resprice, buy_way,
+      buy_admincode, buy_adminname, buy_state,
+      buy_date, buy_applydate, buy_reason
+      )
+    values (#{buyId,jdbcType=INTEGER}, #{buyCode,jdbcType=VARCHAR}, #{buyResname,jdbcType=VARCHAR},
+      #{buyResstandard,jdbcType=VARCHAR}, #{buyResprice,jdbcType=DECIMAL}, #{buyWay,jdbcType=VARCHAR},
+      #{buyAdmincode,jdbcType=VARCHAR}, #{buyAdminname,jdbcType=VARCHAR}, #{buyState,jdbcType=VARCHAR},
+      #{buyDate,jdbcType=TIMESTAMP}, #{buyApplydate,jdbcType=TIMESTAMP}, #{buyReason,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from buy_info
+    where buy_code = #{buyCode,jdbcType=VARCHAR}
+  </delete>
+  <update id="update" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
+    update buy_info
+    <set >
+      <if test="buyCode != null" >
+        buy_code = #{buyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResname != null" >
+        buy_resname = #{buyResname,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResstandard != null" >
+        buy_resstandard = #{buyResstandard,jdbcType=VARCHAR},
+      </if>
+      <if test="buyResprice != null" >
+        buy_resprice = #{buyResprice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyWay != null" >
+        buy_way = #{buyWay,jdbcType=VARCHAR},
+      </if>
+      <if test="buyAdmincode != null" >
+        buy_admincode = #{buyAdmincode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyAdminname != null" >
+        buy_adminname = #{buyAdminname,jdbcType=VARCHAR},
+      </if>
+      <if test="buyState != null" >
+        buy_state = #{buyState,jdbcType=VARCHAR},
+      </if>
+      <if test="buyDate != null" >
+        buy_date = #{buyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyApplydate != null" >
+        buy_applydate = #{buyApplydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyReason != null" >
+        buy_reason = #{buyReason,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where buy_code = #{buyCode,jdbcType=VARCHAR}
+  </update>
+  <select id="getInfo" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from buy_info
+    where buy_code = #{buyCode,jdbcType=VARCHAR}
+  </select>
+  <select id="getList" resultMap="ResultMapWithBLOBs" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from buy_info
+  </select>
 </mapper>
