@@ -5,16 +5,15 @@
  */
 define(['hbs!../template/Login.html',
         '../actions/loginAction',
-        '../../register/views/registerView',
-        '../style/login.css'
+        'css!../style/login.css'
     ],
-    function (tem, LoginAction, registerView) {
+    function (tem, LoginAction) {
         var LoginView = fish.View.extend({
             el:false,
             template:tem,
             events:{
-                'click .loginBtn':'login',
-                'click .registerBtn':'register',
+                'click #loginBtn':'login',
+                'click #registerBtn':'register',
                 'click .findPasswordBtn':'findPassword'
             },
             initialize: function () {
@@ -22,19 +21,21 @@ define(['hbs!../template/Login.html',
             // 登录
             login : function () {
                 var that = this;
-                var params = that.$('#loginForm').form();
-
-                $.blockUI({
-                    message: "登录中"
-                });
+                var loginForm = that.$('#loginForm').form();
+                var params = loginForm.form("value");
                 if (params.userAccount != undefined && params.userPassword != undefined){
+                    $.blockUI({
+                        message: "登录中"
+                    });
                     LoginAction.login(params, function (result) {
                         $.unblockUI();
                         if (result && result.resultCode == 1){
                             window.localStorage.setItem("User",result.resultObject.User);
                             // param.backUrl = "components/res/views/resManageView";
                             that.requireView({
-                                url: "components/res/views/resManageView",
+                                // selector:"#content",
+                                url: "components/system/nav/views/homeView",
+                                // url:homeView,
                                 viewOption:{
                                     // backUrl:param.backUrl
                                 }
@@ -50,7 +51,8 @@ define(['hbs!../template/Login.html',
                 var param = {};
                 param.backUrl = "components/system/login/views/loginView";
                 that.requireView({
-                    url: registerView,
+                    //url: registerView,
+                    url:"components/system/register/views/registerView",
                     viewOption:{
                         backUrl:param.backUrl
                     }

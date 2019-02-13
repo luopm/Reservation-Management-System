@@ -12,8 +12,8 @@ define(['hbs!../template/register.html',
             el:false,
             template:tem,
             events:{
-                'click .loginBtn':'login',
-                'click .registerBtn':'register'
+                'click #loginBtn':'login',
+                'click #registerBtn':'register'
             },
             initialize: function () {
             },
@@ -22,7 +22,7 @@ define(['hbs!../template/register.html',
                 var that = this;
                 // that.parentView.requireView({
                 that.requireView({
-                    url:loginView
+                    url: "components/system/login/views/loginView",
                     // url:that.options.backUrl
                 });
                 that.undelegateEvents();//移除当前view的所有DOM监听事件
@@ -30,15 +30,17 @@ define(['hbs!../template/register.html',
             // 注册
             register : function () {
                 var that = this;
-                var params = that.$('#registerForm').form();
-                $.blockUI({
-                    message: "注册中"
-                });
+                var registerForm = that.$('#registerForm').form();
+                var params = registerForm.form("value");
                 if (params.userAccount != undefined && params.userPassword != undefined){
+                    $.blockUI({
+                        message: "注册中"
+                    });
+                    // fish.post('System/Register', params,
                     RegisterAction.register(params, function (result) {
                         $.unblockUI();
                         if (result && result.resultCode == 1){
-                            window.localStorage.setItem("User",result.resultObject.User);
+                            window.localStorage.setItem("User",result.resultObject.userName);
                             // param.backUrl = "components/res/views/resManageView";
                             that.requireView({
                                 url: "components/res/views/resManageView",

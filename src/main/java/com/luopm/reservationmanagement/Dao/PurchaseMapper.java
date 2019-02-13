@@ -1,12 +1,13 @@
 package com.luopm.reservationmanagement.Dao;
 
 import com.luopm.reservationmanagement.Model.Purchase;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+
+@Repository
 public interface PurchaseMapper {
-
 
     int deleteByPrimaryKey(Integer buyId);
 
@@ -31,4 +32,5 @@ public interface PurchaseMapper {
     Purchase getInfo(String buyCode);
 
     List<Purchase> getList();
+
 }

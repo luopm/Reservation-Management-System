@@ -7,6 +7,8 @@ import com.luopm.reservationmanagement.Model.ResponseUtil;
 import com.luopm.reservationmanagement.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service("UserService")
@@ -46,15 +48,20 @@ public class UserService {
         return responseUtil;
     }
 
+    @Transactional
     public ResponseUtil add(User user){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            User userAdd = userMapper.add(user);
-            if (userAdd != null){//注册用户
-                responseUtil.setResponseUtil(1, "add user success!",
-                        userAdd, null);
-            }else responseUtil.setResponseUtil(0, "add user failed!",
-                    null, null);
+            if (userMapper.insert(user) >= 1){//注册用户
+                try{
+                    User userAdd = userMapper.getUser(user);
+                    if (userAdd != null){//获取刚才注册用户
+                        responseUtil.setResponseUtil(1, "add user success!",
+                                userAdd, null);
+                    }else responseUtil.setResponseUtil(0, "add user failed!",
+                            null, null);
+                }catch (Exception e){}
+            }
         }catch (Exception e){
             responseUtil.setResultMsg(e.getMessage());
         }
@@ -84,7 +91,7 @@ public class UserService {
     public ResponseUtil getUserInfo(User user) {
         ResponseUtil responseUtil = new ResponseUtil();
         try{
-            User userInfo = userMapper.selectByUserAccount(user.getUserAccount());
+            User userInfo = userMapper.getUser(user);
             if (userInfo != null){
                 responseUtil.setResponseUtil(1,"get userInfo success!",
                         userInfo, null);

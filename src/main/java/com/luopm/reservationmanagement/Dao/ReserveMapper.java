@@ -1,10 +1,11 @@
 package com.luopm.reservationmanagement.Dao;
 
 import com.luopm.reservationmanagement.Model.Reserve;
-
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ReserveMapper {
 
     int deleteByPrimaryKey(Integer borId);

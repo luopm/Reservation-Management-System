@@ -16,80 +16,134 @@ define(['hbs!../template/Nav.html',
                 var that = this;
                 // 修改、显示物品信息时引用此页面
                 if (that.options.userAccount){
-                    that.initNav(that.options.userAccount);
+                    // that.initNav(that.options.userAccount);
                 }
             },
-            // 获取物品信息
-            initNav : function (param) {
-                var that = this;
-                NavAction.getNavInfo(param, function (result) {
-                    if (result && result.resultCode == 0) {
-                        var options = {
-                            fNodes: fNodes,
-                            view: {
-                                formatter: function (node) {
-                                    var len = node.name.split(''),
-                                        str = node.name;
-                                    if (len.length > 15) {
-                                        str =  node.name.slice(0, 14) + '...';
+            afterRender : function () {
+                var data = [
+                    {
+                        "title": "一级菜单1",
+                        // "hash": "javascript:;",
+                        "icon": "glyphicon glyphicon-shopping-cart",
+                        "subMenus": [
+                            {
+                                "title": "二级菜单1",
+                                "icon": "glyphicon glyphicon-shopping-cart",
+                                // "hash": "#bb1",
+                                "url": "modules/user/a.html"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "一级菜单2",
+                        "hash": "javascript:;",
+                        "icon": "glyphicon glyphicon-asterisk",
+                        "subMenus": [
+                            {
+                                "title": "二级菜单1",
+                                "icon": "glyphicon glyphicon-shopping-cart",
+                                "hash": "javascript:;",
+                                "url": "modules/user/a.html",
+                                "subMenus": [
+                                    {
+                                        "title": "三级菜单1",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb1",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单2",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb2",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单3",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb3",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单4",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb4",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单5",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb5",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单6",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb6",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单7",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb7",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单8",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb8",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单9",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb9",
+                                        "url": "modules/user/a.html"
+                                    },
+                                    {
+                                        "title": "三级菜单10",
+                                        "icon": "glyphicon glyphicon-shopping-cart",
+                                        "hash": "#bbb10",
+                                        "url": "modules/user/a.html"
                                     }
-                                    return str;
-                                }
+                                ]
                             },
-                            callback: {
-                                beforeClick: function (e, treeNode, clickFlag) {
-                                    console.log("[beforeClick ] " + treeNode.name);
-                                },
-                                onClick: function (e, treeNode, clickFlag) {
-                                    console.log(treeNode);
-                                    console.log("[onClick ] clickFlag = " + clickFlag + " (" + (clickFlag === 1 ? "普通选中" : (clickFlag === 0 ? "<b>取消选中</b>" : "<b>追加选中</b>")) + ")");
-                                },
-                                onNodeCreated: function (e, treeNode) {
-                                    var id = this.id;
-                                    console.log("[onNodeCreated] " + id + " " + treeNode.name);
-                                },
-                                beforeDblClick: function (e, treeNode) {
-                                    console.log("[beforeDblClick] " + treeNode.name);
-                                },
-                                onDblClick: function (e, treeNode) {
-                                    console.log("[onDblClick] " + treeNode.name);
-                                },
-                                beforeMouseDown: function (e, treeNode) {
-                                    console.log("[beforeMouseDown] " + treeNode.name);
-                                },
-                                onMouseDown: function (e, treeNode) {
-                                    console.log("[onMouseDown] " + treeNode.name);
-                                },
-                                beforeMouseUp: function (e, treeNode) {
-                                    console.log("[beforeMouseUp] " + treeNode.name);
-                                },
-                                onMouseUp: function (e, treeNode) {
-                                    console.log("[onMouseUp] " + treeNode.name);
-                                },
-                                beforeRightClick: function (e, treeNode) {
-                                    console.log("[beforeRightClick] " + treeNode.name);
-                                },
-                                onRightClick: function (e, treeNode) {
-                                    console.log("[onRightClick] " + treeNode.name);
-                                },
-                                beforeCollapse: function (e, treeNode) {
-                                    console.log("[beforeCollapse] " + treeNode.name);
-                                },
-                                beforeExpand: function (e, treeNode) {
-                                    console.log("[beforeExpand] " + treeNode.name);
-                                },
-                                beforeSelect: function (e, treeNode, addFlag) {
-                                    console.log("[beforeSelect] " + treeNode.name + ' addFlag: ' + addFlag);
-                                },
-                                onSelect: function (e, treeNode, addFlag) {
-                                    console.log("[onSelect] " + treeNode.name + ' addFlag: ' + addFlag);
-                                },
-                            },
-                        };
-                        that.$("#nav").tree(options);
+                            {
+                                "title": "二级菜单2",
+                                "icon": "glyphicon glyphicon-shopping-cart",
+                                "hash": "#cc2",
+                                "url": "modules/user/a.html"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "无子菜单",
+                        "hash": "#nosubmenu",
+                        "url": "modules/user/a.html",
+                        "icon": "glyphicon glyphicon-shopping-cart"
+                    },
+                ];
+
+                $('#sidebarTest').pagesidebar({
+                    data: data,
+                    width:290,
+                    // openFirst: true,
+                    children: "subMenus",
+                    subMenuMode:"inline",
+                    expand: function () {
+                        console.log('expand');
+                    },
+                    slideUp: function () {
+                        console.log('slideup');
+                    },
+                    slideDown: function () {
+                        console.log('sllideDown');
+                    },
+                    select: function (e,data) {
+                        // $("#consolelog").html($("#consolelog").html() + "\n" + " select： " + data);
                     }
-                })
+                });
             }
+
         });
         return NavView;
     });

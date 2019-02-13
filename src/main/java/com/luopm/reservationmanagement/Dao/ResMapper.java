@@ -4,7 +4,9 @@ import com.luopm.reservationmanagement.Model.Res;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ResMapper {
 
     int deleteByPrimaryKey(Integer resId);

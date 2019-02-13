@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping(value = "/reserve")
+@RequestMapping(value = "/ReserveController")
 public class ReserveController {
 
     @Autowired

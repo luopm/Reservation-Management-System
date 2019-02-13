@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/PurchaseController")
 public class PurchaseController {
 
     @Autowired

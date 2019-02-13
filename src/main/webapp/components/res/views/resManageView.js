@@ -71,7 +71,7 @@ define(['hbs!../template/resManage.html',
                 //初始化grid
                 resAction.getResList(params, function (result){
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         if(result.resultObject.userLists!=null  && result.resultObject.userLists != ""  ){
                             that.$("#ResList").grid({
                                 data: result.resultObject.userLists,
@@ -101,7 +101,8 @@ define(['hbs!../template/resManage.html',
                                 ]
                             });
                         } else{
-                            that.$("#ResList").append('<div style="text-align:center;"><img src="marketing/css/base/images/none-1.png"'
+                            that.$("#ResList").append('<div style="text-align:center;">' +
+                                // '<img src="marketing/css/base/images/none-1.png"'
                                 +' style="height:100px;width:124px;text-align:center;margin:20px 0">'
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#Res-pagination').pagination("destroy");

@@ -1,10 +1,12 @@
 package com.luopm.reservationmanagement.Dao;
 
 import com.luopm.reservationmanagement.Model.User;
-
+import org.springframework.stereotype.Repository;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+@Repository
 public interface UserMapper {
 
     int deleteByPrimaryKey(Integer userId);
@@ -21,13 +23,13 @@ public interface UserMapper {
 
     User update(User user);
 
-    User add(User user);
+    int add(User user);
 
     User delete(User user);
 
-    User selectByUserAccount(String userAccount);
+    User getUser(User user);
 
     List<User> selectAllUser();
 
-    int getUser(User user);
+    User getLogin(User user);
 }

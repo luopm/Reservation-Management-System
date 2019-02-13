@@ -1,18 +1,14 @@
 define(function () {
-       var LoginAction = {
+       return {
            // 登陆
            login: function (params, success) {
-               var result = fish.post('SystemController/Login', params, success);
+               var result = fish.ajax({type:"POST",url:'SystemController/Login',data:params,success:success});
                return result;
            },
-
            // 登出
            logout: function(params, success) {
-               var result = fish.post('LoginController/getLogout', params, success);
+               var result = fish.ajax({type:"POST",url:'SystemController/getLogout',data:params,success:success});
                return result;
            }
-
-       };
-       return LoginAction;
-    }
-)
+       }
+});
