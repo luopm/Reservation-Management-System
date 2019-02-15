@@ -7,6 +7,8 @@ import com.luopm.reservationmanagement.Model.Purchase;
 import com.luopm.reservationmanagement.Model.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service("PurchaseService")
@@ -15,11 +17,12 @@ public class PurchaseService {
     @Autowired
     private PurchaseMapper purchaseMapper;
 
+    @Transactional
     public ResponseUtil add(Purchase purchase){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Purchase purchaseAdd = purchaseMapper.add(purchase);
-            if (purchaseAdd != null){
+            if (purchaseMapper.addPurchase(purchase) == 1){
+                Purchase purchaseAdd = purchaseMapper.getPurchase(purchase);
                 responseUtil.setResponseUtil(1,"add purchase success!",
                         purchaseAdd,null);
             }else responseUtil.setResponseUtil(0,"add purchase failed!",
@@ -30,11 +33,12 @@ public class PurchaseService {
         return responseUtil;
     }
 
+    @Transactional
     public ResponseUtil delete(Purchase purchase){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Purchase purchaseDelete = purchaseMapper.delete(purchase);
-            if (purchaseDelete != null){
+            Purchase purchaseDelete = purchaseMapper.getPurchase(purchase);
+            if (purchaseMapper.deletePurchase(purchase) == 1){
                 responseUtil.setResponseUtil(1,"delete purchase success!",
                         purchaseDelete,null);
             }else responseUtil.setResponseUtil(0,"delete purchase failed!",
@@ -45,11 +49,12 @@ public class PurchaseService {
         return responseUtil;
     }
 
+    @Transactional
     public ResponseUtil update(Purchase purchase){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Purchase purchaseUpdate = purchaseMapper.update(purchase);
-            if (purchaseUpdate != null){
+            if (purchaseMapper.updatePurchase(purchase) == 1){
+                Purchase purchaseUpdate = purchaseMapper.getPurchase(purchase);
                 responseUtil.setResponseUtil(1,"update purchase success!",
                         purchaseUpdate,null);
             }else responseUtil.setResponseUtil(0,"update purchase failed!",
@@ -63,7 +68,7 @@ public class PurchaseService {
     public ResponseUtil getInfo(Purchase purchase){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Purchase purchaseInfo = purchaseMapper.getInfo(purchase.getBuyCode());
+            Purchase purchaseInfo = purchaseMapper.getPurchase(purchase);
             if (purchaseInfo != null){
                 responseUtil.setResponseUtil(1,"getInfo purchase success!",
                         purchaseInfo,null);
@@ -80,7 +85,7 @@ public class PurchaseService {
         try {
             //将参数传给这个方法就可以实现物理分页了，非常简单。
             PageHelper.startPage(pageNum, pageSize);
-            List<Purchase> purchasesList = purchaseMapper.getList();
+            List<Purchase> purchasesList = purchaseMapper.getPurchaseList();
             PageInfo result = new PageInfo(purchasesList);
             responseUtil.setResponseUtil(1, "get purchaseList success!",
                     result,null);//获取All用户详情

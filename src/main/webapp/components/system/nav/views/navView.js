@@ -20,113 +20,83 @@ define(['hbs!../template/Nav.html',
                 }
             },
             afterRender : function () {
+                var that = this;
+                that.loadPagesidebar("#sidebarTest")
+            },
+            loadPagesidebar : function (selector) {
+                var that = this;
                 var data = [
                     {
-                        "title": "一级菜单1",
+                        "title": "人员管理",
                         // "hash": "javascript:;",
                         "icon": "glyphicon glyphicon-shopping-cart",
                         "subMenus": [
                             {
-                                "title": "二级菜单1",
+                                "title": "人员列表",
                                 "icon": "glyphicon glyphicon-shopping-cart",
                                 // "hash": "#bb1",
-                                "url": "modules/user/a.html"
+                                "url": "components/user/views/userManageView"
                             }
                         ]
                     },
                     {
-                        "title": "一级菜单2",
-                        "hash": "javascript:;",
+                        "title": "物品管理",
+                        // "hash": "javascript:;",
                         "icon": "glyphicon glyphicon-asterisk",
                         "subMenus": [
                             {
-                                "title": "二级菜单1",
+                                "title": "物品管理",
                                 "icon": "glyphicon glyphicon-shopping-cart",
-                                "hash": "javascript:;",
-                                "url": "modules/user/a.html",
-                                "subMenus": [
-                                    {
-                                        "title": "三级菜单1",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb1",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单2",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb2",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单3",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb3",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单4",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb4",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单5",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb5",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单6",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb6",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单7",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb7",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单8",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb8",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单9",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb9",
-                                        "url": "modules/user/a.html"
-                                    },
-                                    {
-                                        "title": "三级菜单10",
-                                        "icon": "glyphicon glyphicon-shopping-cart",
-                                        "hash": "#bbb10",
-                                        "url": "modules/user/a.html"
-                                    }
-                                ]
+                                // "hash": "javascript:;",
+                                "url": "components/res/views/resManageView",
+                                // "subMenus": [
+                                //     {
+                                //         "title": "三级菜单1",
+                                //         "icon": "glyphicon glyphicon-shopping-cart",
+                                //         // "hash": "#bbb1",
+                                //         "url": "modules/user/a.html"
+                                //     }
+                                // ]
                             },
                             {
-                                "title": "二级菜单2",
+                                "title": "可借用物品列表",
                                 "icon": "glyphicon glyphicon-shopping-cart",
-                                "hash": "#cc2",
-                                "url": "modules/user/a.html"
+                                // "hash": "#bb1",
+                                "url": "components/res/views/resListView"
                             }
                         ]
                     },
                     {
-                        "title": "无子菜单",
-                        "hash": "#nosubmenu",
-                        "url": "modules/user/a.html",
+                        "title": "采购管理",
+                        // "hash": "#nosubmenu",
+                        "url": "components/purchase/views/purchaseListView",
                         "icon": "glyphicon glyphicon-shopping-cart"
                     },
-                ];
+                    {
+                        "title": "借用管理",
+                        // "hash": "#nosubmenu",
+                        "url": "components/reserve/views/reserveListView",
+                        "icon": "glyphicon glyphicon-shopping-cart"
+                    },
+                    {
+                        "title": "组织管理",
+                        // "hash": "#nosubmenu",
+                        // "url": "modules/user/a.html",
+                        "icon": "glyphicon glyphicon-shopping-cart",
+                        "subMenus":[
+                            {
+                                "title":"菜单管理",
+                                "icon":"glyphicon glyphicon-shopping-cart",
+                                "url":""
+                            }
+                        ]
 
-                $('#sidebarTest').pagesidebar({
+                    },
+                ];
+                $(selector).pagesidebar({
                     data: data,
-                    width:290,
-                    // openFirst: true,
+                    width:220,
+                    openFirst: true,
                     children: "subMenus",
                     subMenuMode:"inline",
                     expand: function () {
@@ -139,9 +109,40 @@ define(['hbs!../template/Nav.html',
                         console.log('sllideDown');
                     },
                     select: function (e,data) {
+                        data = data.originalData;
                         // $("#consolelog").html($("#consolelog").html() + "\n" + " select： " + data);
+                        if(data.url != "" && data.url != undefined){
+                           that.loadRight("#right-content",data.url)
+                        }
                     }
                 });
+            },
+            loadRight : function (selector,url) {
+                var that = this;
+                var  able = parseInt(window.sessionStorage.getItem("Able"));
+                if (able == 1){
+                    that.parentView.requireView({
+                        selector: selector,
+                        url: url,
+                        // viewOption:param,
+                        callback: function () {
+                        }
+                    });
+                }else {
+                    var msg = "";
+                    switch (able) {
+                        case -1:
+                            msg = "用户待审核";
+                            break;
+                        case 0:
+                            msg = "用户已被禁用";
+                            break;
+                        case -2:
+                            msg = "用户审核不通过";
+                            break;
+                    }
+                    fish.error(msg);
+                }
             }
 
         });

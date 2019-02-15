@@ -36,7 +36,7 @@ define(['hbs!../template/resList.html',
             searchAbleRes:function(){
                 var that = this;
                 //that.$('#projectList').grid("destroy");
-                that.initResListGrid(that.pageIndex,that.pageSize);
+                that.initAbleResListGrid(that.pageIndex,that.pageSize);
             },
             //重新加载当前页
             reloadAbleRes:function () {
@@ -51,6 +51,7 @@ define(['hbs!../template/resList.html',
                 var params = {};
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
+                params.res = {resTypecode:1};
 
                 if(that.$("#keyword").val() !=''){
                     params.userName = that.$("#keyword").val();
@@ -60,12 +61,12 @@ define(['hbs!../template/resList.html',
                 that.$("#ResAbleList").html("");
                 that.$("#ResAbleList").grid("destroy");
                 //初始化grid
-                resAction.getResAbleList(params, function (result){
+                resAction.getResList(params, function (result){
                     $.unblockUI();
-                    if(result && result.resultCode==0){
-                        if(result.resultObject.userLists!=null  && result.resultObject.userLists != ""  ){
+                    if(result && result.resultCode==1){
+                        if(result.resultObject.list!=null  && result.resultObject.list != ""  ){
                             that.$("#ResAbleList").grid({
-                                data: result.resultObject.userLists,
+                                data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
                                     {name:'resName',     label:'物品名称',     width: 80, sortable: false},
@@ -97,7 +98,7 @@ define(['hbs!../template/resList.html',
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#ResAble-pagination').pagination("destroy");
                         }
-                        that.userListPage(result.resultObject.pageInfo);//列表分页
+                        that.userListPage(result.resultObject);//列表分页
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -105,27 +106,27 @@ define(['hbs!../template/resList.html',
             },
             //项目列表分页
             userListPage:function(pageInfo){
-                var that = this
+                var that = this;
                 that.$('#ResAble-pagination').pagination("destroy");
                 that.$('#ResAble-pagination').pagination({
-                    total     : pageInfo.pageCount,//总页数
+                    total     : pageInfo.pages,//总页数
                     records   : pageInfo.total, //查询到数据的总个数
-                    displayNum: pageInfo.pageSize,//显示最大有效页数
+                    displayNum: pageInfo.pages,//显示最大有效页数
                     rowNum    : pageInfo.pageSize,//每页显示条数
                     //page      : pageInfo.pageIndex,
-                    start     :pageInfo.pageIndex,//设置初始页码
+                    start     : pageInfo.pageNum > 0 ? pageInfo.pageNum : 1,//设置初始页码
                     pgInput   :true,
                     pgRecText :true,
                     pgTotal   :true,//总计页数
                     rowtext   :null,//每页显示条数
                     onPageClick: function (e, eventData) {
-                        that.initAbleResListGrid(eventData.page,eventData.rowNum);
+                        that.initPurchaseGrid(eventData.page,eventData.rowNum);
                     }
                 });
-                that.$('#ResAble-pagination').find(".pagination").css({"margin":"5px 0"});
+                that.$('#Res-pagination').find(".pagination").css({"margin":"5px 0"});
                 //如当前页大于总页数，则置为总页数
-                if (pageInfo.pageIndex > pageInfo.pageCount && pageInfo.pageCount)
-                    that.initAbleResListGrid(pageInfo.pageCount,pageInfo.pageSize);
+                if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
+                    that.initResListGrid(pageInfo.pages,pageInfo.pageSize);
             },
             // 生效
             reserve : function () {
@@ -134,7 +135,7 @@ define(['hbs!../template/resList.html',
                 $.blockUI({message: '请稍后'});
                 resAction.ableRes(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("生效成功");
                         that.reloadAbleRes();
                     }else{

@@ -7,6 +7,8 @@ import com.luopm.reservationmanagement.Model.Reserve;
 import com.luopm.reservationmanagement.Model.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service("ReserveService")
@@ -15,11 +17,12 @@ public class ReserveService {
     @Autowired
     private ReserveMapper reserveMapper;
 
+    @Transactional
     public ResponseUtil add(Reserve reserve){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Reserve reserveAdd = reserveMapper.add(reserve);
-            if (reserveAdd != null){
+            if (reserveMapper.addReserve(reserve) >= 1){
+                Reserve reserveAdd = reserveMapper.getReserve(reserve);
                 responseUtil.setResponseUtil(1, "add reserve success!",
                         reserveAdd, null);
             }else responseUtil.setResponseUtil(1, "add reserve success!",
@@ -30,11 +33,12 @@ public class ReserveService {
         return responseUtil;
     }
 
+    @Transactional
     public ResponseUtil delete(Reserve reserve){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Reserve reserveDelete = reserveMapper.delete(reserve);
-            if (reserveDelete != null){
+            Reserve reserveDelete = reserveMapper.getReserve(reserve);
+            if (reserveMapper.deleteReserve(reserve) == 1){
                 responseUtil.setResponseUtil(1, "delete reserve success!",
                         reserveDelete, null);
             }else responseUtil.setResponseUtil(1, "delete reserve success!",
@@ -44,11 +48,13 @@ public class ReserveService {
         }
         return responseUtil;
     }
+
+    @Transactional
     public ResponseUtil update(Reserve reserve){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Reserve reserveUpdate = reserveMapper.update(reserve);
-            if (reserveUpdate != null){
+            if (reserveMapper.updateReserve(reserve) == 1){
+                Reserve reserveUpdate = reserveMapper.getReserve(reserve);
                 responseUtil.setResponseUtil(1, "update reserve success!",
                         reserveUpdate, null);
             }else responseUtil.setResponseUtil(1, "update reserve success!",
@@ -61,7 +67,7 @@ public class ReserveService {
     public ResponseUtil getReserveInfo(Reserve reserve){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            Reserve reserveInfo = reserveMapper.getReserveInfo(reserve.getBorCode());
+            Reserve reserveInfo = reserveMapper.getReserve(reserve);
             if (reserveInfo != null){
                 responseUtil.setResponseUtil(1, "get reserveInfo success!",
                         reserveInfo, null);

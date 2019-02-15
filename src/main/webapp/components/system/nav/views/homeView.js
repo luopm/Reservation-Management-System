@@ -5,13 +5,15 @@
  */
 define(['hbs!../template/Home.html',
         // './homeView',
-        '../actions/navAction'
+        '../actions/navAction',
+        'css!../css/Home.css'
     ],
     function (tem ) {
         var HomeView = fish.View.extend({
             el:false,
             template:tem,
             events:{
+                'click #home-off':"offLine",
             },
             initialize: function () {
                 var that = this;
@@ -26,7 +28,7 @@ define(['hbs!../template/Home.html',
                     panes: [
                         { collapsible: true ,//可以收缩
                             resizable: false, //不能调整大小
-                            size: "22%"},//初始尺寸，是垂直布局的情况下就是高度，水平布局就是宽度
+                            size: "17%"},//初始尺寸，是垂直布局的情况下就是高度，水平布局就是宽度
                         { collapsible: false  }//设置第二个面板不允许收缩
                     ]
                 });
@@ -37,8 +39,17 @@ define(['hbs!../template/Home.html',
                     callback: function () {
                     }
                 });
+                that.$("#Name").html(window.sessionStorage.getItem("Name")); //初始化用户
 
             },
+            offLine : function () {
+                var that = this;
+                that.parentView.requireView({
+                    selector: "#content",
+                    url : "components/system/login/views/loginView"
+                });
+                window.sessionStorage.clear();
+            }
         });
         return HomeView;
     });

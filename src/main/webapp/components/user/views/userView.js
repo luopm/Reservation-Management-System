@@ -16,6 +16,10 @@ define(['hbs!../template/user.html',
             },
             initialize: function () {
                 var that = this;
+
+            },
+            afterRender : function () {
+
                 // 修改、显示信息时引用此页面
                 if (that.options.userAccount){
                     that.getUserInfo(that.options.userAccount);
@@ -24,7 +28,7 @@ define(['hbs!../template/user.html',
             getUserInfo : function (param) {
                 var that = this;
                 UserAction.getUserInfo(param, function (result) {
-                    if (result && result.resultCode == 0) {
+                    if (result && result.resultCode == 1) {
                         that.$('#userFormInfo').form(result.resultObject)
                     }
                 })

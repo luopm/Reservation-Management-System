@@ -24,7 +24,7 @@ define(['hbs!../template/purchase.html',
             getPurchaseInfo : function (param) {
                 var that = this;
                 purchaseAction.getPurchaseInfo(param, function (result) {
-                    if (result && result.resultCode == 0) {
+                    if (result && result.resultCode == 1) {
                         that.$('#BuyFormInfo').form(result.resultObject)
                     }
                 })
@@ -34,12 +34,13 @@ define(['hbs!../template/purchase.html',
             savePurchase : function () {
                 var that = this;
                 if (!that.options.userAccount){
-                    var param = that.$('#BuyFormInfo').form();
+                    var param = that.$('#BuyFormInfo').form().form("value");
                     $.blockUI({message:"请稍后"});
                     purchaseAction.purchase(param, function (result) {
                         $.unblockUI();
-                        if (result && result.resultCode == 0){
+                        if (result && result.resultCode == 1){
                             fish.success("保存成功");
+                            that.popup.close();
                         }else{
                             fish.error(result.resultMsg);
                         }

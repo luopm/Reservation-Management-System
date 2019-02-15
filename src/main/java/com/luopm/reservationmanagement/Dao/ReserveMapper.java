@@ -22,13 +22,13 @@ public interface ReserveMapper {
 
     int updateByPrimaryKey(Reserve record);
 
-    Reserve add(Reserve reserve);
+    int addReserve(Reserve reserve);
 
-    Reserve delete(Reserve reserve);
+    int deleteReserve(Reserve reserve);
 
-    Reserve update(Reserve reserve);
+    int updateReserve(Reserve reserve);
 
-    Reserve getReserveInfo(String borCode);
+    Reserve getReserve(Reserve reserve);
 
     List<Reserve> getReserveList();
 

@@ -2,6 +2,12 @@ server:
   port: 8088
 
 spring:
+  mvc:
+      dateFormat: yyyy-MM-dd HH:mm:ss
+
+  jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+
   datasource:
       name: test
       type: com.alibaba.druid.pool.DruidDataSource
@@ -30,6 +36,7 @@ spring:
           pool-prepared-statements: false
           max-pool-prepared-statement-per-connection-size: 20
 
+
   servlet:
       multipart:
     #      max-file-size: 10Mb
@@ -51,4 +58,3 @@ pagehelper:
     supportMethodsArguments: true
     params: count=countSql
   #  returnPageInfo: check
-

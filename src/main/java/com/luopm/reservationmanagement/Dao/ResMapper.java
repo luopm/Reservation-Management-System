@@ -21,15 +21,13 @@ public interface ResMapper {
 
     int updateByPrimaryKey(Res record);
 
-    List<Res> selectResList();
+    List<Res> getResList(Res res);
 
-    List<Res> selectAbleResList();
+    int updateRes(Res res);
 
-    Res updateResByRes(Res res);
+    Res getRes(Res res);
 
-    Res selectByResCode(String resCode);
+    int addRes(Res res);
 
-    Res addRes(Res res);
-
-    Res deleteRes(String resCode);
+    int deleteRes(Res res);
 }

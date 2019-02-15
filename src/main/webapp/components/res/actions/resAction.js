@@ -20,11 +20,6 @@ define(function () {
                var result = fish.ajax({type:"POST",url:'ResController/getResInfo',data:params,success:success});
                return result;
            },
-           // 获取可借用物品列表
-           getResAbleList: function (params, success) {
-               var result = fish.ajax({type:"POST",url:'ResController/getResAbleList',data:params,success:success});
-               return result;
-           },
            // 录入物品
            addRes: function (params, success) {
                var result = fish.ajax({type:"POST",url:'ResController/addRes',data:params,success:success});

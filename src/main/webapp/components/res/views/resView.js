@@ -15,17 +15,36 @@ define(['hbs!../template/res.html',
             },
             initialize: function () {
                 var that = this;
+            },
+            afterRender : function () {
+                var that = this;
+
+                that.$("#resEnableDate").datetimepicker({
+                    buttonIcon: ''
+                });
+                that.$("#resTypecode").combobox({
+                    placeholder: 'Select res type',
+                    dataTextField: 'name',
+                    dataValueField: 'value',
+                    dataSource: [
+                        {name: '可外借', value: 1},
+                        {name: '不外借', value: 0}
+                    ],
+                    template: '<li><a href="#">test</a></li>'
+                });
+
+
                 // 修改、显示物品信息时引用此页面
-                if (that.options.userAccount){
-                    that.getResInfo(that.options.userAccount);
+                if (that.options.resCode){
+                    that.getResInfo({resCode : that.options.resCode});
                 }
             },
             // 获取物品信息
             getResInfo : function (param) {
                 var that = this;
                 resAction.getResInfo(param, function (result) {
-                    if (result && result.resultCode == 0) {
-                        that.$('#userFormInfo').form(result.resultObject)
+                    if (result && result.resultCode == 1) {
+                        that.$('#resFormInfo').form().form("value",result.resultObject);
                     }
                 })
 
@@ -34,12 +53,14 @@ define(['hbs!../template/res.html',
             saveProject : function () {
                 var that = this;
                 if (!that.options.userAccount){
-                    var param = that.$('#resFormInfo').form();
+                    var param = that.$('#resFormInfo').form().form("value");
+                    // param.resEnableDate = new Date(param.resEnableDate);
                     $.blockUI({message:"请稍后"});
                     resAction.addRes(param, function (result) {
                         $.unblockUI();
-                        if (result && result.resultCode == 0){
+                        if (result && result.resultCode == 1){
                             fish.success("添加物品成功");
+                            that.popup.close();
                         }else{
                             fish.error(result.resultMsg);
                         }

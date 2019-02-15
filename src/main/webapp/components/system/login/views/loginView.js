@@ -21,8 +21,7 @@ define(['hbs!../template/Login.html',
             // 登录
             login : function () {
                 var that = this;
-                var loginForm = that.$('#loginForm').form();
-                var params = loginForm.form("value");
+                var params = that.$('#loginForm').form().form("value");
                 if (params.userAccount != undefined && params.userPassword != undefined){
                     $.blockUI({
                         message: "登录中"
@@ -30,10 +29,12 @@ define(['hbs!../template/Login.html',
                     LoginAction.login(params, function (result) {
                         $.unblockUI();
                         if (result && result.resultCode == 1){
-                            window.localStorage.setItem("User",result.resultObject.User);
+                            window.sessionStorage.setItem("User",result.resultObject.userAccount);
+                            window.sessionStorage.setItem("Name",result.resultObject.userName);
+                            window.sessionStorage.setItem("Able",result.resultObject.userDisable);
                             // param.backUrl = "components/res/views/resManageView";
-                            that.requireView({
-                                // selector:"#content",
+                            that.parentView.requireView({
+                                selector:"#content",
                                 url: "components/system/nav/views/homeView",
                                 // url:homeView,
                                 viewOption:{
@@ -50,14 +51,15 @@ define(['hbs!../template/Login.html',
                 var that = this;
                 var param = {};
                 param.backUrl = "components/system/login/views/loginView";
-                that.requireView({
+                that.parentView.requireView({
                     //url: registerView,
+                    selector:'#content',
                     url:"components/system/register/views/registerView",
                     viewOption:{
                         backUrl:param.backUrl
                     }
                 });
-                that.undelegateEvents();//移除当前view的所有DOM监听事件
+                // that.undelegateEvents();//移除当前view的所有DOM监听事件
             },
             // 找回密码
             findPassword : function () {

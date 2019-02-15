@@ -67,18 +67,48 @@ define(['hbs!../template/userManage.html',
                 //初始化grid
                 UserAction.getUserList(params,function (result){
                     $.unblockUI();
-                    if(result && result.resultCode==0){
-                        if(result.resultObject.userLists!=null  && result.resultObject.userLists != ""  ){
+                    if(result && result.resultCode==1){
+                        if(result.resultObject.list!=null  && result.resultObject.list != ""  ){
                             that.$("#UserList").grid({
-                                data: result.resultObject.userLists,
+                                data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'userAccount', label:'用户名',    width: 80, sortable: false},
-                                    {name:'userName',    label:'真实身份',  width: 80, sortable: false},
-                                    {name:'userPhone',   label:'手机号',    width: 80, sortable: false},
-                                    {name:'userEmail',   label:'邮箱',      width: 80, sortable: false},
-                                    {name:'userState',   label:'用户状态',  width: 80, sortable: false},
-
+                                    {name:'userAccount', label:'用户名',    width: 80,  sortable: false},
+                                    {name:'userName',    label:'真实身份',  width: 120, sortable: false},
+                                    {name:'userPhone',   label:'手机号',    width: 120, sortable: false},
+                                    {name:'userEmail',   label:'邮箱',      width: 120, sortable: false},
+                                    {name:'userDisable', label:'用户状态',  width: 120, sortable: false,
+                                        formatter: function (cellval, opts, rowdata, _act) {
+                                            var result = '';
+                                            switch (cellval) {
+                                                case 1 :
+                                                    result = "启用";
+                                                    break;
+                                                case 0:
+                                                    result = "禁用";
+                                                    break;
+                                                case -1:
+                                                    result = "待审核";
+                                                    break;
+                                                case -2:
+                                                    result = "审核不通过";
+                                                    break;
+                                            }
+                                            return result;
+                                        }},
+                                    {name:'userType', label:'用户类型',  width: 120, sortable: false,
+                                        formatter: function (cellval, opts, rowdata, _act) {
+                                            var result = '';
+                                            switch (cellval) {
+                                                case 1 :
+                                                    result = "管理员";
+                                                    break;
+                                                case -1:
+                                                    result = "普通用户";
+                                                    break;
+                                            }
+                                            return result;
+                                        }},
                                     // {name: 'createDate',   label: '创建日期', width: 80,       sortable: false,
                                     //     formatter: function(cellval, opts, rwdat, _act) {
                                     //         var dateStr = ''
@@ -93,7 +123,24 @@ define(['hbs!../template/userManage.html',
                                     //             '</div>'
                                     //     }
                                     // }
-                                    ]
+                                ],
+                                onCellSelect : function( e, rowid, iCol, cellcontent ){
+                                    console.log(rowid+" "+ iCol+" " +cellcontent);
+                                    if (iCol == 0 && cellcontent != null){
+                                        fish.popupView({
+                                            url:"components/user/views/userView",
+                                            viewOption:{resCode:cellcontent},
+                                            width:"40%",
+                                            callback: function (popup,view) {
+                                            },
+                                            close : function () {
+                                                // that.searchRes();
+                                            }
+                                        }).then(function (view) {
+                                            view.$("#saveUser").hide();
+                                        });
+                                    }
+                                }
                             });
                         } else{
                             that.$("#UserList").append('<div style="text-align:center;"><img src="marketing/css/base/images/none-1.png"'
@@ -101,7 +148,7 @@ define(['hbs!../template/userManage.html',
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#user-pagination').pagination("destroy");
                         }
-                        that.userListPage(result.resultObject.pageInfo);//列表分页
+                        that.userListPage(result.resultObject);//列表分页
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -109,40 +156,42 @@ define(['hbs!../template/userManage.html',
             },
             //项目列表分页
             userListPage:function(pageInfo){
-                var that = this
+                var that = this;
                 that.$('#user-pagination').pagination("destroy");
                 that.$('#user-pagination').pagination({
-                    total     : pageInfo.pageCount,//总页数
+                    total     : pageInfo.pages,//总页数
                     records   : pageInfo.total, //查询到数据的总个数
-                    displayNum: pageInfo.pageSize,//显示最大有效页数
+                    displayNum: pageInfo.pages,//显示最大有效页数
                     rowNum    : pageInfo.pageSize,//每页显示条数
                     //page      : pageInfo.pageIndex,
-                    start     :pageInfo.pageIndex,//设置初始页码
+                    start     : pageInfo.pageNum > 0 ? pageInfo.pageNum : 1,//设置初始页码
                     pgInput   :true,
                     pgRecText :true,
                     pgTotal   :true,//总计页数
                     rowtext   :null,//每页显示条数
                     onPageClick: function (e, eventData) {
-                        that.initUserGrid(eventData.page,eventData.rowNum);
+                        that.initPurchaseGrid(eventData.page,eventData.rowNum);
                     }
                 });
-                that.$('#user-pagination').find(".pagination").css({"margin":"5px 0"});
+                that.$('#Res-pagination').find(".pagination").css({"margin":"5px 0"});
                 //如当前页大于总页数，则置为总页数
-                if (pageInfo.pageIndex > pageInfo.pageCount && pageInfo.pageCount)
-                    that.initUserGrid(pageInfo.pageCount,pageInfo.pageSize);
+                if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
+                    that.initResListGrid(pageInfo.pages,pageInfo.pageSize);
             },
             // 生效
             enable : function () {
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
+                param.admin = window.sessionStorage.getItem("User");
+                param.userDisable = 1;
                 $.blockUI({message: '请稍后'});
                 UserAction.ableUser(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("生效成功");
                         that.reloadUsers();
                     }else{
-                        fish.error(result.resMsg);
+                        fish.error(result.resultMsg);
                     }
                 })
             },
@@ -150,15 +199,16 @@ define(['hbs!../template/userManage.html',
             disable : function () {
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.localStorage.getItem("userAccount");
+                param.admin = window.sessionStorage.getItem("User");
+                param.userDisable = 0;
                 $.blockUI({message: '请稍后'});
                 UserAction.ableUser(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("禁用成功");
                         that.reloadUsers();
                     }else{
-                        fish.error(result.resMsg);
+                        fish.error(result.resultMsg);
                     }
                 })
             },
@@ -166,14 +216,16 @@ define(['hbs!../template/userManage.html',
             resetPassword : function () {
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
+                param.userPassword = 666666;
+                param.admin = window.sessionStorage.getItem("User");
                 $.blockUI({message: '请稍后'});
                 UserAction.resetPassword(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("重置密码成功");
                         that.reloadUsers();
                     }else{
-                        fish.error(result.resMsg);
+                        fish.error(result.resultMsg);
                     }
                 })
             },
@@ -181,15 +233,16 @@ define(['hbs!../template/userManage.html',
             checkOk : function () {
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.localStorage.getItem("userAccount");
+                param.admin = window.sessionStorage.getItem("User");
+                param.userDisable = 1;
                 $.blockUI({message: '请稍后'});
                 UserAction.check(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("审核通过");
                         that.reloadUsers();
                     }else{
-                        fish.error(result.resMsg);
+                        fish.error(result.resultMsg);
                     }
                 })
             },
@@ -197,15 +250,16 @@ define(['hbs!../template/userManage.html',
             checkNotOk : function () {
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.localStorage.getItem("userAccount");
+                param.admin = window.sessionStorage.getItem("User");
+                param.userDisable = -2;
                 $.blockUI({message: '请稍后'});
                 UserAction.check(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("审核未通过");
                         that.reloadUsers();
                     }else{
-                        fish.error(result.resMsg);
+                        fish.error(result.resultMsg);
                     }
                 })
             },
@@ -213,15 +267,16 @@ define(['hbs!../template/userManage.html',
             resManage : function () {
                 var that = this;
                 var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.localStorage.getItem("userAccount");
+                param.admin = window.localStorage.getItem("User");
+                param.userType *= -1;
                 $.blockUI({message: '请稍后'});
                 UserAction.resManage(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("授权成功");
                         that.reloadUsers();
                     }else{
-                        fish.error(result.resMsg);
+                        fish.error(result.resultMsg);
                     }
                 })
             },

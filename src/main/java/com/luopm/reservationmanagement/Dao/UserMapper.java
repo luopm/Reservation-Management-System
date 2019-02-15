@@ -21,15 +21,15 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    User update(User user);
+    int updateUser(User user);
 
-    int add(User user);
+    int addUser(User user);
 
-    User delete(User user);
+    int deleteUser(User user);
 
     User getUser(User user);
 
-    List<User> selectAllUser();
+    List<User> getUserList();
 
     User getLogin(User user);
 }

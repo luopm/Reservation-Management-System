@@ -159,7 +159,7 @@
 
 
 
-  <insert id="add" parameterType="com.luopm.reservationmanagement.Model.User" >
+  <insert id="addUser" parameterType="com.luopm.reservationmanagement.Model.User" >
     insert into user_info (user_id, user_account, user_password,
       user_name, user_face, user_idcard,
       user_type, user_phone, user_email,
@@ -168,13 +168,13 @@
       #{userName,jdbcType=VARCHAR}, #{userFace,jdbcType=VARCHAR}, #{userIdcard,jdbcType=VARCHAR},
       #{userType,jdbcType=INTEGER}, #{userPhone,jdbcType=INTEGER}, #{userEmail,jdbcType=VARCHAR},
       #{userDisable,jdbcType=INTEGER})
---     where not exists(select * from user_info where user_account = #{userAccount,jdbcType=VARCHAR} )
   </insert>
-  <delete id="delete" parameterType="java.lang.String" >
+
+  <delete id="deleteUser" parameterType="com.luopm.reservationmanagement.Model.User" >
     delete from user_info
     where user_account = #{userAccount,jdbcType=VARCHAR}
   </delete>
-  <update id="update" parameterType="com.luopm.reservationmanagement.Model.User" >
+  <update id="updateUser" parameterType="com.luopm.reservationmanagement.Model.User" >
     update user_info
     <set >
       <if test="userAccount != null" >
@@ -219,7 +219,7 @@
     from user_info
     where user_account = #{userAccount,jdbcType=VARCHAR} and user_password = #{userPassword,jdbcType=VARCHAR}
   </select>
-  <select id="selectAllUser" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="getUserList" resultMap="BaseResultMap"  >
     select
     <include refid="UserInfo_Column_List" />
     from user_info

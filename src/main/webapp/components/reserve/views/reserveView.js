@@ -17,7 +17,8 @@ define(['hbs!../template/reserve.html',
             },
             saveReserve : function () {
                 var that = this;
-                var param = that.$('#reserveFormInfo').form();
+                var param = that.$('#reserveFormInfo').form().form("value");
+
                 if (param.BorResName == undefined && param.BorResCode == undefined &&
                     param.BorUserAccount == undefined && param.BorStartDate == undefined &&
                     param.BorEndDate == undefined ) {
@@ -27,8 +28,9 @@ define(['hbs!../template/reserve.html',
                 $.blockUI({message:"请稍后"})
                 reserveAction.reserve(param, function (result) {
                     $.unblockUI();
-                    if (result & result.resultCode == 0){
+                    if (result && result.resultCode == 1){
                         fish.success("预约成功！");
+                        that.popup.close();
                     }else{
                         fish.error(result.resultMsg);
                     }

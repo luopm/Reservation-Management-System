@@ -213,11 +213,11 @@
       #{resScrapdate,jdbcType=TIMESTAMP}, #{resState,jdbcType=VARCHAR}, #{resTypecode,jdbcType=INTEGER},
       #{resType,jdbcType=VARCHAR}, #{resBorrowable,jdbcType=INTEGER})
   </insert>
-  <delete id="deleteRes" parameterType="java.lang.String" >
+  <delete id="deleteRes" parameterType="com.luopm.reservationmanagement.Model.Res" >
     delete from res_info
     where res_code = #{resCode,jdbcType=VARCHAR}
   </delete>
-  <update id="updateResByRes" parameterType="com.luopm.reservationmanagement.Model.Res" >
+  <update id="updateRes" parameterType="com.luopm.reservationmanagement.Model.Res" >
     update res_info
     <set >
       <if test="resName != null" >
@@ -259,21 +259,19 @@
     </set>
     where res_code = #{resCode,jdbcType=VARCHAR}
   </update>
-  <select id="selectByResCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="getRes" resultMap="BaseResultMap" parameterType="com.luopm.reservationmanagement.Model.Res" >
     select
     <include refid="Base_Column_List" />
     from res_info
     where res_code = #{resCode,jdbcType=VARCHAR}
   </select>
-  <select id="selectResList" resultMap="BaseResultMap"  >
+  <select id="getResList" resultMap="BaseResultMap" parameterType="com.luopm.reservationmanagement.Model.Res" >
     select
     <include refid="Base_Column_List" />
     from res_info
+    <if test="resTypecode != null" >
+      where res_typecode = #{resTypecode,jdbcType=INTEGER}
+    </if>
   </select>
-  <select id="selectAbleResList" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from res_info
-    where res_typecode = 'able'
-  </select>
+
 </mapper>

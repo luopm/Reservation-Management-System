@@ -23,7 +23,7 @@ public class UserService {
         try {
 //            //将参数传给这个方法就可以实现物理分页了，非常简单。
             PageHelper.startPage(pageNum, pageSize);
-            List<User> userList = userMapper.selectAllUser();
+            List<User> userList = userMapper.getUserList();
             PageInfo result = new PageInfo(userList);
             responseUtil.setResponseUtil(1, "get userList success!",
                      result,null);//获取All用户
@@ -33,11 +33,12 @@ public class UserService {
         return responseUtil;
     }
 
+    @Transactional
     public ResponseUtil update(User user){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            User userUpdate = userMapper.update(user);
-            if (userUpdate != null){//注册用户
+            if (userMapper.updateUser(user) == 1){//注册用户
+                User userUpdate = userMapper.getUser(user);
                 responseUtil.setResponseUtil(1, "update user success!",
                         userUpdate, null);
             }else responseUtil.setResponseUtil(0, "update user failed!",
@@ -52,7 +53,7 @@ public class UserService {
     public ResponseUtil add(User user){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            if (userMapper.insert(user) >= 1){//注册用户
+            if (userMapper.addUser(user) >= 1){//注册用户
                 try{
                     User userAdd = userMapper.getUser(user);
                     if (userAdd != null){//获取刚才注册用户
@@ -67,11 +68,13 @@ public class UserService {
         }
         return responseUtil;
     }
+
+    @Transactional
     public ResponseUtil delete(User user){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
-            User userDelete = userMapper.delete(user);
-            if (userDelete != null){//注册用户
+            User userDelete = userMapper.getUser(user);
+            if (userMapper.deleteUser(user) == 1){//注册用户
                 responseUtil.setResponseUtil(1, "delete user success!",
                         userDelete, null);
             }else responseUtil.setResponseUtil(0, "delete user failed!",

@@ -3,7 +3,7 @@
  * requestParam:
  * 1.0 代码找回标识
  */
-define(['hbs!../template/purchase.html',
+define(['hbs!../template/purchaseList.html',
         '../actions/purchaseAction'
     ],
     function (tem, purchaseAction ) {
@@ -64,10 +64,10 @@ define(['hbs!../template/purchase.html',
                 //初始化grid
                 purchaseAction.getPurchaseList(params, function (result){
                     $.unblockUI();
-                    if(result && result.resultCode==0){
-                        if(result.resultObject.userLists!=null  && result.resultObject.userLists != ""  ){
+                    if(result && result.resultCode==1){
+                        if(result.resultObject.list!=null  && result.resultObject.list != ""  ){
                             that.$("#purchaseList").grid({
-                                data: result.resultObject.reserveLists,
+                                data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
                                     {name:'BuyResName',      label:'物品名称',     width: 80, sortable: false},
@@ -83,7 +83,7 @@ define(['hbs!../template/purchase.html',
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#purchaseList-pagination').pagination("destroy");
                         }
-                        that.reserveListPage(result.resultObject.pageInfo);//列表分页
+                        that.reserveListPage(result.resultObject);//列表分页
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -91,15 +91,15 @@ define(['hbs!../template/purchase.html',
             },
             //项目列表分页
             reserveListPage:function(pageInfo){
-                var that = this
+                var that = this;
                 that.$('#purchaseList-pagination').pagination("destroy");
                 that.$('#purchaseList-pagination').pagination({
-                    total     : pageInfo.pageCount,//总页数
+                    total     : pageInfo.pages,//总页数
                     records   : pageInfo.total, //查询到数据的总个数
-                    displayNum: pageInfo.pageSize,//显示最大有效页数
+                    displayNum: pageInfo.pages,//显示最大有效页数
                     rowNum    : pageInfo.pageSize,//每页显示条数
                     //page      : pageInfo.pageIndex,
-                    start     :pageInfo.pageIndex,//设置初始页码
+                    start     : pageInfo.pageNum > 0 ? pageInfo.pageNum : 1,//设置初始页码
                     pgInput   :true,
                     pgRecText :true,
                     pgTotal   :true,//总计页数
@@ -110,8 +110,8 @@ define(['hbs!../template/purchase.html',
                 });
                 that.$('#purchaseList-pagination').find(".pagination").css({"margin":"5px 0"});
                 //如当前页大于总页数，则置为总页数
-                if (pageInfo.pageIndex > pageInfo.pageCount && pageInfo.pageCount)
-                    that.initPurchaseGrid(pageInfo.pageCount,pageInfo.pageSize);
+                if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
+                    that.initPurchaseGrid(pageInfo.pages,pageInfo.pageSize);
             },
             // 取消申购
             cancelPurchase : function () {
@@ -120,11 +120,11 @@ define(['hbs!../template/purchase.html',
                 if (param == {}) {
                     fish.info("请选中申购记录");
                     return ;
-                };
+                }
                 $.blockUI({message:"请稍后"});
                 purchaseAction.cancelPurchase(param, function (result) {
                     $.unblockUI();
-                    if (result & result.resultCode == 0){
+                    if (result && result.resultCode == 1){
                         fish.success("取消申购成功！");
                         that.reloadPurchase();
                     }else{

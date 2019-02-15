@@ -56,7 +56,6 @@ define(['hbs!../template/resManage.html',
                 var params = {};
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
-
                 // var resData = [
                 //     {resName:"car", resCode:10000, resStandard:"middle car", resPrice:"$10000", resLocation:"warehouse", resState:1},
                 //     {resName:"car", resCode:10001, resStandard:"big car", resPrice:"$20000", resLocation:"warehouse", resState:1}
@@ -72,13 +71,13 @@ define(['hbs!../template/resManage.html',
                 resAction.getResList(params, function (result){
                     $.unblockUI();
                     if(result && result.resultCode==1){
-                        if(result.resultObject.userLists!=null  && result.resultObject.userLists != ""  ){
+                        if(result.resultObject.list!=null  && result.resultObject.list != ""  ){
                             that.$("#ResList").grid({
-                                data: result.resultObject.userLists,
+                                data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
                                     {name:'resName',     label:'物品名称',     width: 80, sortable: false},
-                                    {name:'resCode',     label:'物品编号',     width: 80, sortable: false, hidden:true},
+                                    {name:'resCode',     label:'物品编号',     width: 80, sortable: false, hidden:false},
                                     {name:'resStandard', label:'规格',         width: 80, sortable: false},
                                     {name:'resPrice',    label:'价格',         width: 80, sortable: false},
                                     {name:'resLocation', label:'存放地',     width: 80, sortable: false},
@@ -98,7 +97,24 @@ define(['hbs!../template/resManage.html',
                                     //             '</div>'
                                     //     }
                                     // }
-                                ]
+                                ],
+                                onCellSelect : function( e, rowid, iCol, cellcontent ){
+                                    console.log(rowid+" "+ iCol+" " +cellcontent);
+                                    if (iCol == 1 && cellcontent != null){
+                                        fish.popupView({
+                                            url:"components/res/views/resView",
+                                            viewOption:{resCode:cellcontent},
+                                            width:"40%",
+                                            callback: function (popup,view) {
+                                            },
+                                            close : function () {
+                                                // that.searchRes();
+                                            }
+                                        }).then(function (view) {
+                                            view.$("#saveProject").hide();
+                                        });
+                                    }
+                                }
                             });
                         } else{
                             that.$("#ResList").append('<div style="text-align:center;">' +
@@ -107,7 +123,7 @@ define(['hbs!../template/resManage.html',
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#Res-pagination').pagination("destroy");
                         }
-                        that.userListPage(result.resultObject.pageInfo);//列表分页
+                        that.userListPage(result.resultObject);//列表分页
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -115,36 +131,38 @@ define(['hbs!../template/resManage.html',
             },
             //项目列表分页
             userListPage:function(pageInfo){
-                var that = this
+                var that = this;
                 that.$('#Res-pagination').pagination("destroy");
                 that.$('#Res-pagination').pagination({
-                    total     : pageInfo.pageCount,//总页数
+                    total     : pageInfo.pages,//总页数
                     records   : pageInfo.total, //查询到数据的总个数
-                    displayNum: pageInfo.pageSize,//显示最大有效页数
+                    displayNum: pageInfo.pages,//显示最大有效页数
                     rowNum    : pageInfo.pageSize,//每页显示条数
-                    //page      : pageInfo.pageIndex,
-                    start     :pageInfo.pageIndex,//设置初始页码
+                    // page      : pageInfo.pageIndex,
+                    start     : pageInfo.pageNum > 0 ? pageInfo.pageNum : 1,//设置初始页码start     : pageInfo.pageNum + 1 ,//设置初始页码
                     pgInput   :true,
                     pgRecText :true,
                     pgTotal   :true,//总计页数
                     rowtext   :null,//每页显示条数
                     onPageClick: function (e, eventData) {
-                        that.initResListGrid(eventData.page,eventData.rowNum);
+                        that.initPurchaseGrid(eventData.page,eventData.rowNum);
                     }
                 });
                 that.$('#Res-pagination').find(".pagination").css({"margin":"5px 0"});
                 //如当前页大于总页数，则置为总页数
-                if (pageInfo.pageIndex > pageInfo.pageCount && pageInfo.pageCount)
-                    that.initResListGrid(pageInfo.pageCount,pageInfo.pageSize);
+                if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
+                    that.initResListGrid(pageInfo.pages,pageInfo.pageSize);
             },
             // 生效
             enable : function () {
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
+                param.admin = window.sessionStorage.getItem("userAccount");
+                param.resState = "启用";
                 $.blockUI({message: '请稍后'});
                 resAction.ableRes(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("生效成功");
                         that.reloadRes();
                     }else{
@@ -156,15 +174,16 @@ define(['hbs!../template/resManage.html',
             disable : function () {
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
-                param.admin = window.localStorage.getItem("userAccount");
+                param.admin = window.sessionStorage.getItem("userAccount");
+                param.resState = "禁用";
                 $.blockUI({message: '请稍后'});
                 resAction.ableRes(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("禁用成功");
                         that.reloadRes();
                     }else{
-                        fish.error(result.resMsg);
+                        fish.error(result.resultMsg);
                     }
                 })
             },
@@ -173,11 +192,12 @@ define(['hbs!../template/resManage.html',
             OutOfUse : function () {
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
-                param.admin = window.localStorage.getItem("userAccount");
+                param.admin = window.sessionStorage.getItem("userAccount");
+                param.resState = "报废";
                 $.blockUI({message: '请稍后'});
                 resAction.outOfUse(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("审核通过");
                         that.reloadRes();
                     }else{
@@ -188,20 +208,30 @@ define(['hbs!../template/resManage.html',
             // 录入物品
             addRes : function () {
                 var that = this;
-                that.requireView({
-                    url:resView,
-                    viewOption:{}
+                fish.popupView({
+                    url:"components/res/views/resView",
+                    viewOption:{},
+                    width:"40%",
+                    callback: function (popup,view) {
+                    },
+                    close : function () {
+                        that.searchRes();
+                    }
+                }).then(function (view) {
+
                 });
             },
             // 删除物品
             deleteRes : function () {
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
-                param.admin = window.localStorage.getItem("userAccount");
+                param.admin = window.sessionStorage.getItem("User");
+                param.resEnableDate = new Date().getTime();
+                param.resScrapdate = new Date().getTime();
                 $.blockUI({message: '请稍后'});
                 resAction.deleteRes(param, function (result) {
                     $.unblockUI();
-                    if(result && result.resultCode==0){
+                    if(result && result.resultCode==1){
                         fish.success("删除成功");
                         that.reloadRes();
                     }else{

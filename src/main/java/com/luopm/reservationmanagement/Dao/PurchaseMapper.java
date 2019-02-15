@@ -23,14 +23,14 @@ public interface PurchaseMapper {
 
     int updateByPrimaryKey(Purchase record);
 
-    Purchase add(Purchase purchase);
+    int addPurchase(Purchase purchase);
 
-    Purchase delete(Purchase purchase);
+    int deletePurchase(Purchase purchase);
 
-    Purchase update(Purchase purchase);
+    int updatePurchase(Purchase purchase);
 
-    Purchase getInfo(String buyCode);
+    Purchase getPurchase(Purchase purchase);
 
-    List<Purchase> getList();
+    List<Purchase> getPurchaseList();
 
 }

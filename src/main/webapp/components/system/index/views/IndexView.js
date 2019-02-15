@@ -5,13 +5,18 @@
  */
 define([
         // 'public/portal/portal'
+        'hbs!../template/Index.html'
     ],
-    function () {
+    function (tem) {
         var IndexView = fish.View.extend({
+            template:tem,
             initialize: function () {
                 //监听登录状态改变
                 // portal.appGlobal.on("change:currentStatus", this.currentStatusChange, this);
-                this.requireView('components/system/login/views/LoginView');
+            },
+            afterRender : function () {
+                var that = this;
+                that.requireView({selector:"#content",url:'components/system/login/views/LoginView'});
             },
 
             // 如果已经登录了，则修改成main IndexView，否则变成LoginView

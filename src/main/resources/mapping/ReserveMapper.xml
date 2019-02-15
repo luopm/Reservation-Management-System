@@ -208,7 +208,7 @@
     where bor_id = #{borId,jdbcType=INTEGER}
   </update>
 
-  <insert id="add" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+  <insert id="addReserve" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
     insert into bor_info (bor_id, bor_code, bor_rescode,
       bor_resname, bor_useraccount, bor_username,
       bor_startdate, bor_enddate, bor_returndate,
@@ -220,11 +220,11 @@
       #{borState,jdbcType=VARCHAR}, #{borAdmincode,jdbcType=VARCHAR}, #{borAdminname,jdbcType=VARCHAR},
       #{borReason,jdbcType=LONGVARCHAR})
   </insert>
-  <delete id="delete" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+  <delete id="deleteReserve" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
     delete from bor_info
     where bor_code = #{borCode,jdbcType=VARCHAR}
   </delete>
-  <update id="update" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
+  <update id="updateReserve" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
     update bor_info
     <set >
       <if test="borCode != null" >
@@ -266,7 +266,7 @@
     </set>
     where bor_code = #{borCode,jdbcType=VARCHAR}
   </update>
-  <select id="getReserveInfo" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+  <select id="getReserve" resultMap="ResultMapWithBLOBs" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
     select
     <include refid="Base_Column_List" />
     ,
