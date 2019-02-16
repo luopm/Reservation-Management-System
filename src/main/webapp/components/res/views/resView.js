@@ -33,6 +33,16 @@ define(['hbs!../template/res.html',
                     template: '<li><a href="#">test</a></li>'
                 });
 
+                // that.$("#resCustodian").combobox({
+                //     placeholder: 'Select res type',
+                //     dataTextField: 'name',
+                //     dataValueField: 'value',
+                //     dataSource: [
+                //         {name: '可外借', value: 1},
+                //         {name: '不外借', value: 0}
+                //     ],
+                //     template: '<li><a href="#">test</a></li>'
+                // });
 
                 // 修改、显示物品信息时引用此页面
                 if (that.options.resCode){
@@ -54,7 +64,8 @@ define(['hbs!../template/res.html',
                 var that = this;
                 if (!that.options.userAccount){
                     var param = that.$('#resFormInfo').form().form("value");
-                    // param.resEnableDate = new Date(param.resEnableDate);
+                    param.resEnableDate = new Date(param.resEnableDate);
+                    param.resState = "待确认";//添加物品默认待确认；在库、借出、报废；
                     $.blockUI({message:"请稍后"});
                     resAction.addRes(param, function (result) {
                         $.unblockUI();

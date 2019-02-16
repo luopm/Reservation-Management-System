@@ -90,8 +90,10 @@ public class ResService {
      * pageNum 开始页数
      * pageSize 每页显示的数据条数
      * */
-    public ResponseUtil getResList(int pageNum, int pageSize, Res res) {
+    public ResponseUtil getResList(int pageNum, int pageSize, Integer resTypecode) {
         ResponseUtil responseUtil = new ResponseUtil();
+        Res res = new Res();
+        if (resTypecode != null) res.setResTypecode(resTypecode);
         try {
             //将参数传给这个方法就可以实现物理分页了，非常简单。
             PageHelper.startPage(pageNum, pageSize);

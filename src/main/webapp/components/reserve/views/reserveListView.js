@@ -70,13 +70,17 @@ define(['hbs!../template/reserveList.html',
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'resName',     label:'物品名称',     width: 80, sortable: false},
-                                    {name:'resCode',     label:'物品编号',     width: 80, sortable: false},
-                                    {name:'userAccount', label:'借用人',       width: 80, sortable: false},
-                                    {name:'startDate',   label:'借用日期',     width: 80, sortable: false},
-                                    {name:'endDate',     label:'归还日期',     width: 80, sortable: false},
-                                    {name:'reserveReason',   label:'借用原因', width: 80, sortable: false},
-                                    {name:'userEmail',   label:'审批人',       width: 80, sortable: false}
+                                    {name:'borResname',     label:'物品名称',     width: 80, sortable: false},
+                                    {name:'borRescode',     label:'物品编号',     width: 80, sortable: false},
+                                    {name:'borUseraccount', label:'借用人账号',   width: 80, sortable: false, hidden:true},
+                                    {name:'borUsername',    label:'借用人',       width: 80, sortable: false},
+                                    {name:'borStartdate',   label:'借用日期',     width: 100, sortable: false},
+                                    {name:'borEnddate',     label:'预归还日期',   width: 100, sortable: false},
+                                    {name:'borReturndate',  label:'归还日期',     width: 100, sortable: false},
+                                    {name:'borReason',      label:'借用原因',     width: 80, sortable: false},
+                                    {name:'borState',       label:'借用状态',     width: 80, sortable: false},
+                                    {name:'borAdmincode',   label:'审批账号',     width: 80, sortable: false, hidden:true},
+                                    {name:'borAdminname',   label:'审批人',       width: 80, sortable: false}
                                 ]
                             });
                         } else{

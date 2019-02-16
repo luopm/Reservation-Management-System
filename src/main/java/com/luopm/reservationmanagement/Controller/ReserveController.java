@@ -20,27 +20,27 @@ public class ReserveController {
     private ReserveService reserveService;
 
     @ResponseBody
-    @RequestMapping(value = "/add" )
+    @RequestMapping(value = "/addReserve" )
     public Object add(Reserve reserve){
         return reserveService.add(reserve);
     }
     @ResponseBody
-    @RequestMapping(value = "/delete" )
+    @RequestMapping(value = "/deleteReserve" )
     public Object delete(Reserve reserve){
         return reserveService.delete(reserve);
     }
     @ResponseBody
-    @RequestMapping(value = "/update" )
+    @RequestMapping(value = "/updateReserve" )
     public Object update(Reserve reserve){
         return reserveService.update(reserve);
     }
     @ResponseBody
-    @RequestMapping(value = "/getReserveInfo" )
+    @RequestMapping(value = "/getReserve" )
     public Object getReserveInfo(Reserve reserve){
         return reserveService.getReserveInfo(reserve);
     }
     @ResponseBody
-    @RequestMapping(value = "/getAllReserve" )
+    @RequestMapping(value = "/getReserveList" )
     public Object getReserveList(
             @RequestParam(name="pageNum",required = false,defaultValue = "1")
                     int pageNum,

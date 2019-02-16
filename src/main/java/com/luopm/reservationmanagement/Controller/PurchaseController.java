@@ -18,27 +18,27 @@ public class PurchaseController {
     private PurchaseService purchaseService;
 
     @ResponseBody
-    @RequestMapping(value = "/add" )
+    @RequestMapping(value = "/addPurchase" )
     public Object add(Purchase purchase){
         return purchaseService.add(purchase);
     }
     @ResponseBody
-    @RequestMapping(value = "/delete" )
+    @RequestMapping(value = "/deletePurchase" )
     public Object delete(Purchase purchase){
         return purchaseService.delete(purchase);
     }
     @ResponseBody
-    @RequestMapping(value = "/update" )
+    @RequestMapping(value = "/updatePurchase" )
     public Object update(Purchase purchase){
         return purchaseService.update(purchase);
     }
     @ResponseBody
-    @RequestMapping(value = "/getInfo" )
+    @RequestMapping(value = "/getPurchase" )
     public Object getPurchaseInfo(Purchase purchase){
         return purchaseService.getInfo(purchase);
     }
     @ResponseBody
-    @RequestMapping(value = "/getList" )
+    @RequestMapping(value = "/getPurchaseList" )
     public Object getPurchaseList(
             @RequestParam(name="pageNum",required = false,defaultValue = "1")
                     int pageNum,

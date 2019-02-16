@@ -1,7 +1,7 @@
 package com.luopm.reservationmanagement.Model;
 
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -23,10 +23,8 @@ public class Res {
 
     private String resCustodiancode;
 
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date resEnabledate;
 
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date resScrapdate;
 
     private String resState;

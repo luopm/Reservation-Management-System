@@ -31,7 +31,12 @@ define(['hbs!../template/userManage.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keyword").keydown(function(event) {
+                that.$("#keywordAccount").keydown(function(event) {
+                    if (event.keyCode == "13") {
+                        that.searchUser();
+                    }
+                });
+                that.$("#keywordName").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchUser();
                     }
@@ -57,8 +62,11 @@ define(['hbs!../template/userManage.html',
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
 
-                if(that.$("#keyword").val() !=''){
-                    params.userName = that.$("#keyword").val();
+                if(that.$("#keywordName").val() !=''){
+                    params.userName = that.$("#keywordName").val();
+                }
+                if(that.$("#keywordAccount").val() !=''){
+                    params.userName = that.$("#keywordAccount").val();
                 }
                 $.blockUI({message: '请稍后'});
 

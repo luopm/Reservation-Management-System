@@ -5,8 +5,9 @@
  */
 define(['hbs!../template/resList.html',
         '../actions/resAction',
+        // 'components/reserve/actions/reserveAction'
     ],
-    function (tem, resAction, registerView) {
+    function (tem, resAction) {
         var ResListView = fish.View.extend({
             el:false,
             template:tem,
@@ -26,13 +27,18 @@ define(['hbs!../template/resList.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keyword").keydown(function(event) {
+                that.$("#keywordCode").keydown(function(event) {
+                    if (event.keyCode == "13") {
+                        that.searchAbleRes();
+                    }
+                });
+                that.$("#keywordUser").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchAbleRes();
                     }
                 });
             },
-            //查询用户
+            //查询物品
             searchAbleRes:function(){
                 var that = this;
                 //that.$('#projectList').grid("destroy");
@@ -51,10 +57,13 @@ define(['hbs!../template/resList.html',
                 var params = {};
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
-                params.res = {resTypecode:1};
+                params.resTypecode = 1;
 
-                if(that.$("#keyword").val() !=''){
-                    params.userName = that.$("#keyword").val();
+                if(that.$("#keywordCode").val() !=''){
+                    params.userName = that.$("#keywordCode").val();
+                }
+                if(that.$("#keywordUser").val() !=''){
+                    params.userName = that.$("#keywordUser").val();
                 }
                 $.blockUI({message: '请稍后'});
 
@@ -132,16 +141,26 @@ define(['hbs!../template/resList.html',
             reserve : function () {
                 var that = this;
                 var param = that.$('#ResAbleList').grid("getSelection");
-                $.blockUI({message: '请稍后'});
-                resAction.ableRes(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("生效成功");
-                        that.reloadAbleRes();
-                    }else{
-                        fish.error(result.resMsg);
+                var reserve = {
+                    borResname:param.resName,
+                    borRescode:param.resCode,
+                    borUseraccount:window.sessionStorage.getItem("User"),
+                    borUsername:window.sessionStorage.getItem("Name")
+                };
+                fish.popupView({
+                    url:"components/reserve/views/reserveView",
+                    viewOption:{reserve:reserve},
+                    width:"40%",
+                    callback: function (popup,view) {
+                    },
+                    close : function () {
+                        that.searchAbleRes();
                     }
-                })
+                }).then(function (view) {
+                    view.$(".borState").hide();
+                    view.$(".borStartdate").hide();
+                });
+
             }
 
         });

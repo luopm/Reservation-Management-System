@@ -80,8 +80,22 @@ define(['hbs!../template/resManage.html',
                                     {name:'resCode',     label:'物品编号',     width: 80, sortable: false, hidden:false},
                                     {name:'resStandard', label:'规格',         width: 80, sortable: false},
                                     {name:'resPrice',    label:'价格',         width: 80, sortable: false},
-                                    {name:'resLocation', label:'存放地',     width: 80, sortable: false},
-                                    {name:'resState',    label:'物品状态', width: 80, sortable: false}
+                                    {name:'resLocation', label:'存放地',       width: 80, sortable: false},
+                                    {name:'resState',    label:'物品状态',     width: 80, sortable: false},
+                                    {name:'resEnabledate',label:'采购日期',     width: 80, sortable: false},
+                                    {name:'resTypecode', label:'物品类型',     width: 80, sortable: false,
+                                        formatter: function (cellval, opts, rowdata, _act) {
+                                            var result = '';
+                                            switch (cellval) {
+                                                case 1 :
+                                                    result = "可外借";
+                                                    break;
+                                                case 0:
+                                                    result = "不外借";
+                                                    break;
+                                            }
+                                            return result;
+                                        }},
 
                                     // {name: 'createDate',   label: '创建日期', width: 80,       sortable: false,
                                     //     formatter: function(cellval, opts, rwdat, _act) {
@@ -226,8 +240,8 @@ define(['hbs!../template/resManage.html',
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
                 param.admin = window.sessionStorage.getItem("User");
-                param.resEnableDate = new Date().getTime();
-                param.resScrapdate = new Date().getTime();
+                //param.resEnableDate = new Date().getTime();
+                //param.resScrapdate = new Date().getTime();
                 $.blockUI({message: '请稍后'});
                 resAction.deleteRes(param, function (result) {
                     $.unblockUI();

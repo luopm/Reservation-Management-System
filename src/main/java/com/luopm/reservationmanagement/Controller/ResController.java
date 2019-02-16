@@ -24,10 +24,11 @@ public class ResController {
                     int pageNum,
             @RequestParam(name="pageSize",required = false,defaultValue = "10")
                     int pageSize,
-            @RequestParam(name="res",required = false)
-                    Res res
+            @RequestParam(name="resTypecode",required = false)
+                    Integer resTypecode
             ){
-        return resService.getResList(pageNum, pageSize, res);
+//        if (resTypecode == null)
+        return resService.getResList(pageNum, pageSize, resTypecode);
     }
     @ResponseBody
     @RequestMapping(value = "/ableRes" )

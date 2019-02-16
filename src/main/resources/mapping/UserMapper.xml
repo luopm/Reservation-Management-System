@@ -177,10 +177,7 @@
   <update id="updateUser" parameterType="com.luopm.reservationmanagement.Model.User" >
     update user_info
     <set >
-      <if test="userAccount != null" >
-        user_account = #{userAccount,jdbcType=VARCHAR},
-      </if>
-      <if test="userPassword != null" >
+      <if test="userPassword != (null || '')" >
         user_password = #{userPassword,jdbcType=VARCHAR},
       </if>
       <if test="userName != null" >

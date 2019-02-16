@@ -2,11 +2,11 @@ server:
   port: 8088
 
 spring:
-  mvc:
-      dateFormat: yyyy-MM-dd HH:mm:ss
-
-  jackson:
-      date-format: yyyy-MM-dd HH:mm:ss
+#  mvc:
+#      dateFormat: yyyy-MM-dd HH:mm:ss
+#
+#  jackson:
+#      date-format: yyyy-MM-dd HH:mm:ss
 
   datasource:
       name: test
