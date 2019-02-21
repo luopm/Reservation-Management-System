@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service("PurchaseService")
@@ -20,6 +21,7 @@ public class PurchaseService {
     @Transactional
     public ResponseUtil add(Purchase purchase){
         ResponseUtil responseUtil = new ResponseUtil();
+        purchase.setBuyCode(new Date().getTime() + ""); //获取当前毫秒数作为buyCode
         try {
             if (purchaseMapper.addPurchase(purchase) == 1){
                 Purchase purchaseAdd = purchaseMapper.getPurchase(purchase);

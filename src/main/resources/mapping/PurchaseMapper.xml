@@ -13,6 +13,8 @@
     <result column="buy_state" property="buyState" jdbcType="VARCHAR" />
     <result column="buy_date" property="buyDate" jdbcType="TIMESTAMP" />
     <result column="buy_applydate" property="buyApplydate" jdbcType="TIMESTAMP" />
+    <result column="buy_useraccount" property="buyUseraccount" jdbcType="VARCHAR" />
+    <result column="buy_username" property="buyUsername" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.luopm.reservationmanagement.Model.Purchase" extends="BaseResultMap" >
     <result column="buy_reason" property="buyReason" jdbcType="LONGVARCHAR" />
@@ -20,36 +22,12 @@
 
   <sql id="Base_Column_List" >
     buy_id, buy_code, buy_resname, buy_resstandard, buy_resprice, buy_way, buy_admincode,
-    buy_adminname, buy_state, buy_date, buy_applydate
+    buy_adminname, buy_state, buy_date, buy_applydate, buy_useraccount, buy_username
   </sql>
   <sql id="Blob_Column_List" >
     buy_reason
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from buy_info
-    where buy_id = #{buyId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from buy_info
-    where buy_id = #{buyId,jdbcType=INTEGER}
-  </delete>
 
-  <insert id="insert" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
-    insert into buy_info (buy_id, buy_code, buy_resname,
-      buy_resstandard, buy_resprice, buy_way,
-      buy_admincode, buy_adminname, buy_state,
-      buy_date, buy_applydate, buy_reason
-      )
-    values (#{buyId,jdbcType=INTEGER}, #{buyCode,jdbcType=VARCHAR}, #{buyResname,jdbcType=VARCHAR},
-      #{buyResstandard,jdbcType=VARCHAR}, #{buyResprice,jdbcType=DECIMAL}, #{buyWay,jdbcType=VARCHAR},
-      #{buyAdmincode,jdbcType=VARCHAR}, #{buyAdminname,jdbcType=VARCHAR}, #{buyState,jdbcType=VARCHAR},
-      #{buyDate,jdbcType=TIMESTAMP}, #{buyApplydate,jdbcType=TIMESTAMP}, #{buyReason,jdbcType=LONGVARCHAR}
-      )
-  </insert>
   <insert id="insertSelective" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
     insert into buy_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -199,15 +177,16 @@
   </update>
 
   <insert id="addPurchase" parameterType="com.luopm.reservationmanagement.Model.Purchase" >
-    insert into buy_info (buy_id, buy_code, buy_resname,
+  insert into buy_info (buy_id, buy_code, buy_resname,
       buy_resstandard, buy_resprice, buy_way,
       buy_admincode, buy_adminname, buy_state,
-      buy_date, buy_applydate, buy_reason
+      buy_date, buy_applydate, buy_useraccount, buy_username, buy_reason
       )
     values (#{buyId,jdbcType=INTEGER}, #{buyCode,jdbcType=VARCHAR}, #{buyResname,jdbcType=VARCHAR},
       #{buyResstandard,jdbcType=VARCHAR}, #{buyResprice,jdbcType=DECIMAL}, #{buyWay,jdbcType=VARCHAR},
       #{buyAdmincode,jdbcType=VARCHAR}, #{buyAdminname,jdbcType=VARCHAR}, #{buyState,jdbcType=VARCHAR},
-      #{buyDate,jdbcType=TIMESTAMP}, #{buyApplydate,jdbcType=TIMESTAMP}, #{buyReason,jdbcType=LONGVARCHAR}
+      #{buyDate,jdbcType=TIMESTAMP}, #{buyApplydate,jdbcType=TIMESTAMP}, #{buyUseraccount,jdbcType=VARCHAR},
+      #{buyUsername,jdbcType=VARCHAR}, #{buyReason,jdbcType=LONGVARCHAR}
       )
   </insert>
   <delete id="deletePurchase" parameterType="java.lang.String" >
@@ -246,6 +225,12 @@
       </if>
       <if test="buyApplydate != null" >
         buy_applydate = #{buyApplydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyUseraccount != null" >
+        buy_useraccount = #{buyUseraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="buyUsername != null" >
+        buy_username = #{buyUsername,jdbcType=VARCHAR},
       </if>
       <if test="buyReason != null" >
         buy_reason = #{buyReason,jdbcType=LONGVARCHAR},

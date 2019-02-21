@@ -32,3 +32,19 @@
 #home-off{
     margin: auto;
 }
+.form-group{
+    display: flex;
+    justify-content: flex-start;
+}
+.row{
+    /*display: flex;*/
+    /*justify-content: center;*/
+}
+.page-item{
+    display: flex;
+    justify-content: flex-start;
+}
+.page-item-group{
+    display: flex;
+    justify-content: space-between;
+}

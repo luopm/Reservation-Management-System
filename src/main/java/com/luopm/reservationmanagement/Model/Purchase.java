@@ -28,6 +28,10 @@ public class Purchase {
 
     private String buyReason;
 
+    private String buyUseraccount;
+
+    private String buyUsername;
+
     public Integer getBuyId() {
         return buyId;
     }
@@ -123,4 +127,14 @@ public class Purchase {
     public void setBuyReason(String buyReason) {
         this.buyReason = buyReason == null ? null : buyReason.trim();
     }
+
+    public String getBuyUseraccount(){return buyUseraccount;}
+
+    public void  setBuyUseraccount(String buyUseraccount){this.buyUseraccount = buyUseraccount == null ? null : buyUseraccount.trim();}
+
+    public String getBuyUsername(){return buyUsername;}
+
+    public void  setBuyUsername(String buyUsername){this.buyUsername = buyUsername == null ? null : buyUsername.trim();}
+
+
 }

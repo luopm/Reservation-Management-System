@@ -13,7 +13,10 @@ define(['hbs!../template/purchaseList.html',
             pageIndex:1,
             pageSize:10,
             events:{
-                'click #cancelPurchase':'cancelPurchase'
+                'click #cancelPurchase':'cancelPurchase',
+                'click #addPurchase':'addPurchase',
+                'click #OKPurchase' : 'OKPurchase',
+                'click #NOPurchase' : 'NOPurchase'
             },
             initialize: function () {
                 var that = this;
@@ -28,11 +31,19 @@ define(['hbs!../template/purchaseList.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keyword").keydown(function(event) {
+                that.$("#keywordCode").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchPurchase();
                     }
                 });
+                that.$("#keywordAccount").keydown(function(event) {
+                    if (event.keyCode == "13") {
+                        that.searchPurchase();
+                    }
+                });
+                that.$("#searchByAccount").click(function () {
+                    that.searchPurchase();
+                })
             },
             //查询项目
             searchPurchase:function(){
@@ -54,8 +65,11 @@ define(['hbs!../template/purchaseList.html',
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
 
-                if(that.$("#keyword").val() !=''){
-                    params.userName = that.$("#keyword").val();
+                if(that.$("#keywordCode").val() !=''){
+                    params.buyCode = that.$("#keywordCode").val();
+                }
+                if(that.$("#keywordAccount").val() !=''){
+                    params.buyUseraccount = that.$("#keywordAccount").val();
                 }
                 $.blockUI({message: '请稍后'});
 
@@ -70,12 +84,34 @@ define(['hbs!../template/purchaseList.html',
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'BuyResName',      label:'物品名称',     width: 80, sortable: false},
-                                    {name:'BuyResPrice',     label:'物品价格',     width: 80, sortable: false},
-                                    {name:'BuyResStandard',  label:'物品规格',     width: 80, sortable: false},
-                                    {name:'BuyUserAccount',  label:'申购人',       width: 80, sortable: false},
-                                    {name:'BuyReason',       label:'申购原因',     width: 80, sortable: false}
-                                ]
+                                    {name:'buyCode',         label:'采购编号',     width: 80, sortable: false},
+                                    {name:'buyResname',      label:'物品名称',     width: 80, sortable: false},
+                                    {name:'buyResprice',     label:'物品价格',     width: 80, sortable: false},
+                                    {name:'buyResstandard',  label:'物品规格',     width: 80, sortable: false},
+                                    {name:'buyWay',          label:'购买途径',     width: 80, sortable: false},
+                                    {name:'buyUseraccount',  label:'申购用户',     width: 80, sortable: false, hidden:true},
+                                    {name:'buyUsername',     label:'申购人',       width: 80, sortable: false},
+                                    {name:'buyState',        label:'采购状态',     width: 80, sortable: false},
+                                    {name:'buyReason',       label:'申购原因',     width: 80, sortable: false},
+                                    {name:'buyApplydate',    label:'申购日期',     width: 80, sortable: false},
+                                    {name:'buyDate',         label:'购买日期',     width: 80, sortable: false},
+                                ],
+                                onCellSelect : function( e, rowid, iCol, cellcontent ){
+                                    if (iCol == 0 && cellcontent != null){
+                                        fish.popupView({
+                                            url:"components/purchase/views/purchaseView",
+                                            viewOption:{buyCode:cellcontent},
+                                            width:"40%",
+                                            callback: function (popup,view) {
+                                            },
+                                            close : function () {
+                                                // that.searchRes();
+                                            }
+                                        }).then(function (view) {
+                                            view.$("#savePurchase").hide();
+                                        });
+                                    }
+                                }
                             });
                         } else{
                             that.$("#purchaseList").append('<div style="text-align:center;"><img src="marketing/css/base/images/none-1.png"'
@@ -113,19 +149,86 @@ define(['hbs!../template/purchaseList.html',
                 if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
                     that.initPurchaseGrid(pageInfo.pages,pageInfo.pageSize);
             },
+            // 新增采购
+            addPurchase : function () {
+                var that = this;
+                var user = {
+                    buyUseraccount:window.sessionStorage.getItem("User"),
+                    buyUsername:window.sessionStorage.getItem("Name")
+                };
+                fish.popupView({
+                    url:"components/purchase/views/purchaseView",
+                    viewOption:{user:user},
+                    width:"40%",
+                    callback: function (popup,view) {
+                    },
+                    close : function () {
+                        that.searchPurchase();
+                    }
+                }).then(function (view) {
+                    // view.$("#saveProject").hide();
+                });
+            },
             // 取消申购
             cancelPurchase : function () {
                 var that = this;
-                var param = that.$('#purchaseList').grid("getSelection");
-                if (param == {}) {
+                var selRow = that.$('#purchaseList').grid("getSelection");
+                if (selRow.buyCode == undefined ) {
                     fish.info("请选中申购记录");
                     return ;
                 }
+                var param = {buyCode : selRow.buyCode};
                 $.blockUI({message:"请稍后"});
                 purchaseAction.cancelPurchase(param, function (result) {
                     $.unblockUI();
                     if (result && result.resultCode == 1){
                         fish.success("取消申购成功！");
+                        that.reloadPurchase();
+                    }else{
+                        fish.error(result.resultMsg);
+                    }
+                })
+            },
+            // 同意申购
+            OKPurchase : function () {
+                var that = this;
+                var selRow = that.$('#purchaseList').grid("getSelection");
+                if (selRow.buyCode == undefined ) {
+                    fish.info("请选中申购记录");
+                    return ;
+                }
+                var param = {buyCode : selRow.buyCode};
+                param.buyState = "同意申购";
+                param.buyAdmincode = window.sessionStorage.getItem("User");
+                param.buyAdminname = window.sessionStorage.getItem("Name");
+                $.blockUI({message:"请稍后"});
+                purchaseAction.updatePurchase(param, function (result) {
+                    $.unblockUI();
+                    if (result && result.resultCode == 1){
+                        fish.success("同意申购！");
+                        that.reloadPurchase();
+                    }else{
+                        fish.error(result.resultMsg);
+                    }
+                })
+            },
+            // 拒绝申购
+            NOPurchase : function () {
+                var that = this;
+                var selRow = that.$('#purchaseList').grid("getSelection");
+                if (selRow.buyCode == undefined ) {
+                    fish.info("请选中申购记录");
+                    return ;
+                }
+                var param = {buyCode : selRow.buyCode};
+                param.buyState = "拒绝采购";
+                param.buyAdmincode = window.sessionStorage.getItem("User");
+                param.buyAdminname = window.sessionStorage.getItem("Name");
+                $.blockUI({message:"请稍后"});
+                purchaseAction.updatePurchase(param, function (result) {
+                    $.unblockUI();
+                    if (result && result.resultCode == 1){
+                        fish.success("拒绝申购！");
                         that.reloadPurchase();
                     }else{
                         fish.error(result.resultMsg);

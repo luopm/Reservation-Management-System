@@ -11,7 +11,7 @@ define(function () {
                return result;
            },
            // 转借物品
-           applyLend : function (params, success) {
+           updateReserve : function (params, success) {
                var result = fish.ajax({type:"POST",url:'ReserveController/updateReserve',data:params,success:success});
                return result;
            },

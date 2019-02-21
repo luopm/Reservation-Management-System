@@ -7,16 +7,25 @@
                         <button id="addReturn" class="btn btn-default" style="margin-top: -3px;margin-left: -10px;border:none"><i class="iconfont icon-return-a"></i></button>
                         <label class="zte-title" id="ResPurchaseList" style="margin-left: 5px;font-size:1.2em">物品申购列表</label>
                         <div class="action-button zte-clear">
+                            <button type="button" class="btn" id="addPurchase">
+                                <span class="glyphicon zte-iconfont icon-plus"></span>新增申购
+                            </button>
                             <button type="button" class="btn" id="cancelPurchase">
-                                <span class="glyphicon zte-iconfont icon-add-a"></span>取消申购
+                                <span class="  zte-iconfont icon-remove"></span>取消申购
+                            </button>
+                            <button type="button" class="btn" id="OKPurchase">
+                                <span class="  zte-iconfont icon-remove"></span>同意申购
+                            </button>
+                            <button type="button" class="btn" id="NOPurchase">
+                                <span class="  zte-iconfont icon-remove"></span>拒绝申购
                             </button>
                         </div>
                         <div class="zte-search-wrap zte-clear">
-                            <div class="dropdown zte-fl">
+                            <div class="page-item">
                                 <!--<i class="zte-iconfont icon-search-a" id="searchByUserCode"></i>-->
                                 <input name="keyword" id="keywordCode" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入物品编号查询">
                                 <input name="keyword" id="keywordAccount" style="width: 200px;" class="form-control" placeholder="输入用户名查询">
-                                <i class="zte-iconfont icon-search-a" id="searchByAccount"></i>
+                                <i class="zte-iconfont glyphicon-search" id="searchByAccount"></i>
                             </div>
                         </div>
                     </div>

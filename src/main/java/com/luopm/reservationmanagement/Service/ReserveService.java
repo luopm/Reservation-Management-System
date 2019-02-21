@@ -21,7 +21,7 @@ public class ReserveService {
     @Transactional
     public ResponseUtil add(Reserve reserve){
         ResponseUtil responseUtil = new ResponseUtil();
-        reserve.setBorStartdate(new Date());
+        reserve.setBorCode(new Date().getTime() + ""); //获取当前毫秒数作为reserveCode
         try {
             if (reserveMapper.addReserve(reserve) >= 1){
                 Reserve reserveAdd = reserveMapper.getReserve(reserve);
@@ -59,7 +59,7 @@ public class ReserveService {
                 Reserve reserveUpdate = reserveMapper.getReserve(reserve);
                 responseUtil.setResponseUtil(1, "update reserve success!",
                         reserveUpdate, null);
-            }else responseUtil.setResponseUtil(1, "update reserve failed!",
+            }else responseUtil.setResponseUtil(0, "update reserve failed!",
                     null, null);
         }catch (Exception e){
             responseUtil.setResultMsg(e.getMessage());
@@ -73,7 +73,7 @@ public class ReserveService {
             if (reserveInfo != null){
                 responseUtil.setResponseUtil(1, "get reserveInfo success!",
                         reserveInfo, null);
-            }else responseUtil.setResponseUtil(1, "get reserveInfo failed!",
+            }else responseUtil.setResponseUtil(0, "get reserveInfo failed!",
                     null, null);
         }catch (Exception e){
             responseUtil.setResultMsg(e.getMessage());

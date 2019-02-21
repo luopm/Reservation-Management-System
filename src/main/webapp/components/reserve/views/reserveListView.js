@@ -5,15 +5,16 @@
  */
 define(['hbs!../template/reserveList.html',
         '../actions/reserveAction',
-        // '../../register/views/registerView'
     ],
-    function (tem, reserveAction, registerView) {
+    function (tem, reserveAction) {
         var ReserveListView = fish.View.extend({
             el:false,
             template:tem,
             events:{
                 'click #returnRes':'returnRes',
-                'click #applyLend':'applyLend'
+                'click #applyLend':'applyLend',
+                'click #checkReserveOK':'checkReserveOK',
+                'click #checkReserveNO' : 'checkReserveNO'
             },
             initialize: function () {
                 var that = this;
@@ -28,11 +29,19 @@ define(['hbs!../template/reserveList.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keyword").keydown(function(event) {
+                that.$("#keywordCode").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchProject();
                     }
                 });
+                that.$("#keywordAccount").keydown(function(event) {
+                    if (event.keyCode == "13") {
+                        that.searchProject();
+                    }
+                });
+                that.$("#searchByAccount").click(function () {
+                    that.searchProject();
+                })
             },
             //查询项目
             searchProject:function(){
@@ -54,8 +63,11 @@ define(['hbs!../template/reserveList.html',
                 params.pageIndex = pageNum;
                 params.pageSize = pageSize;
 
-                if(that.$("#keyword").val() !=''){
-                    params.userName = that.$("#keyword").val();
+                if(that.$("#keywordCode").val() !=''){
+                    params.borRescode = that.$("#keywordCode").val();
+                }
+                if(that.$("#keywordAccount").val() !=''){
+                    params.borUseraccount = that.$("#keywordAccount").val();
                 }
                 $.blockUI({message: '请稍后'});
 
@@ -70,9 +82,10 @@ define(['hbs!../template/reserveList.html',
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
+                                    {name:'borCode',        label:'借用编号',     width: 80, sortable: false, hidden:false},
                                     {name:'borResname',     label:'物品名称',     width: 80, sortable: false},
                                     {name:'borRescode',     label:'物品编号',     width: 80, sortable: false},
-                                    {name:'borUseraccount', label:'借用人账号',   width: 80, sortable: false, hidden:true},
+                                    {name:'borUseraccount', label:'借用账号',    width: 80, sortable: false, hidden:true},
                                     {name:'borUsername',    label:'借用人',       width: 80, sortable: false},
                                     {name:'borStartdate',   label:'借用日期',     width: 100, sortable: false},
                                     {name:'borEnddate',     label:'预归还日期',   width: 100, sortable: false},
@@ -81,7 +94,23 @@ define(['hbs!../template/reserveList.html',
                                     {name:'borState',       label:'借用状态',     width: 80, sortable: false},
                                     {name:'borAdmincode',   label:'审批账号',     width: 80, sortable: false, hidden:true},
                                     {name:'borAdminname',   label:'审批人',       width: 80, sortable: false}
-                                ]
+                                ],
+                                onCellSelect : function( e, rowid, iCol, cellcontent ){
+                                    if (iCol == 0 && cellcontent != null){
+                                        fish.popupView({
+                                            url:"components/reserve/views/reserveView",
+                                            viewOption:{borCode:cellcontent},
+                                            width:"40%",
+                                            callback: function (popup,view) {
+                                            },
+                                            close : function () {
+                                                // that.searchRes();
+                                            }
+                                        }).then(function (view) {
+                                            view.$("#saveReserve").hide();
+                                        });
+                                    }
+                                }
                             });
                         } else{
                             that.$("#reserveHistoryList").append('<div style="text-align:center;"><img src="marketing/css/base/images/none-1.png"'
@@ -122,11 +151,13 @@ define(['hbs!../template/reserveList.html',
             // 归还物品
             returnRes : function () {
                 var that = this;
-                var param = that.$('#reserveHistoryList').grid("getSelection");
-                if (param == {}) {
-                    fish.info("请选中物品");
+                var selRow = that.$('#reserveHistoryList').grid("getSelection");
+                if (selRow == {} || selRow == null) {
+                    fish.info("请选中需要归还的物品");
                     return ;
-                };
+                }
+                var param = {borCode: selRow.borCode};
+                param.borReturndate = new Date();
                 $.blockUI({message:"请稍后"});
                 reserveAction.returnRes(param, function (result) {
                     $.unblockUI();
@@ -141,22 +172,66 @@ define(['hbs!../template/reserveList.html',
             // 申请转借物品
             applyLend : function () {
                 var that = this;
-                var param = that.$('#reserveHistoryList').grid("getSelection");
-                if (param == {}) {
-                    fish.info("请选中物品");
+                var selRow = that.$('#reserveHistoryList').grid("getSelection");
+                if (selRow == {} || selRow == null) {
+                    fish.info("请选中需要归还的物品");
                     return ;
-                }else param.applyUser = window.localStorage.getItem("userAccount");
+                }
+                var param = {borCode: selRow.borCode};
+                param.borUseraccount = window.sessionStorage.getItem("User");
+                param.borUsername = window.sessionStorage.getItem("Name");
                 $.blockUI({message:"请稍后"});
-                reserveAction.applyLend(param, function (result) {
+                reserveAction.updateReserve(param, function (result) {
                     $.unblockUI();
                     if (result && result.resultCode == 1){
                         fish.success("申请转借成功！");
                         that.reloadProjects();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
+                    }else fish.error(result.resultMsg);
 
+                })
+            },
+            // 借用审核
+            checkReserveOK : function () {
+                var that = this;
+                var selRow = that.$('#reserveHistoryList').grid("getSelection");
+                if (selRow == {} || selRow == null) {
+                    fish.info("请选中需要归还的物品");
+                    return ;
+                }
+                var param = {borCode: selRow.borCode};
+                param.borState = "审核通过";
+                //添加审核管理信息
+                param.borAdmincode = window.sessionStorage.getItem("User");
+                param.borAdminname = window.sessionStorage.getItem("Name");
+                $.blockUI({message:"请稍后"});
+                reserveAction.updateReserve(param, function (result) {
+                    $.unblockUI();
+                    if (result && result.resultCode == 1){
+                        fish.success("审核成功！");
+                        that.reloadProjects();
+                    }else fish.error(result.resultMsg);
+                })
+            },
+            checkReserveNO : function () {
+                var that = this;
+                var selRow = that.$('#reserveHistoryList').grid("getSelection");
+                if (selRow == {} || selRow == null) {
+                    fish.info("请选中需要归还的物品");
+                    return ;
+                }
+                var param = {borCode: selRow.borCode};
+                //添加审核管理信息
+                param.borAdmincode = window.sessionStorage.getItem("User");
+                param.borAdminname = window.sessionStorage.getItem("Name");
+                param.borState = "审核未通过";
+                $.blockUI({message:"请稍后"});
+                reserveAction.updateReserve(param, function (result) {
+                    $.unblockUI();
+                    if (result && result.resultCode == 1){
+                        fish.success("审核成功！");
+                        that.reloadProjects();
+                    }else fish.error(result.resultMsg);
+                })
             }
         });
         return ReserveListView;

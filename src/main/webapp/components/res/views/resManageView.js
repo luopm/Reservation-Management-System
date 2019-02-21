@@ -31,11 +31,19 @@ define(['hbs!../template/resManage.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keyword").keydown(function(event) {
+                that.$("#keywordCode").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchRes();
                     }
                 });
+                that.$("#keywordState").keydown(function(event) {
+                    if (event.keyCode == "13") {
+                        that.searchRes();
+                    }
+                });
+                that.$("#searchByState").click(function () {
+                    that.searchRes();
+                })
             },
             //查询用户
             searchRes:function(){
@@ -60,8 +68,11 @@ define(['hbs!../template/resManage.html',
                 //     {resName:"car", resCode:10000, resStandard:"middle car", resPrice:"$10000", resLocation:"warehouse", resState:1},
                 //     {resName:"car", resCode:10001, resStandard:"big car", resPrice:"$20000", resLocation:"warehouse", resState:1}
                 // ];
-                if(that.$("#keyword").val() !=''){
-                    params.userName = that.$("#keyword").val();
+                if(that.$("#keywordCode").val() !=''){
+                    params.resCode = that.$("#keywordCode").val();
+                }
+                if(that.$("#keywordState").val() !=''){
+                    params.resState = that.$("#keywordState").val();
                 }
                 $.blockUI({message: '请稍后'});
 

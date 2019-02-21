@@ -20,17 +20,20 @@
                     </div>
                 </div>
                 <div class="zte-search-wrap zte-clear">
-                    <div class="dropdown zte-fl has-feedback">
-                        <!--<i class="zte-iconfont icon-search-a" id="searchByUserCode"></i>-->
-                        <input name="keyword" id="keywordCode" class="form-control" style="width: 200px;margin-right: 10px;"  placeholder="输入物品编号查询">
-                        <input name="keyword" id="keywordState" class="form-control" style="width: 200px;"  placeholder="输入物品状态查询">
-                        <i class="glyphicon-search" id="searchByState"></i>
-                        <button type="button" class="btn btn-primary " id="addRes">
-                            <span class="glyphicon zte-iconfont icon-add-a"></span>录入物品
-                        </button>
-                        <button type="button" class="btn btn-primary " id="deleteRes">
-                            <span class="glyphicon zte-iconfont icon-add-a"></span>删除物品
-                        </button>
+                    <div class="page-item-group">
+                        <div class="page-item has-feedback">
+                            <input name="keyword" id="keywordCode" class="form-control" style="width: 200px;margin-right: 10px;"  placeholder="输入物品编号查询">
+                            <input name="keyword" id="keywordState" class="form-control" style="width: 200px;"  placeholder="输入物品状态查询">
+                            <i class="glyphicon glyphicon-search has-feedback" id="searchByState"></i>
+                        </div>
+                        <div class="page-item">
+                            <button type="button" class="btn btn-primary " id="addRes">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>录入物品
+                            </button>
+                            <button type="button" class="btn btn-primary " id="deleteRes">
+                                <span class="glyphicon zte-iconfont icon-add-a"></span>删除物品
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

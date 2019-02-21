@@ -16,7 +16,18 @@ define(['hbs!../template/Login.html',
                 'click #registerBtn':'register',
                 'click .findPasswordBtn':'findPassword'
             },
-            initialize: function () {
+            initialize: function () {},
+            afterRender : function () {
+                var that = this;
+                that.initPageEvents();
+            },
+            initPageEvents : function () {
+                var that = this;
+                that.$("#loginPassword").keydown(function(event) {
+                    if (event.keyCode == "13") {
+                        that.login();
+                    }
+                });
             },
             // 登录
             login : function () {

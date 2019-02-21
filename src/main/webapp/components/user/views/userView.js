@@ -19,17 +19,17 @@ define(['hbs!../template/user.html',
 
             },
             afterRender : function () {
-
+                var that = this;
                 // 修改、显示信息时引用此页面
                 if (that.options.userAccount){
-                    that.getUserInfo(that.options.userAccount);
+                    that.getUserInfo({userAccount:that.options.userAccount});
                 }
             },
             getUserInfo : function (param) {
                 var that = this;
                 UserAction.getUserInfo(param, function (result) {
                     if (result && result.resultCode == 1) {
-                        that.$('#userFormInfo').form(result.resultObject)
+                        that.$('#userFormInfo').form().form('value',result.resultObject)
                     }
                 })
                 

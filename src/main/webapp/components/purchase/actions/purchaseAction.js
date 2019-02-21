@@ -12,12 +12,17 @@ define(function () {
             },
             // 取消申购
             cancelPurchase: function(params, success) {
-                var result = fish.ajax({type:"POST",url:'PurchaseController/updatePurchase',data:params,success:success});
+                var result = fish.ajax({type:"POST",url:'PurchaseController/deletePurchase',data:params,success:success});
                 return result;
             },
             // 申购列表
             getPurchaseList: function(params, success) {
                 var result = fish.ajax({type:"POST",url:'PurchaseController/getPurchaseList',data:params,success:success});
+                return result;
+            },
+            // 更新申购
+            updatePurchase: function(params, success) {
+                var result = fish.ajax({type:"POST",url:'PurchaseController/updatePurchase',data:params,success:success});
                 return result;
             }
         }

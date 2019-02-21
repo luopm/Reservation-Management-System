@@ -41,6 +41,9 @@ define(['hbs!../template/userManage.html',
                         that.searchUser();
                     }
                 });
+                that.$("#searchByAccount").click(function () {
+                    that.searchUser();
+                })
             },
             //查询用户
             searchUser:function(){
@@ -66,7 +69,7 @@ define(['hbs!../template/userManage.html',
                     params.userName = that.$("#keywordName").val();
                 }
                 if(that.$("#keywordAccount").val() !=''){
-                    params.userName = that.$("#keywordAccount").val();
+                    params.userAccount = that.$("#keywordAccount").val();
                 }
                 $.blockUI({message: '请稍后'});
 
@@ -133,11 +136,10 @@ define(['hbs!../template/userManage.html',
                                     // }
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
-                                    console.log(rowid+" "+ iCol+" " +cellcontent);
                                     if (iCol == 0 && cellcontent != null){
                                         fish.popupView({
                                             url:"components/user/views/userView",
-                                            viewOption:{resCode:cellcontent},
+                                            viewOption:{userAccount:cellcontent},
                                             width:"40%",
                                             callback: function (popup,view) {
                                             },

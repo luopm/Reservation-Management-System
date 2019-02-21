@@ -17,15 +17,26 @@ define(['hbs!../template/reserve.html',
             },
             afterRender : function () {
                 var that = this;
-                if (that.options.reserve != undefined){ //初始化用户和物品信息
+                if (that.options.reserve != undefined){ //新增:初始化用户和物品信息
                     that.$('#reserveFormInfo').form().form("value",that.options.reserve);
-                };
+                }else if (that.options.borCode != undefined){ //查看详情:初始化预约信息
+                    that.getReserveInfo(that.options.borCode);
+                }
                 that.$("#borStartdate").datetimepicker({
                     buttonIcon: ''
                 });
                 that.$("#borEnddate").datetimepicker({
                     buttonIcon: ''
                 });
+            },
+            getReserveInfo : function (borCode) {
+                var that = this;
+                var param = {borCode:borCode};
+                reserveAction.getReserve(param, function (result) {
+                    if (result.resultCode == 1){
+                        that.$('#reserveFormInfo').form().form("value",result.resultObject);
+                    }else fish.error(result.resultMsg);
+                })
             },
             saveReserve : function () {
                 var that = this;
