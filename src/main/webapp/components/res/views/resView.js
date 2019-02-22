@@ -19,7 +19,7 @@ define(['hbs!../template/res.html',
             afterRender : function () {
                 var that = this;
 
-                that.$("#resEnableDate").datetimepicker({
+                that.$("#resEnabledate").datetimepicker({
                     buttonIcon: ''
                 });
                 that.$("#resTypecode").combobox({
@@ -64,7 +64,7 @@ define(['hbs!../template/res.html',
                 var that = this;
                 if (!that.options.userAccount){
                     var param = that.$('#resFormInfo').form().form("value");
-                    param.resEnableDate = new Date(param.resEnableDate);
+                    param.resEnabledate = new Date(param.resEnabledate);
                     param.resState = "待确认";//添加物品默认待确认；在库、借出、报废；
                     $.blockUI({message:"请稍后"});
                     resAction.addRes(param, function (result) {

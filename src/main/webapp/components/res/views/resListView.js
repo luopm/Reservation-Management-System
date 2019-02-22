@@ -54,23 +54,22 @@ define(['hbs!../template/resList.html',
             //初始化用户列表
             initAbleResListGrid:function(pageNum,pageSize){
                 var that = this;
-                var params = {};
-                params.pageIndex = pageNum;
-                params.pageSize = pageSize;
-                params.resTypecode = 1;
-
+                var res = {},page = {};
+                page.pageSize = (pageSize == null ? 10 : pageSize);
+                page.pageIndex = (pageNum == null ? 1 : pageNum);
+                res.resTypecode = 1;
                 if(that.$("#keywordCode").val() !=''){
-                    params.userName = that.$("#keywordCode").val();
+                    res.resCode = that.$("#keywordCode").val();
                 }
-                if(that.$("#keywordUser").val() !=''){
-                    params.userName = that.$("#keywordUser").val();
+                if(that.$("#keywordState").val() !=''){
+                    res.resState = that.$("#keywordState").val();
                 }
                 $.blockUI({message: '请稍后'});
-
+                var params = {res:res,page:page};
                 that.$("#ResAbleList").html("");
                 that.$("#ResAbleList").grid("destroy");
                 //初始化grid
-                resAction.getResList(params, function (result){
+                resAction.getResList(JSON.stringify(params), function (result){
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list != ""  ){

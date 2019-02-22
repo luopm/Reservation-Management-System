@@ -1,15 +1,17 @@
 package com.luopm.reservationmanagement.Controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.luopm.reservationmanagement.Model.Reserve;
-import com.luopm.reservationmanagement.Model.User;
 import com.luopm.reservationmanagement.Service.ReserveService;
-import com.luopm.reservationmanagement.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 
 @Controller
@@ -41,12 +43,11 @@ public class ReserveController {
     }
     @ResponseBody
     @RequestMapping(value = "/getReserveList" )
-    public Object getReserveList(
-            @RequestParam(name="pageNum",required = false,defaultValue = "1")
-                    int pageNum,
-            @RequestParam(name="pageSize",required = false,defaultValue = "10")
-                    int pageSize){
-        return reserveService.getReserveList(pageNum, pageSize);
+    public Object getReserveList(@RequestBody Map<String,Object> map){
+            Reserve reserve = JSON.parseObject(JSON.toJSONString(map.get("reserve")),Reserve.class);
+            int pageNum = JSON.parseObject(JSON.toJSONString(map.get("page"))).getIntValue("pageIndex");
+            int pageSize = JSON.parseObject(JSON.toJSONString(map.get("page"))).getIntValue("pageSize");
+        return reserveService.getReserveList(pageNum, pageSize, reserve);
     }
 
 }

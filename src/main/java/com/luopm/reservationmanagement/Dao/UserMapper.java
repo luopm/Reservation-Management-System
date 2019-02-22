@@ -29,7 +29,7 @@ public interface UserMapper {
 
     User getUser(User user);
 
-    List<User> getUserList();
+    List<User> getUserList(User user);
 
     User getLogin(User user);
 }

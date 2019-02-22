@@ -61,22 +61,21 @@ define(['hbs!../template/purchaseList.html',
             //初始化预约历史列表
             initPurchaseGrid:function(pageNum,pageSize){
                 var that = this;
-                var params = {};
-                params.pageIndex = pageNum;
-                params.pageSize = pageSize;
-
+                var purchase = {},page = {};
+                page.pageSize = (pageSize == null ? 10 : pageSize);
+                page.pageIndex = (pageNum == null ? 1 : pageNum);
                 if(that.$("#keywordCode").val() !=''){
-                    params.buyCode = that.$("#keywordCode").val();
+                    purchase.buyCode = that.$("#keywordCode").val();
                 }
                 if(that.$("#keywordAccount").val() !=''){
-                    params.buyUseraccount = that.$("#keywordAccount").val();
+                    purchase.buyUseraccount = that.$("#keywordAccount").val();
                 }
                 $.blockUI({message: '请稍后'});
-
+                var params = {purchase:purchase,page:page};
                 that.$("#purchaseList").html("");
                 that.$("#purchaseList").grid("destroy");
                 //初始化grid
-                purchaseAction.getPurchaseList(params, function (result){
+                purchaseAction.getPurchaseList(JSON.stringify(params), function (result){
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list != ""  ){

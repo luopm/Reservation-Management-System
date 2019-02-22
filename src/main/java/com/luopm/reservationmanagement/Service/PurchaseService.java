@@ -82,12 +82,12 @@ public class PurchaseService {
         return responseUtil;
     }
 
-    public ResponseUtil getList(int pageNum, int pageSize){
+    public ResponseUtil getList(int pageNum, int pageSize, Purchase purchase){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
             //将参数传给这个方法就可以实现物理分页了，非常简单。
             PageHelper.startPage(pageNum, pageSize);
-            List<Purchase> purchasesList = purchaseMapper.getPurchaseList();
+            List<Purchase> purchasesList = purchaseMapper.getPurchaseList(purchase);
             PageInfo result = new PageInfo(purchasesList);
             responseUtil.setResponseUtil(1, "get purchaseList success!",
                     result,null);//获取All用户详情

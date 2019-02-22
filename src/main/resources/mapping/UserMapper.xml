@@ -220,5 +220,36 @@
     select
     <include refid="UserInfo_Column_List" />
     from user_info
+    where 1 = 1
+    <if test="userAccount != null" >
+      <bind name="userAccountLike" value="'%' + userAccount + '%'" />
+      and user_account like #{userAccountLike}
+    </if>
+    <if test="userName != null" >
+      <bind name="userNameLike" value="'%' + userName + '%'" />
+      and user_name like #{userNameLike,jdbcType=VARCHAR}
+    </if>
+    <if test="userFace != null" >
+      <bind name="userFaceLike" value="'%' + userFace + '%'" />
+      and user_face like #{userFaceLike,jdbcType=VARCHAR}
+    </if>
+    <if test="userIdcard != null" >
+      <bind name="userIdcardLike" value="'%' + userIdcard + '%'" />
+      and user_idcard like #{userIdcardLike,jdbcType=VARCHAR}
+    </if>
+    <if test="userType != null" >
+      and user_type = #{userType,jdbcType=INTEGER}
+    </if>
+    <if test="userPhone != null" >
+      <bind name="userPhoneLike" value="'%' + userPhone + '%'" />
+      and user_phone like #{userPhoneLike}
+    </if>
+    <if test="userEmail != null" >
+      <bind name="userEmailLike" value="'%' + userEmail + '%'" />
+      and user_email like #{userEmailLike,jdbcType=VARCHAR}
+    </if>
+    <if test="userDisable != null" >
+      and user_disable = #{userDisable,jdbcType=INTEGER}
+    </if>
   </select>
 </mapper>

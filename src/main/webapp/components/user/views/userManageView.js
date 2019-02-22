@@ -61,22 +61,21 @@ define(['hbs!../template/userManage.html',
             //初始化用户列表
             initUserGrid:function(pageNum,pageSize){
                 var that = this;
-                var params = {};
-                params.pageIndex = pageNum;
-                params.pageSize = pageSize;
-
+                var user = {},page = {};
+                page.pageSize = (pageSize == null ? 10 : pageSize);
+                page.pageIndex = (pageNum == null ? 1 : pageNum);
                 if(that.$("#keywordName").val() !=''){
-                    params.userName = that.$("#keywordName").val();
+                    user.userName = that.$("#keywordName").val();
                 }
                 if(that.$("#keywordAccount").val() !=''){
-                    params.userAccount = that.$("#keywordAccount").val();
+                    user.userAccount = that.$("#keywordAccount").val();
                 }
                 $.blockUI({message: '请稍后'});
-
+                var params = {user:user,page:page};
                 that.$("#UserList").html("");
                 that.$("#UserList").grid("destroy");
                 //初始化grid
-                UserAction.getUserList(params,function (result){
+                UserAction.getUserList(JSON.stringify(params),function (result){
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list != ""  ){

@@ -17,7 +17,7 @@ define(function () {
             },
             // 申购列表
             getPurchaseList: function(params, success) {
-                var result = fish.ajax({type:"POST",url:'PurchaseController/getPurchaseList',data:params,success:success});
+                var result = fish.ajax({type:"POST",contentType:"application/json",url:'PurchaseController/getPurchaseList',data:params,success:success});
                 return result;
             },
             // 更新申购

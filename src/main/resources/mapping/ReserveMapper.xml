@@ -33,22 +33,7 @@
     from bor_info
     where bor_id = #{borId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from bor_info
-    where bor_id = #{borId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
-    insert into bor_info (bor_id, bor_code, bor_rescode, 
-      bor_resname, bor_useraccount, bor_username, 
-      bor_startdate, bor_enddate, bor_returndate, 
-      bor_state, bor_admincode, bor_adminname, 
-      bor_reason)
-    values (#{borId,jdbcType=INTEGER}, #{borCode,jdbcType=VARCHAR}, #{borRescode,jdbcType=VARCHAR}, 
-      #{borResname,jdbcType=VARCHAR}, #{borUseraccount,jdbcType=VARCHAR}, #{borUsername,jdbcType=VARCHAR}, 
-      #{borStartdate,jdbcType=TIMESTAMP}, #{borEnddate,jdbcType=TIMESTAMP}, #{borReturndate,jdbcType=TIMESTAMP}, 
-      #{borState,jdbcType=VARCHAR}, #{borAdmincode,jdbcType=VARCHAR}, #{borAdminname,jdbcType=VARCHAR}, 
-      #{borReason,jdbcType=LONGVARCHAR})
-  </insert>
+
   <insert id="insertSelective" parameterType="com.luopm.reservationmanagement.Model.Reserve" >
     insert into bor_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -274,11 +259,57 @@
     from bor_info
     where bor_code = #{borCode,jdbcType=VARCHAR}
   </select>
-  <select id="getReserveList" resultMap="ResultMapWithBLOBs" >
+  <select id="getReserveList" resultMap="ResultMapWithBLOBs" parameterType="com.luopm.reservationmanagement.Model.Reserve"  >
     select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from bor_info
+    where 1 = 1
+    <if test="borCode != null" >
+      <bind name="borCodeLike" value="'%' + borCode + '%'" />
+      and bor_code like #{borCodeLike}
+    </if>
+    <if test="borRescode != null" >
+      <bind name="borRescodeLike" value="'%' + borRescode + '%'" />
+      and bor_rescode like #{borRescodeLike}
+    </if>
+    <if test="borResname != null" >
+      <bind name="borResnameLike" value="'%' + borResname + '%'" />
+      and bor_resname like #{borResname,jdbcType=VARCHAR}
+    </if>
+    <if test="borUseraccount != null" >
+      <bind name="borUseraccountLike" value="'%' + borUseraccount + '%'" />
+      and bor_useraccount like #{borUseraccountLike}
+    </if>
+    <if test="borUsername != null" >
+      <bind name="borUsernameLike" value="'%' + borUsername + '%'" />
+      and bor_username like #{borUsernameLike},
+    </if>
+    <if test="borStartdate != null" >
+      and bor_startdate >= #{borStartdate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="borEnddate != null" >
+      and bor_enddate >= #{borEnddate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="borReturndate != null" >
+      and bor_returndate > #{borReturndate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="borState != null" >
+      <bind name="borStateLike" value="'%' + borState + '%'" />
+      and bor_state like #{borStateLike}
+    </if>
+    <if test="borAdmincode != null" >
+      <bind name="borAdmincodeLike" value="'%' + borAdmincode + '%'" />
+      and bor_admincode like #{borAdmincodeLike}
+    </if>
+    <if test="borAdminname != null" >
+      <bind name="borAdminnameLike" value="'%' + borAdminname + '%'" />
+      and bor_adminname like #{borAdminnameLike}
+    </if>
+    <if test="borReason != null" >
+      <bind name="borReasonLike" value="'%' + borReason + '%'" />
+      and bor_reason like #{borReasonLike}
+    </if>
   </select>
 </mapper>

@@ -31,6 +31,6 @@ public interface PurchaseMapper {
 
     Purchase getPurchase(Purchase purchase);
 
-    List<Purchase> getPurchaseList();
+    List<Purchase> getPurchaseList(Purchase purchase);
 
 }

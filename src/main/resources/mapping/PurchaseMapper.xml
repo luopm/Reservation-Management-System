@@ -252,5 +252,55 @@
     ,
     <include refid="Blob_Column_List" />
     from buy_info
+    where 1 = 1
+    <if test="buyCode != null" >
+      <bind name="buyCodeLike" value="'%' + buyCode + '%'" />
+      and buy_code like #{buyCodeLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyResname != null" >
+      <bind name="buyResnameLike" value="'%' + buyResname + '%'" />
+      and buy_resname like #{buyResnameLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyResstandard != null" >
+      <bind name="buyResstandardLike" value="'%' + buyResstandard + '%'" />
+      and buy_resstandard like #{buyResstandardLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyResprice != null" >
+      and buy_resprice >= #{buyResprice,jdbcType=DECIMAL}
+    </if>
+    <if test="buyWay != null" >
+      <bind name="buyWayLike" value="'%' + buyWay + '%'" />
+      and buy_way like #{buyWayLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyAdmincode != null" >
+      <bind name="buyAdmincodeLike" value="'%' + buyAdmincode + '%'" />
+      and buy_admincode like #{buyAdmincodeLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyAdminname != null" >
+      <bind name="buyAdminnameLike" value="'%' + buyAdminname + '%'" />
+      and buy_adminname like #{buyAdminnameLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyState != null" >
+      <bind name="buyStateLike" value="'%' + buyState + '%'" />
+      and buy_state like #{buyStateLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyDate != null" >
+      and buy_date >= #{buyDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="buyApplydate != null" >
+      and buy_applydate >= #{buyApplydate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="buyUseraccount != null" >
+      <bind name="buyUseraccountLike" value="'%' + buyUseraccount + '%'" />
+      and buy_useraccount like #{buyUseraccountLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyUsername != null" >
+      <bind name="buyUsernameLike" value="'%' + buyUsername + '%'" />
+      and buy_username like #{buyUsernameLike,jdbcType=VARCHAR}
+    </if>
+    <if test="buyReason != null" >
+      <bind name="buyReasonLike" value="'%' + buyReason + '%'" />
+      and buy_reason like #{buyReasonLike,jdbcType=LONGVARCHAR}
+    </if>
   </select>
 </mapper>

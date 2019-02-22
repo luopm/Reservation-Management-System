@@ -269,8 +269,53 @@
     select
     <include refid="Base_Column_List" />
     from res_info
+    where 1 = 1
+    <if test="resCode != null" >
+      <bind name="resCodeLike" value="'%' + resCode + '%'" />
+      and res_code like #{resCodeLike,jdbcType=VARCHAR}
+    </if>
+    <if test="resName != null" >
+      <bind name="resNameLike" value="'%' + resName + '%'" />
+      and res_name like #{resNameLike,jdbcType=VARCHAR}
+    </if>
+    <if test="resStandard != null" >
+      <bind name="resStandardLike" value="'%' + resStandard + '%'" />
+      and res_standard like #{resStandardLike,jdbcType=VARCHAR}
+    </if>
+    <if test="resPrice != null" >
+      and res_price >= #{resPrice,jdbcType=DECIMAL}
+    </if>
+    <if test="resLocation != null" >
+      <bind name="resLocationLike" value="'%' + resLocation + '%'" />
+      and res_location like #{resLocationLike,jdbcType=VARCHAR}
+    </if>
+    <if test="resCustodian != null" >
+      <bind name="resCustodianLike" value="'%' + resCustodian + '%'" />
+      and res_custodian like #{resCustodianLike,jdbcType=VARCHAR}
+    </if>
+    <if test="resCustodiancode != null" >
+      <bind name="resCustodiancodeLike" value="'%' + resCustodiancode + '%'" />
+      and res_custodiancode like #{resCustodiancodeLike,jdbcType=VARCHAR}
+    </if>
+    <if test="resEnabledate != null" >
+      and res_enabledate >= #{resEnabledate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="resScrapdate != null" >
+      and res_scrapdate >= #{resScrapdate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="resState != null" >
+      <bind name="resStateLike" value="'%' + resState + '%'" />
+      and res_state like #{resStateLike,jdbcType=VARCHAR}
+    </if>
     <if test="resTypecode != null" >
-      where res_typecode = #{resTypecode,jdbcType=INTEGER}
+      and res_typecode = #{resTypecode,jdbcType=INTEGER}
+    </if>
+    <if test="resType != null" >
+      <bind name="resTypeLike" value="'%' + resType + '%'" />
+      and res_type like #{resTypeLike,jdbcType=VARCHAR}
+    </if>
+    <if test="resBorrowable != null" >
+      and res_borrowable = #{resBorrowable,jdbcType=INTEGER}
     </if>
   </select>
 

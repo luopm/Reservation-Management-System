@@ -59,22 +59,21 @@ define(['hbs!../template/reserveList.html',
             //初始化预约历史列表
             initReserveGrid:function(pageNum,pageSize){
                 var that = this;
-                var params = {};
-                params.pageIndex = pageNum;
-                params.pageSize = pageSize;
-
+                var reserve = {},page = {};
+                page.pageSize = (pageSize == null ? 10 : pageSize);
+                page.pageIndex = (pageNum == null ? 1 : pageNum);
                 if(that.$("#keywordCode").val() !=''){
-                    params.borRescode = that.$("#keywordCode").val();
+                    reserve.borRescode = that.$("#keywordCode").val();
                 }
                 if(that.$("#keywordAccount").val() !=''){
-                    params.borUseraccount = that.$("#keywordAccount").val();
+                    reserve.borUseraccount = that.$("#keywordAccount").val();
                 }
+                var params = {reserve:reserve,page:page};
                 $.blockUI({message: '请稍后'});
-
                 that.$("#reserveHistoryList").html("");
                 that.$("#reserveHistoryList").grid("destroy");
                 //初始化grid
-                reserveAction.getReserveList(params, function (result){
+                reserveAction.getReserveList(JSON.stringify(params), function (result){
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list!= ""  ){
@@ -204,7 +203,7 @@ define(['hbs!../template/reserveList.html',
                 param.borAdmincode = window.sessionStorage.getItem("User");
                 param.borAdminname = window.sessionStorage.getItem("Name");
                 $.blockUI({message:"请稍后"});
-                reserveAction.updateReserve(param, function (result) {
+                reserveAction.updateReserve(JSON.stringify(param), function (result) {
                     $.unblockUI();
                     if (result && result.resultCode == 1){
                         fish.success("审核成功！");

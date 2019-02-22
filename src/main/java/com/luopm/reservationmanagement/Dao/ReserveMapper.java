@@ -30,6 +30,6 @@ public interface ReserveMapper {
 
     Reserve getReserve(Reserve reserve);
 
-    List<Reserve> getReserveList();
+    List<Reserve> getReserveList(Reserve reserve);
 
 }

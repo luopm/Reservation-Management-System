@@ -80,12 +80,12 @@ public class ReserveService {
         }
         return responseUtil;
     }
-    public ResponseUtil getReserveList(int pageNum, int pageSize){
+    public ResponseUtil getReserveList(int pageNum, int pageSize, Reserve reserve){
         ResponseUtil responseUtil = new ResponseUtil();
         try {
             //将参数传给这个方法就可以实现物理分页了，非常简单。
             PageHelper.startPage(pageNum, pageSize);
-            List<Reserve> reserveList = reserveMapper.getReserveList();
+            List<Reserve> reserveList = reserveMapper.getReserveList(reserve);
             PageInfo result = new PageInfo(reserveList);
             responseUtil.setResponseUtil(1, "get reserveList success!",
                     result,null);//获取All用户详情

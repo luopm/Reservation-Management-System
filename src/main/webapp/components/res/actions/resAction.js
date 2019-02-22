@@ -2,7 +2,7 @@ define(function () {
        return {
            // 获取所有物品列表
            getResList: function (params, success) {
-               var result = fish.ajax({type:"POST",url:'ResController/getResList',data:params,success:success});
+               var result = fish.ajax({type:"POST",contentType:"application/json",url:'ResController/getResList',data:params,success:success});
                return result;
            },
            // 可借用/禁用

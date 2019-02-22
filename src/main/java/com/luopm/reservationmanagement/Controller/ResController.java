@@ -1,13 +1,17 @@
 package com.luopm.reservationmanagement.Controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.luopm.reservationmanagement.Model.Res;
 import com.luopm.reservationmanagement.Service.ResService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 
 @Controller
@@ -19,16 +23,11 @@ public class ResController {
 
     @ResponseBody
     @RequestMapping(value = "/getResList" )
-    public Object getResList(
-            @RequestParam(name="pageNum",required = false,defaultValue = "1")
-                    int pageNum,
-            @RequestParam(name="pageSize",required = false,defaultValue = "10")
-                    int pageSize,
-            @RequestParam(name="resTypecode",required = false)
-                    Integer resTypecode
-            ){
-//        if (resTypecode == null)
-        return resService.getResList(pageNum, pageSize, resTypecode);
+    public Object getResList(@RequestBody Map<String,Object> map){
+        Res res = JSON.parseObject(JSON.toJSONString(map.get("res")),Res.class);
+        int pageNum = JSON.parseObject(JSON.toJSONString(map.get("page"))).getIntValue("pageIndex");
+        int pageSize = JSON.parseObject(JSON.toJSONString(map.get("page"))).getIntValue("pageSize");
+        return resService.getResList(pageNum, pageSize, res);
     }
     @ResponseBody
     @RequestMapping(value = "/ableRes" )

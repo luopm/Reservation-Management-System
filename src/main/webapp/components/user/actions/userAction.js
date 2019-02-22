@@ -2,7 +2,7 @@ define(function () {
        return {
            // 获取用户列表
            getUserList : function (params, success) {
-               var result = fish.ajax({type:"POST",url:'UserController/getUserList',data:params,success:success});
+               var result = fish.ajax({type:"POST",contentType:"application/json",url:'UserController/getUserList',data:params,success:success});
                return result;
            },
            // 生效/禁用

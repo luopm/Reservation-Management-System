@@ -2,7 +2,7 @@ define(function () {
        return {
            // 获取预约历史列表
            getReserveList : function (params, success) {
-               var result = fish.ajax({type:"POST",url:'ReserveController/getReserveList',data:params,success:success});
+               var result = fish.ajax({type:"POST",contentType:"application/json",url:'ReserveController/getReserveList',data:params,success:success});
                return result;
            },
            // 归还物品
