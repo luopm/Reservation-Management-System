@@ -24,6 +24,80 @@ define(['hbs!../template/purchaseList.html',
             },
             afterRender: function () {
                 var that = this;
+                that.loadPageHeader();
+            },
+            loadPageHeader : function () {
+                var that = this;
+                var $tabs = that.$("#PurchaseManage_tabs_border").tabs();
+                var $select = that.$('#PurchaseManage_multiselect').multiselect({
+                    dataTextField:'name',
+                    dataValueField:'value',
+                    dataSource:[
+                        {name:"物品名称", value:"buyResname"},
+                        {name:"物品价格", value:"buyResprice"},
+                        {name:"购买途径", value:"buyWay"},
+                        {name:"申购用户", value:"buyUseraccount"},
+                        {name:"采购状态", value:"buyState"},
+                        {name:"物品规格", value:"buyResstandard"},
+                        {name:"申购人", value:"buyUsername"},
+                        {name:"申购原因", value:"buyReason"},
+                        {name:"申购日期", value:"buyApplydate"},
+                        {name:"购买日期", value:"buyDate"}
+                    ]
+                });
+                that.$('button').click(function(e) {
+                    var $target = $(e.target);
+                    switch ($target.attr('id')) {
+                        case 'btn1':
+                            $select.multiselect('enable');
+                            break;
+                        case 'btn2':
+                            $select.multiselect('disable');
+                            break;
+                        case 'btn3':
+                            that.loadSearchCondition($select.multiselect('selectedItems'));
+                            break;
+                        case 'btn6':
+                            //三种写法效果一样
+                            $select.multiselect('value', []); //
+                            that.$("#PurchaseManage_search_condition_form").html("");
+                            that.searchPurchase();
+                            break;
+                        case 'btn8':
+                            $select.isValid();
+                            break;
+                    }
+                });
+            },
+            loadSearchCondition : function(arr) {
+                var that = this;
+                var HTML = "";
+                for(var val in arr){
+                    HTML += '<input name="'+ arr[val].value +'" id="keyword' + arr[val].value +
+                        '" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入'
+                        + arr[val].name + '查询">';
+                }
+                that.$("#PurchaseManage_search_condition_form").html(HTML);
+                for (var index in arr){
+                    if (arr[index].name == "申购日期"){
+                        that.$("#keywordbuyApplydate").datetimepicker({
+                            buttonIcon: ''
+                        });
+                    }else if (arr[index].name == "购买日期"){
+                        that.$("#keywordbuyDate").datetimepicker({
+                            buttonIcon: ''
+                        });
+                    }else if (arr[index].name == "物品价格"){
+                        that.$("#keywordbuyResprice").currencybox({
+                            numeralDecimalScale: 2, //默认为2
+                            prefix: '$', //默认为''
+                            suffix: '元',
+                            thousandsSeparator: ",", //默认为''
+                            numeralThousandsGroupStyle: true,  //默认为false
+                        });
+                    }
+                }
+
                 //注册页面事件
                 that.initPageEvents();
             },
@@ -31,19 +105,11 @@ define(['hbs!../template/purchaseList.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keywordCode").keydown(function(event) {
+                that.$("#PurchaseManage_search_condition_form input").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchPurchase();
                     }
                 });
-                that.$("#keywordAccount").keydown(function(event) {
-                    if (event.keyCode == "13") {
-                        that.searchPurchase();
-                    }
-                });
-                that.$("#searchByAccount").click(function () {
-                    that.searchPurchase();
-                })
             },
             //查询项目
             searchPurchase:function(){
@@ -61,17 +127,11 @@ define(['hbs!../template/purchaseList.html',
             //初始化预约历史列表
             initPurchaseGrid:function(pageNum,pageSize){
                 var that = this;
-                var purchase = {},page = {};
-                page.pageSize = (pageSize == null ? 10 : pageSize);
-                page.pageIndex = (pageNum == null ? 1 : pageNum);
-                if(that.$("#keywordCode").val() !=''){
-                    purchase.buyCode = that.$("#keywordCode").val();
-                }
-                if(that.$("#keywordAccount").val() !=''){
-                    purchase.buyUseraccount = that.$("#keywordAccount").val();
-                }
-                $.blockUI({message: '请稍后'});
+                var page = {pageSize : (pageSize == null ? 10 : pageSize),
+                    pageIndex : (pageNum == null ? 1 : pageNum)};
+                var purchase = that.$("#PurchaseManage_search_condition_form").form().form('value');
                 var params = {purchase:purchase,page:page};
+                $.blockUI({message: '请稍后'});
                 that.$("#purchaseList").html("");
                 that.$("#purchaseList").grid("destroy");
                 //初始化grid
@@ -79,11 +139,11 @@ define(['hbs!../template/purchaseList.html',
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list != ""  ){
-                            that.$("#purchaseList").grid({
+                            var $purchaseGrid = that.$("#purchaseList").grid({
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'buyCode',         label:'采购编号',     width: 80, sortable: false},
+                                    {name:'buyCode',         label:'采购编号',     width: 80, sortable: false, hidden:true},
                                     {name:'buyResname',      label:'物品名称',     width: 80, sortable: false},
                                     {name:'buyResprice',     label:'物品价格',     width: 80, sortable: false},
                                     {name:'buyResstandard',  label:'物品规格',     width: 80, sortable: false},
@@ -96,10 +156,10 @@ define(['hbs!../template/purchaseList.html',
                                     {name:'buyDate',         label:'购买日期',     width: 80, sortable: false},
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
-                                    if (iCol == 0 && cellcontent != null){
+                                    if (iCol == 1 && cellcontent != null){
                                         fish.popupView({
                                             url:"components/purchase/views/purchaseView",
-                                            viewOption:{buyCode:cellcontent},
+                                            viewOption:{buyCode:$purchaseGrid.grid("getRowData",rowid).buyCode},
                                             width:"40%",
                                             callback: function (popup,view) {
                                             },
@@ -113,7 +173,8 @@ define(['hbs!../template/purchaseList.html',
                                 }
                             });
                         } else{
-                            that.$("#purchaseList").append('<div style="text-align:center;"><img src="marketing/css/base/images/none-1.png"'
+                            that.$("#purchaseList").append('<div style="text-align:center;">' +
+                                // '<img src="marketing/css/base/images/none-1.png"'
                                 +' style="height:100px;width:124px;text-align:center;margin:20px 0">'
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#purchaseList-pagination').pagination("destroy");

@@ -22,6 +22,77 @@ define(['hbs!../template/reserveList.html',
             },
             afterRender: function () {
                 var that = this;
+                that.loadPageHeader();
+            },
+            loadPageHeader : function () {
+                var that = this;
+                var $tabs = that.$("#ReserveManage_tabs_border").tabs();
+                var $select = that.$('#ReserveManage_multiselect').multiselect({
+                    dataTextField:'name',
+                    dataValueField:'value',
+                    dataSource:[
+                        {name:"物品名称", value:"borResname"},
+                        {name:"物品编号", value:"borRescode"},
+                        {name:"借用账号", value:"borUseraccount"},
+                        {name:"借用状态", value:"borState"},
+                        {name:"借用人", value:"borUsername"},
+                        {name:"借用原因",   value:"borReason"},
+                        {name:"借用日期", value:"borStartdate"},
+                        {name:"预归还日期", value:"borEnddate"},
+                        {name:"归还日期", value:"borReturndate"},
+                        {name:"审批账号",   value:"borAdmincode"},
+                        {name:"审批人",   value:"borAdminname"}
+                    ]
+                });
+                that.$('button').click(function(e) {
+                    var $target = $(e.target);
+                    switch ($target.attr('id')) {
+                        case 'btn1':
+                            $select.multiselect('enable');
+                            break;
+                        case 'btn2':
+                            $select.multiselect('disable');
+                            break;
+                        case 'btn3':
+                            that.loadSearchCondition($select.multiselect('selectedItems'));
+                            break;
+                        case 'btn6':
+                            //三种写法效果一样
+                            $select.multiselect('value', []); //
+                            that.$("#ReserveManage_search_condition_form").html("");
+                            that.searchProject();
+                            break;
+                        case 'btn8':
+                            $select.isValid();
+                            break;
+                    }
+                });
+            },
+            loadSearchCondition : function(arr) {
+                var that = this;
+                var HTML = "";
+                for(var val in arr){
+                    HTML += '<input name="'+ arr[val].value +'" id="keyword' + arr[val].value +
+                        '" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入'
+                        + arr[val].name + '查询">';
+                }
+                that.$("#ReserveManage_search_condition_form").html(HTML);
+                for (var index in arr){
+                    if (arr[index].name == "借用日期"){
+                        that.$("#keywordborStartdate").datetimepicker({
+                            buttonIcon: ''
+                        });
+                    }else if (arr[index].name == "预归还日期"){
+                        that.$("#keywordborEnddate").datetimepicker({
+                            buttonIcon: ''
+                        });
+                    }else if (arr[index].name == "归还日期"){
+                        that.$("#keywordborReturndate").datetimepicker({
+                            buttonIcon: ''
+                        });
+                    }
+                }
+
                 //注册页面事件
                 that.initPageEvents();
             },
@@ -29,19 +100,11 @@ define(['hbs!../template/reserveList.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keywordCode").keydown(function(event) {
+                that.$("#ReserveManage_search_condition_form input").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchProject();
                     }
                 });
-                that.$("#keywordAccount").keydown(function(event) {
-                    if (event.keyCode == "13") {
-                        that.searchProject();
-                    }
-                });
-                that.$("#searchByAccount").click(function () {
-                    that.searchProject();
-                })
             },
             //查询项目
             searchProject:function(){
@@ -59,15 +122,9 @@ define(['hbs!../template/reserveList.html',
             //初始化预约历史列表
             initReserveGrid:function(pageNum,pageSize){
                 var that = this;
-                var reserve = {},page = {};
-                page.pageSize = (pageSize == null ? 10 : pageSize);
-                page.pageIndex = (pageNum == null ? 1 : pageNum);
-                if(that.$("#keywordCode").val() !=''){
-                    reserve.borRescode = that.$("#keywordCode").val();
-                }
-                if(that.$("#keywordAccount").val() !=''){
-                    reserve.borUseraccount = that.$("#keywordAccount").val();
-                }
+                var page = {pageSize : (pageSize == null ? 10 : pageSize),
+                    pageIndex : (pageNum == null ? 1 : pageNum)};
+                var reserve = that.$("#ReserveManage_search_condition_form").form().form('value');
                 var params = {reserve:reserve,page:page};
                 $.blockUI({message: '请稍后'});
                 that.$("#reserveHistoryList").html("");
@@ -77,11 +134,11 @@ define(['hbs!../template/reserveList.html',
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list!= ""  ){
-                            that.$("#reserveHistoryList").grid({
+                            var $reserveGrid = that.$("#reserveHistoryList").grid({
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'borCode',        label:'借用编号',     width: 80, sortable: false, hidden:false},
+                                    {name:'borCode',        label:'借用编号',     width: 80, sortable: false, hidden:true},
                                     {name:'borResname',     label:'物品名称',     width: 80, sortable: false},
                                     {name:'borRescode',     label:'物品编号',     width: 80, sortable: false},
                                     {name:'borUseraccount', label:'借用账号',    width: 80, sortable: false, hidden:true},
@@ -95,10 +152,10 @@ define(['hbs!../template/reserveList.html',
                                     {name:'borAdminname',   label:'审批人',       width: 80, sortable: false}
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
-                                    if (iCol == 0 && cellcontent != null){
+                                    if (iCol == 1 && cellcontent != null){
                                         fish.popupView({
                                             url:"components/reserve/views/reserveView",
-                                            viewOption:{borCode:cellcontent},
+                                            viewOption:{borCode:$reserveGrid.grid("getRowData",rowid).borCode},
                                             width:"40%",
                                             callback: function (popup,view) {
                                             },
@@ -112,7 +169,8 @@ define(['hbs!../template/reserveList.html',
                                 }
                             });
                         } else{
-                            that.$("#reserveHistoryList").append('<div style="text-align:center;"><img src="marketing/css/base/images/none-1.png"'
+                            that.$("#reserveHistoryList").append('<div style="text-align:center;">'+
+                                // '<img src="marketing/css/base/images/none-1.png"'
                                 +' style="height:100px;width:124px;text-align:center;margin:20px 0">'
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#history-pagination').pagination("destroy");
@@ -142,10 +200,10 @@ define(['hbs!../template/reserveList.html',
                         that.initPurchaseGrid(eventData.page,eventData.rowNum);
                     }
                 });
-                that.$('#Res-pagination').find(".pagination").css({"margin":"5px 0"});
+                that.$('#history-pagination').find(".pagination").css({"margin":"5px 0"});
                 //如当前页大于总页数，则置为总页数
                 if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
-                    that.initResListGrid(pageInfo.pages,pageInfo.pageSize);
+                    that.initReserveGrid(pageInfo.pages,pageInfo.pageSize);
             },
             // 归还物品
             returnRes : function () {

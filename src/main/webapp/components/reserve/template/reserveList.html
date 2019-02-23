@@ -1,34 +1,57 @@
 <section id="reserveList"><div class="pt-wrap">
         <!-- header -->
         <div class="modal-header" style="margin-bottom: 2px;">
-            <div class="zte-search-condition">
-                <div class="zte-title-list zte-clear">
-                    <div class="zte-clear">
-                        <button id="addReturn" class="btn btn-default" style="margin-top: -3px;margin-left: -10px;border:none"><i class="iconfont icon-return-a"></i></button>
-                        <label class="zte-title" id="resReserveHistory" style="margin-left: 5px;font-size:1.2em">物品借用历史</label>
-                        <div class="action-button zte-clear">
-                            <button type="button" class="btn" id="returnRes">
-                                <span class="glyphicon zte-iconfont icon-add-a"></span>归还物品
-                            </button>
-                            <button type="button" class="btn" id="applyLend">
-                                <span class="glyphicon zte-iconfont icon-add-a"></span>申请转借
-                            </button>
-                            <button type="button" class="btn" id="checkReserveOK">
-                                <span class="glyphicon zte-iconfont icon-add-a"></span>确认借用
-                            </button>
-                            <button type="button" class="btn" id="checkReserveNO">
-                                <span class="glyphicon zte-iconfont icon-add-a"></span>拒绝借用
-                            </button>
-                        </div>
-                        <div class="zte-search-wrap zte-clear">
-                            <div class="page-item">
-                                <!--<i class="zte-iconfont icon-search-a" id="searchByUserCode"></i>-->
-                                <input name="keyword" id="keywordCode" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入物品编号查询">
-                                <input name="keyword" id="keywordAccount" style="width: 200px;" class="form-control" placeholder="输入用户名查询">
-                                <i class="icon-search" id="searchByAccount"></i>
+            <div class="zte-clear body-item" >
+                <label class="zte-title" id="resReserveHistory" style="margin-left: 5px;font-size:1.2em">物品借用列表</label>
+                <button id="addReturn" class="btn btn-default" style="margin-top: -3px;border:none"><i class="iconfont icon-return-a"></i></button>
+            </div>
+            <div id="ReserveManage_tabs_border" class="tabs-border ui-tabs">
+                <ul class="ui-tabs-nav">
+                    <li><a href="#ReserveManage_table_page_1">操作</a></li>
+                    <li><a href="#ReserveManage_table_page_2">检索</a></li>
+                    <li><a href="#ReserveManage_table_page_3">Third Tab</a></li>
+                </ul>
+                <div id="ReserveManage_table_page_1">
+                    <div class="action-button zte-clear">
+                        <button type="button" class="btn" id="returnRes">
+                            <span class="glyphicon zte-iconfont icon-add-a"></span>归还物品
+                        </button>
+                        <button type="button" class="btn" id="applyLend">
+                            <span class="glyphicon zte-iconfont icon-add-a"></span>申请转借
+                        </button>
+                        <button type="button" class="btn" id="checkReserveOK">
+                            <span class="glyphicon zte-iconfont icon-add-a"></span>确认借用
+                        </button>
+                        <button type="button" class="btn" id="checkReserveNO">
+                            <span class="glyphicon zte-iconfont icon-add-a"></span>拒绝借用
+                        </button>
+                    </div>
+                </div>
+                <div id="ReserveManage_table_page_2">
+                    <div class="panel panel-default page-item-group " id="ReserveManage_select_condition">
+                        <!--<div class="panel-heading"><span class="panel-title">multiple select</span></div>-->
+                        <div class="panel-body ui-validator" style="width: 50%;">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <select id="ReserveManage_multiselect" name="ReserveManage_multiselect" class="chosen-select" data-placeholder="Choose a Condition..." multiple="" data-rule="required">
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        <div class="panel-footer" style="margin-bottom:10px;">
+                            <!--<button id="btn1" type="button" class="btn btn-default ">启用</button>-->
+                            <!--<button id="btn2" type="button" class="btn btn-default ">禁用</button>-->
+                            <button id="btn3" type="button" class="btn btn-default ">取值</button>
+                            <button id="btn6" type="button" class="btn btn-default ">清空</button>
+                            <button id="btn8" type="button" class="btn btn-default ">校验</button>
+                        </div>
                     </div>
+                    <div class="zte-search-condition page-item " id="ReserveManage_search_condition">
+                        <form id="ReserveManage_search_condition_form" style="display: flex;">
+                        </form>
+                    </div>
+                </div>
+                <div id="ReserveManage_table_page_3">
                 </div>
             </div>
         </div>

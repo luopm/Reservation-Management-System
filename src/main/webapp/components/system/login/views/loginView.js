@@ -42,7 +42,7 @@ define(['hbs!../template/Login.html',
                         if (result && result.resultCode == 1){
                             window.sessionStorage.setItem("User",result.resultObject.userAccount);
                             window.sessionStorage.setItem("Name",result.resultObject.userName);
-                            window.sessionStorage.setItem("Able",result.resultObject.userDisable);
+                            window.sessionStorage.setItem("Able",result.resultObject.userState);
                             // param.backUrl = "components/res/views/resManageView";
                             that.parentView.requireView({
                                 selector:"#content",
@@ -52,7 +52,7 @@ define(['hbs!../template/Login.html',
                                     // backUrl:param.backUrl
                                 }
                             });
-                            that.undelegateEvents();//移除当前view的所有DOM监听事件
+                            // that.undelegateEvents();//移除当前view的所有DOM监听事件
                         }else fish.error("账号或密码错误！");
                     })
                 }else fish.info("请检查输入！");

@@ -22,28 +22,26 @@ define(['hbs!../template/res.html',
                 that.$("#resEnabledate").datetimepicker({
                     buttonIcon: ''
                 });
-                that.$("#resTypecode").combobox({
-                    placeholder: 'Select res type',
+                that.$("#resClass").combobox({
+                    placeholder: 'Select res class',
                     dataTextField: 'name',
                     dataValueField: 'value',
                     dataSource: [
                         {name: '可外借', value: 1},
-                        {name: '不外借', value: 0}
+                        {name: '不外借', value: 2}
                     ],
                     template: '<li><a href="#">test</a></li>'
                 });
-
-                // that.$("#resCustodian").combobox({
-                //     placeholder: 'Select res type',
-                //     dataTextField: 'name',
-                //     dataValueField: 'value',
-                //     dataSource: [
-                //         {name: '可外借', value: 1},
-                //         {name: '不外借', value: 0}
-                //     ],
-                //     template: '<li><a href="#">test</a></li>'
-                // });
-
+                that.$("#resType").combobox({
+                    placeholder: 'Select res type',
+                    dataTextField: 'name',
+                    dataValueField: 'value',
+                    dataSource: [
+                        {name: '企业级', value: 1},
+                        {name: '分公司级', value: 2},
+                        {name: '部门级', value: 3}
+                    ]
+                });
                 // 修改、显示物品信息时引用此页面
                 if (that.options.resCode){
                     that.getResInfo({resCode : that.options.resCode});
@@ -65,7 +63,7 @@ define(['hbs!../template/res.html',
                 if (!that.options.userAccount){
                     var param = that.$('#resFormInfo').form().form("value");
                     param.resEnabledate = new Date(param.resEnabledate);
-                    param.resState = "待确认";//添加物品默认待确认；在库、借出、报废；
+                    param.resState = 3;//1在库/2借出/3待审核/4禁用/5报废；
                     $.blockUI({message:"请稍后"});
                     resAction.addRes(param, function (result) {
                         $.unblockUI();

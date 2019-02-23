@@ -1,12 +1,17 @@
 <section id="resManage"><div class="pt-wrap">
         <!-- header -->
         <div class="modal-header" style="margin-bottom: 2px;">
-            <div class="zte-search-condition">
-                <div class="zte-title-list zte-clear">
-                    <button id="addReturn" class="btn btn-default" style="margin-top: -3px;margin-left: -10px;border:none"><i class="iconfont icon-return-a"></i></button>
-                    <ul class=" titleList zte-clear">
-                        <li class="zte-title tar_grp_detail_btn" id="projectName" style="height: 28px!important; line-height: 28px!important;">物品管理</li>
-                    </ul>
+            <div class="zte-clear body-item" >
+                <label class="zte-title" id="ResListTitle" style="margin-left: 5px;font-size:1.2em">物品管理</label>
+                <button id="addReturn" class="btn btn-default" style="margin-top: -3px;border:none"><i class="iconfont icon-return-a"></i></button>
+            </div>
+            <div id="ResManage_tabs_border" class="tabs-border ui-tabs">
+                <ul class="ui-tabs-nav">
+                    <li><a href="#ResManage_table_page_1">操作</a></li>
+                    <li><a href="#ResManage_table_page_2">检索</a></li>
+                    <li><a href="#ResManage_table_page_3">Third Tab</a></li>
+                </ul>
+                <div id="ResManage_table_page_1">
                     <div class="action-button zte-clear">
                         <button type="button" class="btn" id="resEnable">
                             <span class="glyphicon zte-iconfont icon-add-a"></span>可借用
@@ -19,22 +24,31 @@
                         </button>
                     </div>
                 </div>
-                <div class="zte-search-wrap zte-clear">
-                    <div class="page-item-group">
-                        <div class="page-item has-feedback">
-                            <input name="keyword" id="keywordCode" class="form-control" style="width: 200px;margin-right: 10px;"  placeholder="输入物品编号查询">
-                            <input name="keyword" id="keywordState" class="form-control" style="width: 200px;"  placeholder="输入物品状态查询">
-                            <i class="glyphicon glyphicon-search has-feedback" id="searchByState"></i>
+                <div id="ResManage_table_page_2">
+                    <div class="panel panel-default page-item-group " id="ResManage_select_condition">
+                        <!--<div class="panel-heading"><span class="panel-title">multiple select</span></div>-->
+                        <div class="panel-body ui-validator" style="width: 50%;">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <select id="ResManage_multiselect" name="ResManage_multiselect" class="chosen-select" data-placeholder="Choose a Condition..." multiple="" data-rule="required">
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="page-item">
-                            <button type="button" class="btn btn-primary " id="addRes">
-                                <span class="glyphicon zte-iconfont icon-add-a"></span>录入物品
-                            </button>
-                            <button type="button" class="btn btn-primary " id="deleteRes">
-                                <span class="glyphicon zte-iconfont icon-add-a"></span>删除物品
-                            </button>
+                        <div class="panel-footer" style="margin-bottom:10px;">
+                            <!--<button id="btn1" type="button" class="btn btn-default ">启用</button>-->
+                            <!--<button id="btn2" type="button" class="btn btn-default ">禁用</button>-->
+                            <button id="btn3" type="button" class="btn btn-default ">取值</button>
+                            <button id="btn6" type="button" class="btn btn-default ">清空</button>
+                            <button id="btn8" type="button" class="btn btn-default ">校验</button>
                         </div>
                     </div>
+                    <div class="zte-search-condition page-item " id="ResManage_search_condition">
+                        <form id="ResManage_search_condition_form" style="display: flex;">
+                        </form>
+                    </div>
+                </div>
+                <div id="ResManage_table_page_3">
                 </div>
             </div>
         </div>

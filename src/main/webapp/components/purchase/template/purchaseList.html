@@ -1,11 +1,17 @@
 <section id="purchaseManage"><div class="pt-wrap">
         <!-- header -->
         <div class="modal-header" style="margin-bottom: 2px;">
-            <div class="zte-search-condition">
-                <div class="zte-title-list zte-clear">
-                    <div class="zte-clear">
-                        <button id="addReturn" class="btn btn-default" style="margin-top: -3px;margin-left: -10px;border:none"><i class="iconfont icon-return-a"></i></button>
-                        <label class="zte-title" id="ResPurchaseList" style="margin-left: 5px;font-size:1.2em">物品申购列表</label>
+            <div class="zte-clear body-item" >
+                <label class="zte-title" id="ResPurchaseList" style="margin-left: 5px;font-size:1.2em">物品申购列表</label>
+                <button id="addReturn" class="btn btn-default" style="margin-top: -3px;border:none"><i class="iconfont icon-return-a"></i></button>
+            </div>
+            <div id="PurchaseManage_tabs_border" class="tabs-border ui-tabs">
+                    <ul class="ui-tabs-nav">
+                        <li><a href="#PurchaseManage_table_page_1">操作</a></li>
+                        <li><a href="#PurchaseManage_table_page_2">检索</a></li>
+                        <li><a href="#PurchaseManage_table_page_3">Third Tab</a></li>
+                    </ul>
+                    <div id="PurchaseManage_table_page_1">
                         <div class="action-button zte-clear">
                             <button type="button" class="btn" id="addPurchase">
                                 <span class="glyphicon zte-iconfont icon-plus"></span>新增申购
@@ -20,17 +26,34 @@
                                 <span class="  zte-iconfont icon-remove"></span>拒绝申购
                             </button>
                         </div>
-                        <div class="zte-search-wrap zte-clear">
-                            <div class="page-item">
-                                <!--<i class="zte-iconfont icon-search-a" id="searchByUserCode"></i>-->
-                                <input name="keyword" id="keywordCode" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入物品编号查询">
-                                <input name="keyword" id="keywordAccount" style="width: 200px;" class="form-control" placeholder="输入用户名查询">
-                                <i class="zte-iconfont glyphicon-search" id="searchByAccount"></i>
+                    </div>
+                    <div id="PurchaseManage_table_page_2">
+                        <div class="panel panel-default page-item-group " id="PurchaseManage_select_condition">
+                            <!--<div class="panel-heading"><span class="panel-title">multiple select</span></div>-->
+                            <div class="panel-body ui-validator" style="width: 50%;">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <select id="PurchaseManage_multiselect" name="PurchaseManage_multiselect" class="chosen-select" data-placeholder="Choose a Condition..." multiple="" data-rule="required">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer" style="margin-bottom:10px;">
+                                <!--<button id="btn1" type="button" class="btn btn-default ">启用</button>-->
+                                <!--<button id="btn2" type="button" class="btn btn-default ">禁用</button>-->
+                                <button id="btn3" type="button" class="btn btn-default ">取值</button>
+                                <button id="btn6" type="button" class="btn btn-default ">清空</button>
+                                <button id="btn8" type="button" class="btn btn-default ">校验</button>
                             </div>
                         </div>
+                        <div class="zte-search-condition page-item " id="PurchaseManage_search_condition">
+                            <form id="PurchaseManage_search_condition_form" style="display: flex;">
+                            </form>
+                        </div>
+                    </div>
+                    <div id="PurchaseManage_table_page_3">
                     </div>
                 </div>
-            </div>
         </div>
         <!-- body -->
         <div class="modal-body">

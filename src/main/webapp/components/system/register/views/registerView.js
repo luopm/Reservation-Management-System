@@ -44,7 +44,7 @@ define(['hbs!../template/register.html',
                         if (result && result.resultCode == 1){
                             window.sessionStorage.setItem("User",result.resultObject.userAccount);
                             window.sessionStorage.setItem("Name",result.resultObject.userName);
-                            window.sessionStorage.setItem("Able",result.resultObject.userDisable);
+                            window.sessionStorage.setItem("Able",result.resultObject.userState);
                             // param.backUrl = "components/res/views/resManageView";
                             that.parentView.requireView({
                                 selector:"#content",

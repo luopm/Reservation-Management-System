@@ -1,26 +1,26 @@
 /**
- * 用户管理页面
+ * 企业管理页面
  * requestParam:
  * 1.0 代码找回标识
  */
-define(['hbs!../template/userManage.html',
-        '../actions/userAction'
+define(['hbs!../template/comManage.html',
+        '../actions/comAction'
     ],
-    function (tem, UserAction) {
-        var UserManageView = fish.View.extend({
+    function (tem, ComAction) {
+        var ComManageView = fish.View.extend({
             el:false,
             template:tem,
             events:{
-                'click #UserEnable':'enable',
-                'click #UserDisable':'disable',
-                'click #UserResetPassword':'resetPassword',
-                'click #UserCheckOk':'checkOk',
-                'click #UserCheckNotOk':'checkNotOk',
-                'click #UserResManage':'resManage'
+                'click #ComAdd' : "ComAdd",
+                'click #ComEnable':'enable',
+                'click #ComDisable':'disable',
+                'click #ComCheckOk':'checkOk',
+                'click #ComCheckNotOk':'checkNotOk',
+                'click #ComResManage':'resManage'
             },
             initialize: function () {
                 var that = this;
-                that.searchUser();
+                that.searchCom();
             },
             afterRender: function () {
                 var that = this;
@@ -28,8 +28,8 @@ define(['hbs!../template/userManage.html',
             },
             loadPageHeader : function () {
                 var that = this;
-                var $tabs = that.$("#userManage_tabs_border").tabs();
-                var $select = that.$('#userManage_multiselect').multiselect({
+                var $tabs = that.$("#comManage_tabs_border").tabs();
+                var $select = that.$('#comManage_multiselect').multiselect({
                     dataTextField:'name',
                     dataValueField:'value',
                     dataSource:[
@@ -56,7 +56,7 @@ define(['hbs!../template/userManage.html',
                         case 'btn6':
                             //三种写法效果一样
                             $select.multiselect('value', []); //
-                            that.$("#userManage_search_condition_form").html("");
+                            that.$("#comManage_search_condition_form").html("");
                             that.searchUser();
                             break;
                         case 'btn8':
@@ -73,11 +73,11 @@ define(['hbs!../template/userManage.html',
                         '" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入'
                         + arr[val].name + '查询">';
                 }
-                that.$("#userManage_search_condition_form").html(HTML);
+                that.$("#comManage_search_condition_form").html(HTML);
                 for (var index in arr){
                     if (arr[index].name == "用户状态"){
-                        that.$("#keyworduserDisable").combobox({
-                            placeholder: 'Select User State',
+                        that.$("#keywordcomState").combobox({
+                            placeholder: 'Select Com State',
                             dataTextField: 'name',
                             dataValueField: 'value',
                             dataSource: [
@@ -88,8 +88,8 @@ define(['hbs!../template/userManage.html',
                             ],
                         });
                     }else if (arr[index].name == "用户类型"){
-                        that.$("#keyworduserType").combobox({
-                            placeholder: 'Select User Type',
+                        that.$("#keywordcomType").combobox({
+                            placeholder: 'Select Com Type',
                             dataTextField: 'name',
                             dataValueField: 'value',
                             dataSource: [
@@ -98,7 +98,7 @@ define(['hbs!../template/userManage.html',
                             ],
                         });
                     }else if (arr[index].name == "手机号"){
-                        that.$("#keyworduserPhone").attr("type","number");
+                        that.$("#keywordcomTel").attr("type","number");
                     }
                 }
 
@@ -109,49 +109,50 @@ define(['hbs!../template/userManage.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#userManage_search_condition_form input").keydown(function(event) {
+                that.$("#comManage_search_condition_form input").keydown(function(event) {
                     if (event.keyCode == "13") {
-                        that.searchUser();
+                        that.searchCom();
                     }
                 });
             },
             //查询用户
-            searchUser:function(){
+            searchCom:function(){
                 var that = this;
                 //that.$('#projectList').grid("destroy");
-                that.initUserGrid(that.pageIndex,that.pageSize);
+                that.initComGrid(that.pageIndex,that.pageSize);
             },
             //重新加载当前页
-            reloadUsers:function () {
+            reloadCom:function () {
                 var that = this;
-                var pagination = $('#user-pagination .active').attr("data-page");
+                var pagination = $('#com-pagination .active').attr("data-page");
                 if (pagination == undefined ) pagination = 1;//当前无数据时即分页值为空时，为免查询报错，赋值为1
-                that.initUserGrid(pagination,that.pageSize);
+                that.initComGrid(pagination,that.pageSize);
             },
             //初始化用户列表
-            initUserGrid:function(pageNum,pageSize){
+            initComGrid:function(pageNum,pageSize){
                 var that = this;
                 var page = {pageSize : (pageSize == null ? 10 : pageSize),
                     pageIndex : (pageNum == null ? 1 : pageNum)};
-                var user = that.$("#userManage_search_condition_form").form().form('value');
-                var params = {user:user,page:page};
+                var com = that.$("#comManage_search_condition_form").form().form('value');
+                var params = {com:com,page:page};
                 $.blockUI({message: '请稍后'});
-                that.$("#UserList").html("");
-                that.$("#UserList").grid("destroy");
+                that.$("#ComList").html("");
+                that.$("#ComList").grid("destroy");
                 //初始化grid
-                UserAction.getUserList(JSON.stringify(params),function (result){
+                ComAction.getComList(JSON.stringify(params),function (result){
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list != ""  ){
-                            that.$("#UserList").grid({
+                            that.$("#ComList").grid({
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'userAccount', label:'用户名',    width: 80,  sortable: false},
-                                    {name:'userName',    label:'真实身份',  width: 120, sortable: false},
-                                    {name:'userPhone',   label:'手机号',    width: 120, sortable: false},
-                                    {name:'userEmail',   label:'邮箱',      width: 120, sortable: false},
-                                    {name:'userState', label:'用户状态',  width: 120, sortable: false,
+                                    {name:'comCode',   label:'企业编号',    width: 80,  sortable: false},
+                                    {name:'comName',    label:'企业名称',  width: 120, sortable: false},
+                                    {name:'comAccount',   label:'企业关联账户',    width: 120, sortable: false},
+                                    {name:'comTel',   label:'企业电话',      width: 120, sortable: false},
+                                    {name:'comEmail',   label:'企业邮箱',      width: 120, sortable: false},
+                                    {name:'comState', label:'企业状态',  width: 120, sortable: false,
                                         formatter: function (cellval, opts, rowdata, _act) {
                                             var result = '';
                                             switch (cellval) {
@@ -173,35 +174,32 @@ define(['hbs!../template/userManage.html',
                                             }
                                             return result;
                                         }},
-                                    {name:'userType', label:'用户类型',  width: 120, sortable: false,
+                                    {name:'comType', label:'企业类型',  width: 120, sortable: false,
                                         formatter: function (cellval, opts, rowdata, _act) {
                                             var result = '';
                                             switch (cellval) {
                                                 case 1 :
-                                                    result = "企业用户";
+                                                    result = "企业";
                                                     break;
                                                 case 2:
-                                                    result = "分公司用户";
+                                                    result = "分公司";
                                                     break;
                                                 case 3 :
-                                                    result = "部门用户";
+                                                    result = "部门";
                                                     break;
                                                 case 10:
-                                                    result = "普通用户";
-                                                    break;
-                                                case 0:
-                                                    result = "系统管理员";
+                                                    result = "其他";
                                                     break;
                                             }
                                             return result;
                                     }},
-                                    {name:'userCreateddate',label:'注册时间',width: 120, sortable: false}
+                                    {name:'comCreateddate',label:'企业注册时间',width: 120, sortable: false}
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
                                     if (iCol == 0 && cellcontent != null){
                                         fish.popupView({
-                                            url:"components/user/views/userView",
-                                            viewOption:{userAccount:cellcontent},
+                                            url:"components/com/views/comView",
+                                            viewOption:{comCode:cellcontent},
                                             width:"40%",
                                             callback: function (popup,view) {
                                             },
@@ -209,29 +207,29 @@ define(['hbs!../template/userManage.html',
                                                 // that.searchRes();
                                             }
                                         }).then(function (view) {
-                                            view.$("#saveUser").hide();
+                                            view.$("#saveCom").hide();
                                         });
                                     }
                                 }
                             });
                         } else{
-                            that.$("#UserList").append('<div style="text-align:center;">'+
+                            that.$("#ComList").append('<div style="text-align:center;">'+
                                 // '<img src="marketing/css/base/images/none-1.png"'
                                 +' style="height:100px;width:124px;text-align:center;margin:20px 0">'
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
-                            that.$('#user-pagination').pagination("destroy");
+                            that.$('#com-pagination').pagination("destroy");
                         }
-                        that.userListPage(result.resultObject);//列表分页
+                        that.comListPage(result.resultObject);//列表分页
                     }else{
                         fish.error(result.resultMsg);
                     }
                 });
             },
             //项目列表分页
-            userListPage:function(pageInfo){
+            comListPage:function(pageInfo){
                 var that = this;
-                that.$('#user-pagination').pagination("destroy");
-                that.$('#user-pagination').pagination({
+                that.$('#com-pagination').pagination("destroy");
+                that.$('#com-pagination').pagination({
                     total     : pageInfo.pages,//总页数
                     records   : pageInfo.total, //查询到数据的总个数
                     displayNum: pageInfo.pages,//显示最大有效页数
@@ -243,26 +241,43 @@ define(['hbs!../template/userManage.html',
                     pgTotal   :true,//总计页数
                     rowtext   :null,//每页显示条数
                     onPageClick: function (e, eventData) {
-                        that.initUserGrid(eventData.page,eventData.rowNum);
+                        that.initComGrid(eventData.page,eventData.rowNum);
                     }
                 });
-                that.$('#user-pagination').find(".pagination").css({"margin":"5px 0"});
+                that.$('#com-pagination').find(".pagination").css({"margin":"5px 0"});
                 //如当前页大于总页数，则置为总页数
                 if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
-                    that.initUserGrid(pageInfo.pages,pageInfo.pageSize);
+                    that.initComGrid(pageInfo.pages,pageInfo.pageSize);
+            },
+            ComAdd : function () {
+                var that = this;
+                fish.popupView({
+                    url:"components/com/views/comView",
+                    viewOption:{},
+                    width:"40%",
+                    callback: function (popup,view) {
+                    },
+                    close : function () {
+                        that.searchCom();
+                    }
+                }).then(function (view) {
+
+                });
             },
             // 生效
             enable : function () {
                 var that = this;
-                var param = that.$('#UserList').grid("getSelection");
+                var selRow = that.$('#ComList').grid("getSelection");
+                var param = {};
                 param.admin = window.sessionStorage.getItem("User");
-                param.userState = 1;
+                param.comCode = selRow.comCode;
+                param.comState = 1;
                 $.blockUI({message: '请稍后'});
-                UserAction.ableUser(param, function (result) {
+                ComAction.updateCom(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         fish.success("生效成功");
-                        that.reloadUsers();
+                        that.reloadCom();
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -271,32 +286,17 @@ define(['hbs!../template/userManage.html',
             // 禁用
             disable : function () {
                 var that = this;
-                var param = that.$('#UserList').grid("getSelection");
+                var selRow = that.$('#ComList').grid("getSelection");
+                var param = {};
                 param.admin = window.sessionStorage.getItem("User");
-                param.userState = 3;
+                param.comState = 3;
+                param.comCode = selRow.comCode;
                 $.blockUI({message: '请稍后'});
-                UserAction.ableUser(param, function (result) {
+                ComAction.updateCom(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         fish.success("禁用成功");
-                        that.reloadUsers();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
-            },
-            // 重置密码
-            resetPassword : function () {
-                var that = this;
-                var param = that.$('#UserList').grid("getSelection");
-                param.userPassword = 666666;
-                param.admin = window.sessionStorage.getItem("User");
-                $.blockUI({message: '请稍后'});
-                UserAction.resetPassword(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("重置密码成功");
-                        that.reloadUsers();
+                        that.reloadCom();
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -305,15 +305,17 @@ define(['hbs!../template/userManage.html',
             // 审核通过
             checkOk : function () {
                 var that = this;
-                var param = that.$('#UserList').grid("getSelection");
+                var selRow = that.$('#ComList').grid("getSelection");
+                var param = {};
                 param.admin = window.sessionStorage.getItem("User");
-                param.userState = 1;
+                param.comState = 1;
+                param.comCode = selRow.comCode;
                 $.blockUI({message: '请稍后'});
-                UserAction.check(param, function (result) {
+                ComAction.updateCom(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         fish.success("审核通过");
-                        that.reloadUsers();
+                        that.reloadCom();
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -322,15 +324,17 @@ define(['hbs!../template/userManage.html',
             // 未通过
             checkNotOk : function () {
                 var that = this;
-                var param = that.$('#UserList').grid("getSelection");
+                var selRow = that.$('#ComList').grid("getSelection");
+                var param = {};
                 param.admin = window.sessionStorage.getItem("User");
-                param.userState = 5;
+                param.comState = 5;
+                param.comCode = selRow.comCode;
                 $.blockUI({message: '请稍后'});
-                UserAction.check(param, function (result) {
+                ComAction.updateCom(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         fish.success("审核未通过");
-                        that.reloadUsers();
+                        that.reloadCom();
                     }else{
                         fish.error(result.resultMsg);
                     }
@@ -339,20 +343,22 @@ define(['hbs!../template/userManage.html',
             // 授权管理
             resManage : function () {
                 var that = this;
-                var param = that.$('#UserList').grid("getSelection");
+                var selRow = that.$('#ComList').grid("getSelection");
+                var param = {};
                 param.admin = window.localStorage.getItem("User");
-                param.userType -= 1;
+                param.comType -= 1;
+                param.comCode = selRow.comCode;
                 $.blockUI({message: '请稍后'});
-                UserAction.resManage(param, function (result) {
+                ComAction.updateCom(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         fish.success("授权成功");
-                        that.reloadUsers();
+                        that.reloadCom();
                     }else{
                         fish.error(result.resultMsg);
                     }
                 })
             }
         });
-        return UserManageView;
+        return ComManageView;
     });

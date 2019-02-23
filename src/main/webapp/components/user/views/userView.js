@@ -24,6 +24,32 @@ define(['hbs!../template/user.html',
                 if (that.options.userAccount){
                     that.getUserInfo({userAccount:that.options.userAccount});
                 }
+                that.$("#userCreateddate").datetimepicker({
+                    buttonIcon: ''
+                });
+                that.$("#userState").combobox({
+                    placeholder: 'Select res class',
+                    dataTextField: 'name',
+                    dataValueField: 'value',
+                    dataSource: [
+                        {name: '正常', value: 1},
+                        {name: '待审核', value: 2},
+                        {name: '禁用', value: 3},
+                        {name: '注销', value: 4},
+                        {name: '审核不通过', value: 5}
+                    ]
+                });
+                that.$("#userType").combobox({
+                    placeholder: 'Select res class',
+                    dataTextField: 'name',
+                    dataValueField: 'value',
+                    dataSource: [
+                        {name: '企业用户', value: 1},
+                        {name: '分公司用户', value: 2},
+                        {name: '部门用户', value: 3},
+                        {name: '普通用户', value: 4}
+                    ]
+                });
             },
             getUserInfo : function (param) {
                 var that = this;

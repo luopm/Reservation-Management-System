@@ -24,6 +24,83 @@ define(['hbs!../template/resManage.html',
             },
             afterRender: function () {
                 var that = this;
+                that.loadPageHeader();
+            },
+            loadPageHeader : function () {
+                var that = this;
+                var $tabs = that.$("#ResManage_tabs_border").tabs();
+                var $select = that.$('#ResManage_multiselect').multiselect({
+                    dataTextField:'name',
+                    dataValueField:'value',
+                    dataSource:[
+                        {name:"物品名称", value:"resName"},
+                        {name:"物品编号", value:"resCode"},
+                        {name:"物品价格", value:"resPrice"},
+                        {name:"存放地",   value:"resLocation"},
+                        {name:"物品状态", value:"resState"},
+                        {name:"物品类型", value:"resTypecode"},
+                        {name:"采购日期", value:"resEnabledate"},
+                    ]
+                });
+                that.$('button').click(function(e) {
+                    var $target = $(e.target);
+                    switch ($target.attr('id')) {
+                        case 'btn1':
+                            $select.multiselect('enable');
+                            break;
+                        case 'btn2':
+                            $select.multiselect('disable');
+                            break;
+                        case 'btn3':
+                            that.loadSearchCondition($select.multiselect('selectedItems'));
+                            break;
+                        case 'btn6':
+                            //三种写法效果一样
+                            $select.multiselect('value', []); //
+                            that.$("#ResManage_search_condition_form").html("");
+                            that.searchRes();
+                            break;
+                        case 'btn8':
+                            $select.isValid();
+                            break;
+                    }
+                });
+            },
+            loadSearchCondition : function(arr) {
+                var that = this;
+                var HTML = "";
+                for(var val in arr){
+                    HTML += '<input name="'+ arr[val].value +'" id="keyword' + arr[val].value +
+                        '" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入'
+                        + arr[val].name + '查询">';
+                }
+                that.$("#ResManage_search_condition_form").html(HTML);
+                for (var index in arr){
+                    if (arr[index].name == "物品类型"){
+                        that.$("#keywordresTypecode").combobox({
+                            placeholder: 'Select Res Type',
+                            dataTextField: 'name',
+                            dataValueField: 'value',
+                            dataSource: [
+                                {name: '可外借', value: 1},
+                                {name: '不可外借', value: 0},
+                            ]
+                        });
+                    }else if (arr[index].name == "采购日期"){
+                        that.$("#keywordresEnabledate").datetimepicker({
+                            buttonIcon: ''
+                        });
+                    }else if (arr[index].name == "物品价格"){
+                        that.$("#keywordresPrice").currencybox({
+                            numeralDecimalScale: 2, //默认为2
+                            prefix: '$', //默认为''
+                            suffix: '元',
+                            thousandsSeparator: ",", //默认为''
+                            numeralThousandsGroupStyle: true,  //默认为false
+                        });
+                    }
+                }
+
                 //注册页面事件
                 that.initPageEvents();
             },
@@ -31,19 +108,11 @@ define(['hbs!../template/resManage.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keywordCode").keydown(function(event) {
+                that.$("#ResManage_search_condition_form input").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchRes();
                     }
                 });
-                that.$("#keywordState").keydown(function(event) {
-                    if (event.keyCode == "13") {
-                        that.searchRes();
-                    }
-                });
-                that.$("#searchByState").click(function () {
-                    that.searchRes();
-                })
             },
             //查询用户
             searchRes:function(){
@@ -61,17 +130,11 @@ define(['hbs!../template/resManage.html',
             //初始化用户列表
             initResListGrid:function(pageNum,pageSize){
                 var that = this;
-                var res = {},page = {};
-                page.pageSize = (pageSize == null ? 10 : pageSize);
-                page.pageIndex = (pageNum == null ? 1 : pageNum);
-                if(that.$("#keywordCode").val() !=''){
-                    res.resCode = that.$("#keywordCode").val();
-                }
-                if(that.$("#keywordState").val() !=''){
-                    res.resState = that.$("#keywordState").val();
-                }
-                $.blockUI({message: '请稍后'});
+                var page = {pageSize : (pageSize == null ? 10 : pageSize),
+                    pageIndex : (pageNum == null ? 1 : pageNum)};
+                var res = that.$("#ResManage_search_condition_form").form().form('value');
                 var params = {res:res,page:page};
+                $.blockUI({message: '请稍后'});
                 that.$("#ResList").html("");
                 that.$("#ResList").grid("destroy");
                 //初始化grid
@@ -83,45 +146,67 @@ define(['hbs!../template/resManage.html',
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
+                                    {name:'resCode',     label:'物品编号',     width: 80, sortable: false},
                                     {name:'resName',     label:'物品名称',     width: 80, sortable: false},
-                                    {name:'resCode',     label:'物品编号',     width: 80, sortable: false, hidden:false},
                                     {name:'resStandard', label:'规格',         width: 80, sortable: false},
                                     {name:'resPrice',    label:'价格',         width: 80, sortable: false},
                                     {name:'resLocation', label:'存放地',       width: 80, sortable: false},
-                                    {name:'resState',    label:'物品状态',     width: 80, sortable: false},
-                                    {name:'resEnabledate',label:'采购日期',     width: 80, sortable: false},
-                                    {name:'resTypecode', label:'物品类型',     width: 80, sortable: false,
+                                    {name:'resState',    label:'物品状态',     width: 80, sortable: false,
+                                        formatter: function (cellval, opts, rowdata, _act) {
+                                            var result = '';
+                                            switch (cellval) {
+                                                case 1 :
+                                                    result = "正常";
+                                                    break;
+                                                case 2:
+                                                    result = "借出";
+                                                    break;
+                                                case 3 :
+                                                    result = "待审核";
+                                                    break;
+                                                case 4:
+                                                    result = "禁用";
+                                                    break;
+                                                case 5 :
+                                                    result = "报废";
+                                                    break;
+                                            }
+                                            return result;
+                                    }},
+                                    {name:'resEnabledate',label:'采购日期',    width: 80, sortable: false},
+                                    {name:'resClass',    label:'物品类型',     width: 80, sortable: false,
                                         formatter: function (cellval, opts, rowdata, _act) {
                                             var result = '';
                                             switch (cellval) {
                                                 case 1 :
                                                     result = "可外借";
                                                     break;
-                                                case 0:
+                                                case 2:
                                                     result = "不外借";
                                                     break;
                                             }
                                             return result;
-                                        }},
-
-                                    // {name: 'createDate',   label: '创建日期', width: 80,       sortable: false,
-                                    //     formatter: function(cellval, opts, rwdat, _act) {
-                                    //         var dateStr = ''
-                                    //         if(cellval){  dateStr = fish.dateTsFormatter(cellval);}
-                                    //         return dateStr;
-                                    //     }
-                                    // },
-                                    // { name: 'action',      label: '操作',         width: 200,   sortable: false,
-                                    //     formatter: function (cellval, opts, rowdata, _act) {
-                                    //         return '<div class="btn-group">' +
-                                    //             '<button type="button" class="btn btn-link js-edit editProject" data-roleId="'+rowdata.mgrId+'">项目配置</button>' +
-                                    //             '</div>'
-                                    //     }
-                                    // }
+                                    }},
+                                    {name:'resType',     label:'物品级别',      width: 80, sortable: false, hidden:true,
+                                        formatter: function (cellval, opts, rowdata, _act) {
+                                            var result = '';
+                                            switch (cellval) {
+                                                case 1 :
+                                                    result = "企业级";
+                                                    break;
+                                                case 2:
+                                                    result = "分公司级";
+                                                    break;
+                                                case 3 :
+                                                    result = "部门级";
+                                                    break;
+                                            }
+                                            return result;
+                                        }}
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
                                     console.log(rowid+" "+ iCol+" " +cellcontent);
-                                    if (iCol == 1 && cellcontent != null){
+                                    if (iCol == 0 && cellcontent != null){
                                         fish.popupView({
                                             url:"components/res/views/resView",
                                             viewOption:{resCode:cellcontent},
@@ -166,7 +251,7 @@ define(['hbs!../template/resManage.html',
                     pgTotal   :true,//总计页数
                     rowtext   :null,//每页显示条数
                     onPageClick: function (e, eventData) {
-                        that.initPurchaseGrid(eventData.page,eventData.rowNum);
+                        that.initResListGrid(eventData.page,eventData.rowNum);
                     }
                 });
                 that.$('#Res-pagination').find(".pagination").css({"margin":"5px 0"});
@@ -179,7 +264,7 @@ define(['hbs!../template/resManage.html',
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
                 param.admin = window.sessionStorage.getItem("userAccount");
-                param.resState = "启用";
+                param.resState = 1;
                 $.blockUI({message: '请稍后'});
                 resAction.ableRes(param, function (result) {
                     $.unblockUI();
@@ -196,7 +281,7 @@ define(['hbs!../template/resManage.html',
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
                 param.admin = window.sessionStorage.getItem("userAccount");
-                param.resState = "禁用";
+                param.resState = 4;
                 $.blockUI({message: '请稍后'});
                 resAction.ableRes(param, function (result) {
                     $.unblockUI();
@@ -214,7 +299,7 @@ define(['hbs!../template/resManage.html',
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
                 param.admin = window.sessionStorage.getItem("userAccount");
-                param.resState = "报废";
+                param.resState = 5;
                 $.blockUI({message: '请稍后'});
                 resAction.outOfUse(param, function (result) {
                     $.unblockUI();
@@ -247,8 +332,6 @@ define(['hbs!../template/resManage.html',
                 var that = this;
                 var param = that.$('#ResList').grid("getSelection");
                 param.admin = window.sessionStorage.getItem("User");
-                //param.resEnableDate = new Date().getTime();
-                //param.resScrapdate = new Date().getTime();
                 $.blockUI({message: '请稍后'});
                 resAction.deleteRes(param, function (result) {
                     $.unblockUI();

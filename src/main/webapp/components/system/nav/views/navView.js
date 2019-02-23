@@ -81,17 +81,15 @@ define(['hbs!../template/Nav.html',
                     {
                         "title": "组织管理",
                         // "hash": "#nosubmenu",
+                        "url": "components/com/views/comManageView",
+                        "icon": "glyphicon glyphicon-shopping-cart",
+                    },
+                    {
+                        "title": "菜单管理",
+                        // "hash": "#nosubmenu",
                         // "url": "modules/user/a.html",
                         "icon": "glyphicon glyphicon-shopping-cart",
-                        "subMenus":[
-                            {
-                                "title":"菜单管理",
-                                "icon":"glyphicon glyphicon-shopping-cart",
-                                "url":""
-                            }
-                        ]
-
-                    },
+                    }
                 ];
                 $(selector).pagesidebar({
                     data: data,
@@ -131,13 +129,16 @@ define(['hbs!../template/Nav.html',
                 }else {
                     var msg = "";
                     switch (able) {
-                        case -1:
+                        case 2:
                             msg = "用户待审核";
                             break;
-                        case 0:
+                        case 3:
                             msg = "用户已被禁用";
                             break;
-                        case -2:
+                        case 4:
+                            msg = "用户已注销";
+                            break;
+                        case 5:
                             msg = "用户审核不通过";
                             break;
                     }

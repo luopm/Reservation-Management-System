@@ -12,15 +12,13 @@
     <result column="res_custodiancode" property="resCustodiancode" jdbcType="VARCHAR" />
     <result column="res_enabledate" property="resEnabledate" jdbcType="TIMESTAMP" />
     <result column="res_scrapdate" property="resScrapdate" jdbcType="TIMESTAMP" />
-    <result column="res_state" property="resState" jdbcType="VARCHAR" />
-    <result column="res_typecode" property="resTypecode" jdbcType="INTEGER" />
-    <result column="res_type" property="resType" jdbcType="VARCHAR" />
-    <result column="res_borrowable" property="resBorrowable" jdbcType="INTEGER" />
+    <result column="res_state" property="resState" jdbcType="INTEGER" />
+    <result column="res_class" property="resClass" jdbcType="INTEGER" />
+    <result column="res_type"  property="resType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     res_id, res_code, res_name, res_standard, res_price, res_location, res_custodian, 
-    res_custodiancode, res_enabledate, res_scrapdate, res_state, res_typecode, res_type, 
-    res_borrowable
+    res_custodiancode, res_enabledate, res_scrapdate, res_state, res_class, res_type
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -38,180 +36,24 @@
     insert into res_info (res_id, res_code, res_name, 
       res_standard, res_price, res_location, 
       res_custodian, res_custodiancode, res_enabledate, 
-      res_scrapdate, res_state, res_typecode, 
-      res_type, res_borrowable)
+      res_scrapdate, res_state, res_class,
+      res_type)
     values (#{resId,jdbcType=INTEGER}, #{resCode,jdbcType=VARCHAR}, #{resName,jdbcType=VARCHAR}, 
       #{resStandard,jdbcType=VARCHAR}, #{resPrice,jdbcType=DECIMAL}, #{resLocation,jdbcType=VARCHAR}, 
       #{resCustodian,jdbcType=VARCHAR}, #{resCustodiancode,jdbcType=VARCHAR}, #{resEnabledate,jdbcType=TIMESTAMP}, 
-      #{resScrapdate,jdbcType=TIMESTAMP}, #{resState,jdbcType=VARCHAR}, #{resTypecode,jdbcType=INTEGER}, 
-      #{resType,jdbcType=VARCHAR}, #{resBorrowable,jdbcType=INTEGER})
+      #{resScrapdate,jdbcType=TIMESTAMP}, #{resState,jdbcType=INTEGER}, #{resClass,jdbcType=INTEGER},
+      #{resType,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.luopm.reservationmanagement.Model.Res" >
-    insert into res_info
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="resId != null" >
-        res_id,
-      </if>
-      <if test="resCode != null" >
-        res_code,
-      </if>
-      <if test="resName != null" >
-        res_name,
-      </if>
-      <if test="resStandard != null" >
-        res_standard,
-      </if>
-      <if test="resPrice != null" >
-        res_price,
-      </if>
-      <if test="resLocation != null" >
-        res_location,
-      </if>
-      <if test="resCustodian != null" >
-        res_custodian,
-      </if>
-      <if test="resCustodiancode != null" >
-        res_custodiancode,
-      </if>
-      <if test="resEnabledate != null" >
-        res_enabledate,
-      </if>
-      <if test="resScrapdate != null" >
-        res_scrapdate,
-      </if>
-      <if test="resState != null" >
-        res_state,
-      </if>
-      <if test="resTypecode != null" >
-        res_typecode,
-      </if>
-      <if test="resType != null" >
-        res_type,
-      </if>
-      <if test="resBorrowable != null" >
-        res_borrowable,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="resId != null" >
-        #{resId,jdbcType=INTEGER},
-      </if>
-      <if test="resCode != null" >
-        #{resCode,jdbcType=VARCHAR},
-      </if>
-      <if test="resName != null" >
-        #{resName,jdbcType=VARCHAR},
-      </if>
-      <if test="resStandard != null" >
-        #{resStandard,jdbcType=VARCHAR},
-      </if>
-      <if test="resPrice != null" >
-        #{resPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="resLocation != null" >
-        #{resLocation,jdbcType=VARCHAR},
-      </if>
-      <if test="resCustodian != null" >
-        #{resCustodian,jdbcType=VARCHAR},
-      </if>
-      <if test="resCustodiancode != null" >
-        #{resCustodiancode,jdbcType=VARCHAR},
-      </if>
-      <if test="resEnabledate != null" >
-        #{resEnabledate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="resScrapdate != null" >
-        #{resScrapdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="resState != null" >
-        #{resState,jdbcType=VARCHAR},
-      </if>
-      <if test="resTypecode != null" >
-        #{resTypecode,jdbcType=INTEGER},
-      </if>
-      <if test="resType != null" >
-        #{resType,jdbcType=VARCHAR},
-      </if>
-      <if test="resBorrowable != null" >
-        #{resBorrowable,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-
-  <update id="updateByPrimaryKeySelective" parameterType="com.luopm.reservationmanagement.Model.Res" >
-    update res_info
-    <set >
-      <if test="resCode != null" >
-        res_code = #{resCode,jdbcType=VARCHAR},
-      </if>
-      <if test="resName != null" >
-        res_name = #{resName,jdbcType=VARCHAR},
-      </if>
-      <if test="resStandard != null" >
-        res_standard = #{resStandard,jdbcType=VARCHAR},
-      </if>
-      <if test="resPrice != null" >
-        res_price = #{resPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="resLocation != null" >
-        res_location = #{resLocation,jdbcType=VARCHAR},
-      </if>
-      <if test="resCustodian != null" >
-        res_custodian = #{resCustodian,jdbcType=VARCHAR},
-      </if>
-      <if test="resCustodiancode != null" >
-        res_custodiancode = #{resCustodiancode,jdbcType=VARCHAR},
-      </if>
-      <if test="resEnabledate != null" >
-        res_enabledate = #{resEnabledate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="resScrapdate != null" >
-        res_scrapdate = #{resScrapdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="resState != null" >
-        res_state = #{resState,jdbcType=VARCHAR},
-      </if>
-      <if test="resTypecode != null" >
-        res_typecode = #{resTypecode,jdbcType=INTEGER},
-      </if>
-      <if test="resType != null" >
-        res_type = #{resType,jdbcType=VARCHAR},
-      </if>
-      <if test="resBorrowable != null" >
-        res_borrowable = #{resBorrowable,jdbcType=INTEGER},
-      </if>
-    </set>
-    where res_id = #{resId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.luopm.reservationmanagement.Model.Res" >
-    update res_info
-    set res_code = #{resCode,jdbcType=VARCHAR},
-      res_name = #{resName,jdbcType=VARCHAR},
-      res_standard = #{resStandard,jdbcType=VARCHAR},
-      res_price = #{resPrice,jdbcType=DECIMAL},
-      res_location = #{resLocation,jdbcType=VARCHAR},
-      res_custodian = #{resCustodian,jdbcType=VARCHAR},
-      res_custodiancode = #{resCustodiancode,jdbcType=VARCHAR},
-      res_enabledate = #{resEnabledate,jdbcType=TIMESTAMP},
-      res_scrapdate = #{resScrapdate,jdbcType=TIMESTAMP},
-      res_state = #{resState,jdbcType=VARCHAR},
-      res_typecode = #{resTypecode,jdbcType=INTEGER},
-      res_type = #{resType,jdbcType=VARCHAR},
-      res_borrowable = #{resBorrowable,jdbcType=INTEGER}
-    where res_id = #{resId,jdbcType=INTEGER}
-  </update>
-
   <insert id="addRes" parameterType="com.luopm.reservationmanagement.Model.Res" >
     insert into res_info (res_id, res_code, res_name,
       res_standard, res_price, res_location,
       res_custodian, res_custodiancode, res_enabledate,
-      res_scrapdate, res_state, res_typecode,
-      res_type, res_borrowable)
+      res_scrapdate, res_state, res_class, res_type)
     values (#{resId,jdbcType=INTEGER}, #{resCode,jdbcType=VARCHAR}, #{resName,jdbcType=VARCHAR},
       #{resStandard,jdbcType=VARCHAR}, #{resPrice,jdbcType=DECIMAL}, #{resLocation,jdbcType=VARCHAR},
       #{resCustodian,jdbcType=VARCHAR}, #{resCustodiancode,jdbcType=VARCHAR}, #{resEnabledate,jdbcType=TIMESTAMP},
-      #{resScrapdate,jdbcType=TIMESTAMP}, #{resState,jdbcType=VARCHAR}, #{resTypecode,jdbcType=INTEGER},
-      #{resType,jdbcType=VARCHAR}, #{resBorrowable,jdbcType=INTEGER})
+      #{resScrapdate,jdbcType=TIMESTAMP}, #{resState,jdbcType=INTEGER}, #{resClass,jdbcType=INTEGER},
+      #{resType,jdbcType=INTEGER})
   </insert>
   <delete id="deleteRes" parameterType="com.luopm.reservationmanagement.Model.Res" >
     delete from res_info
@@ -245,16 +87,13 @@
         res_scrapdate = #{resScrapdate,jdbcType=TIMESTAMP},
       </if>
       <if test="resState != null" >
-        res_state = #{resState,jdbcType=VARCHAR},
+        res_state = #{resState,jdbcType=INTEGER},
       </if>
-      <if test="resTypecode != null" >
-        res_typecode = #{resTypecode,jdbcType=INTEGER},
+      <if test="resClass != null" >
+        res_typecode = #{resClass,jdbcType=INTEGER},
       </if>
       <if test="resType != null" >
-        res_type = #{resType,jdbcType=VARCHAR},
-      </if>
-      <if test="resBorrowable != null" >
-        res_borrowable = #{resBorrowable,jdbcType=INTEGER},
+        res_type = #{resType,jdbcType=INTEGER}
       </if>
     </set>
     where res_code = #{resCode,jdbcType=VARCHAR}
@@ -304,18 +143,13 @@
       and res_scrapdate >= #{resScrapdate,jdbcType=TIMESTAMP}
     </if>
     <if test="resState != null" >
-      <bind name="resStateLike" value="'%' + resState + '%'" />
-      and res_state like #{resStateLike,jdbcType=VARCHAR}
+      and res_state = #{resState,jdbcType=INTEGER}
     </if>
-    <if test="resTypecode != null" >
-      and res_typecode = #{resTypecode,jdbcType=INTEGER}
+    <if test="resClass != null" >
+      and res_class = #{resClass,jdbcType=INTEGER}
     </if>
     <if test="resType != null" >
-      <bind name="resTypeLike" value="'%' + resType + '%'" />
-      and res_type like #{resTypeLike,jdbcType=VARCHAR}
-    </if>
-    <if test="resBorrowable != null" >
-      and res_borrowable = #{resBorrowable,jdbcType=INTEGER}
+      and res_type = #{resType,jdbcType=INTEGER}
     </if>
   </select>
 

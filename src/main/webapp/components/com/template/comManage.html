@@ -1,46 +1,45 @@
-<section id="userManage">
-    <div class="user-wrap">
+<section id="comManage">
         <!-- header -->
         <div class="modal-header" style="margin-bottom: 2px;">
             <div class="zte-clear body-item" >
-                <label class="zte-title" id="projectName" style="margin-left: 5px;font-size:1.2em">用户管理</label>
+                <label class="zte-title" id="comManageTitle" style="margin-left: 5px;font-size:1.2em">企业管理</label>
                 <button id="addReturn" class="btn btn-default" style="margin-top: -3px;border:none"><i class="iconfont icon-return-a"></i></button>
             </div>
-            <div id="userManage_tabs_border" class="tabs-border ui-tabs">
+            <div id="comManage_tabs_border" class="tabs-border ui-tabs">
                 <ul class="ui-tabs-nav">
-                    <li><a href="#userManage_table_page_1">操作</a></li>
-                    <li><a href="#userManage_table_page_2">检索</a></li>
-                    <li><a href="#userManage_table_page_3">Third Tab</a></li>
+                    <li><a href="#comManage_table_page_1">操作</a></li>
+                    <li><a href="#comManage_table_page_2">检索</a></li>
+                    <li><a href="#comManage_table_page_3">Third Tab</a></li>
                 </ul>
-                <div id="userManage_table_page_1">
+                <div id="comManage_table_page_1">
                     <div class="action-button zte-clear">
-                        <button type="button" class="btn" id="UserEnable">
+                        <button type="button" class="btn" id="ComAdd">
+                            <span class="glyphicon zte-iconfont icon-add-a"></span>新增组织
+                        </button>
+                        <button type="button" class="btn" id="ComEnable">
                             <span class="glyphicon zte-iconfont icon-add-a"></span>生效
                         </button>
-                        <button type="button" class="btn" id="UserDisable">
-                            <span class="glyphicon zte-iconfont icon-add-a"></span>失效
+                        <button type="button" class="btn" id="ComDisable">
+                            <span class="glyphicon zte-iconfont icon-add-a"></span>禁用
                         </button>
-                        <button type="button" class="btn" id="UserResetPassword">
-                            <span class="glyphicon zte-iconfont icon-add-a"></span>重置密码
-                        </button>
-                        <button type="button" class="btn" id="UserCheckOk">
+                        <button type="button" class="btn" id="ComCheckOk">
                             <span class="glyphicon zte-iconfont icon-add-a"></span>审核通过
                         </button>
-                        <button type="button" class="btn" id="UserCheckNotOk">
+                        <button type="button" class="btn" id="ComCheckNotOk">
                             <span class="glyphicon zte-iconfont icon-add-a"></span>审核不通过
                         </button>
-                        <button type="button" class="btn" id="UserResManage">
+                        <button type="button" class="btn" id="ComResManage">
                             <span class="glyphicon zte-iconfont icon-add-a"></span>授权管理
                         </button>
                     </div>
                 </div>
-                <div id="userManage_table_page_2">
-                    <div class="panel panel-default page-item-group " id="userManage_select_condition">
+                <div id="comManage_table_page_2">
+                    <div class="panel panel-default page-item-group " id="comManage_select_condition">
                         <!--<div class="panel-heading"><span class="panel-title">multiple select</span></div>-->
                         <div class="panel-body ui-validator" style="width: 50%;">
                             <div class="row">
                                 <div class="col-md-9">
-                                    <select id="userManage_multiselect" name="userManage_multiselect" class="chosen-select" data-placeholder="Choose a Condition..." multiple="" data-rule="required">
+                                    <select id="comManage_multiselect" name="comManage_multiselect" class="chosen-select" data-placeholder="Choose a Condition..." multiple="" data-rule="required">
                                     </select>
                                 </div>
                             </div>
@@ -53,12 +52,12 @@
                             <button id="btn8" type="button" class="btn btn-default ">校验</button>
                         </div>
                     </div>
-                    <div class="zte-search-condition page-item " id="userManage_search_condition">
-                        <form id="userManage_search_condition_form" style="display: flex;">
+                    <div class="zte-search-condition page-item " id="comManage_search_condition">
+                        <form id="comManage_search_condition_form" style="display: flex;">
                         </form>
                     </div>
                 </div>
-                <div id="userManage_table_page_3">
+                <div id="comManage_table_page_3">
                 </div>
             </div>
         </div>
@@ -68,12 +67,12 @@
             <!-- 列表 -->
             <div class="row" >
                 <div class="meta-table-2">
-                    <div id="UserList">
+                    <div id="ComList">
                     </div>
                 </div>
             </div>
             <!--  分页 pagination-specGrp-->
-            <div id="user-pagination" class="text-right" style="margin-top: 20px"></div>
+            <div id="com-pagination" class="text-right" style="margin-top: 20px"></div>
 
         </div>
-</div></section>
+</section>

@@ -1,5 +1,7 @@
 package com.luopm.reservationmanagement.Model;
 
+import java.util.Date;
+
 public class User {
     private Integer userId;
 
@@ -19,7 +21,9 @@ public class User {
 
     private String userEmail;
 
-    private Integer userDisable;
+    private Integer userState;
+
+    private Date userCreateddate;
 
     public Integer getUserId() {
         return userId;
@@ -93,11 +97,17 @@ public class User {
         this.userEmail = userEmail == null ? null : userEmail.trim();
     }
 
-    public Integer getUserDisable() {
-        return userDisable;
+    public Integer getUserState() {
+        return userState;
     }
 
-    public void setUserDisable(Integer userDisable) {
-        this.userDisable = userDisable;
+    public void setUserState(Integer userState) {
+        this.userState = userState;
+    }
+
+    public Date getUserCreateddate(){return userCreateddate;}
+
+    public void setUserCreateddate(Date userCreateddate){
+        this.userCreateddate = userCreateddate;
     }
 }

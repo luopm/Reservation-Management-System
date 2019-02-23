@@ -20,6 +20,67 @@ define(['hbs!../template/resList.html',
             },
             afterRender: function () {
                 var that = this;
+                that.loadPageHeader();
+            },
+            loadPageHeader : function () {
+                var that = this;
+                var $tabs = that.$("#ResAbleManage_tabs_border").tabs();
+                var $select = that.$('#ResAbleManage_multiselect').multiselect({
+                    dataTextField:'name',
+                    dataValueField:'value',
+                    dataSource:[
+                        {name:"物品编号", value:"resCode"},
+                        {name:"物品名称", value:"resName"},
+                        {name:"物品价格", value:"resPrice"},
+                        {name:"存放地", value:"resLocation"},
+                        {name:"物品状态", value:"resState"},
+                        {name:"规格", value:"resStandard"}
+                    ]
+                });
+                that.$('button').click(function(e) {
+                    var $target = $(e.target);
+                    switch ($target.attr('id')) {
+                        case 'btn1':
+                            $select.multiselect('enable');
+                            break;
+                        case 'btn2':
+                            $select.multiselect('disable');
+                            break;
+                        case 'btn3':
+                            that.loadSearchCondition($select.multiselect('selectedItems'));
+                            break;
+                        case 'btn6':
+                            //三种写法效果一样
+                            $select.multiselect('value', []); //
+                            that.$("#ResAbleManage_search_condition_form").html("");
+                            that.searchAbleRes();
+                            break;
+                        case 'btn8':
+                            $select.isValid();
+                            break;
+                    }
+                });
+            },
+            loadSearchCondition : function(arr) {
+                var that = this;
+                var HTML = "";
+                for(var val in arr){
+                    HTML += '<input name="'+ arr[val].value +'" id="keyword' + arr[val].value +
+                        '" style="width: 200px;margin-right: 10px;" class="form-control" placeholder="输入'
+                        + arr[val].name + '查询">';
+                }
+                that.$("#ResAbleManage_search_condition_form").html(HTML);
+                for (var index in arr){
+                    if (arr[index].name == "物品价格"){
+                        that.$("#keywordresPrice").currencybox({
+                            numeralDecimalScale: 2, //默认为2
+                            prefix: '$', //默认为''
+                            suffix: '元',
+                            thousandsSeparator: ",", //默认为''
+                            numeralThousandsGroupStyle: true,  //默认为false
+                        });
+                    }
+                }
                 //注册页面事件
                 that.initPageEvents();
             },
@@ -27,12 +88,7 @@ define(['hbs!../template/resList.html',
             initPageEvents:function(parma){
                 var that = this;
                 //项目名称查询回车事件
-                that.$("#keywordCode").keydown(function(event) {
-                    if (event.keyCode == "13") {
-                        that.searchAbleRes();
-                    }
-                });
-                that.$("#keywordUser").keydown(function(event) {
+                that.$("#ResAbleManage_search_condition_form input").keydown(function(event) {
                     if (event.keyCode == "13") {
                         that.searchAbleRes();
                     }
@@ -54,16 +110,10 @@ define(['hbs!../template/resList.html',
             //初始化用户列表
             initAbleResListGrid:function(pageNum,pageSize){
                 var that = this;
-                var res = {},page = {};
-                page.pageSize = (pageSize == null ? 10 : pageSize);
-                page.pageIndex = (pageNum == null ? 1 : pageNum);
+                var page = {pageSize : (pageSize == null ? 10 : pageSize),
+                    pageIndex : (pageNum == null ? 1 : pageNum)};
+                var res = that.$("#ResAbleManage_search_condition_form").form().form('value');
                 res.resTypecode = 1;
-                if(that.$("#keywordCode").val() !=''){
-                    res.resCode = that.$("#keywordCode").val();
-                }
-                if(that.$("#keywordState").val() !=''){
-                    res.resState = that.$("#keywordState").val();
-                }
                 $.blockUI({message: '请稍后'});
                 var params = {res:res,page:page};
                 that.$("#ResAbleList").html("");
@@ -77,31 +127,55 @@ define(['hbs!../template/resList.html',
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'resName',     label:'物品名称',     width: 80, sortable: false},
-                                    {name:'resCode',     label:'物品编号',     width: 80, sortable: false, hidden:true},
-                                    {name:'resStandard', label:'规格',         width: 80, sortable: false},
-                                    {name:'resPrice',    label:'价格',         width: 80, sortable: false},
-                                    {name:'resLocation', label:'存放地',     width: 80, sortable: false},
-                                    {name:'resState',    label:'物品状态', width: 80, sortable: false}
-
-                                    // {name: 'createDate',   label: '创建日期', width: 80,       sortable: false,
-                                    //     formatter: function(cellval, opts, rwdat, _act) {
-                                    //         var dateStr = ''
-                                    //         if(cellval){  dateStr = fish.dateTsFormatter(cellval);}
-                                    //         return dateStr;
-                                    //     }
-                                    // },
-                                    // { name: 'action',      label: '操作',         width: 200,   sortable: false,
-                                    //     formatter: function (cellval, opts, rowdata, _act) {
-                                    //         return '<div class="btn-group">' +
-                                    //             '<button type="button" class="btn btn-link js-edit editProject" data-roleId="'+rowdata.mgrId+'">项目配置</button>' +
-                                    //             '</div>'
-                                    //     }
-                                    // }
-                                ]
+                                    {name:'resCode',     label:'物品编号',    width: 80, sortable: false},
+                                    {name:'resName',     label:'物品名称',    width: 80, sortable: false},
+                                    {name:'resStandard', label:'规格',        width: 80, sortable: false},
+                                    {name:'resPrice',    label:'价格',        width: 80, sortable: false},
+                                    {name:'resLocation', label:'存放地',      width: 80, sortable: false},
+                                    {name:'resState',    label:'物品状态',     width: 80, sortable: false,
+                                        formatter: function (cellval, opts, rowdata, _act) {
+                                            var result = '';
+                                            switch (cellval) {
+                                                case 1 :
+                                                    result = "正常";
+                                                    break;
+                                                case 2:
+                                                    result = "借出";
+                                                    break;
+                                                case 3 :
+                                                    result = "待审核";
+                                                    break;
+                                                case 4:
+                                                    result = "禁用";
+                                                    break;
+                                                case 5 :
+                                                    result = "报废";
+                                                    break;
+                                            }
+                                            return result;
+                                        }},
+                                ],
+                                onCellSelect : function( e, rowid, iCol, cellcontent ){
+                                    console.log(rowid+" "+ iCol+" " +cellcontent);
+                                    if (iCol == 0 && cellcontent != null){
+                                        fish.popupView({
+                                            url:"components/res/views/resView",
+                                            viewOption:{resCode:cellcontent},
+                                            width:"40%",
+                                            callback: function (popup,view) {
+                                            },
+                                            close : function () {
+                                                // that.searchRes();
+                                            }
+                                        }).then(function (view) {
+                                            view.$("#saveProject").hide();
+                                        });
+                                    }
+                                }
                             });
                         } else{
-                            that.$("#ResAbleList").append('<div style="text-align:center;"><img src="marketing/css/base/images/none-1.png"'
+                            that.$("#ResAbleList").append('<div style="text-align:center;">'+
+                                // '<img src="marketing/css/base/images/none-1.png"'
                                 +' style="height:100px;width:124px;text-align:center;margin:20px 0">'
                                 +'<p style="width:100%;text-align:center;color:#d0d5e0;">抱歉！暂无数据</p></div>');
                             that.$('#ResAble-pagination').pagination("destroy");
@@ -128,13 +202,13 @@ define(['hbs!../template/resList.html',
                     pgTotal   :true,//总计页数
                     rowtext   :null,//每页显示条数
                     onPageClick: function (e, eventData) {
-                        that.initPurchaseGrid(eventData.page,eventData.rowNum);
+                        that.initAbleResListGrid(eventData.page,eventData.rowNum);
                     }
                 });
-                that.$('#Res-pagination').find(".pagination").css({"margin":"5px 0"});
+                that.$('#ResAble-pagination').find(".pagination").css({"margin":"5px 0"});
                 //如当前页大于总页数，则置为总页数
                 if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
-                    that.initResListGrid(pageInfo.pages,pageInfo.pageSize);
+                    that.initAbleResListGrid(pageInfo.pages,pageInfo.pageSize);
             },
             // 生效
             reserve : function () {

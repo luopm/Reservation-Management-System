@@ -27,13 +27,11 @@ public class Res {
 
     private Date resScrapdate;
 
-    private String resState;
+    private Integer resState;
 
-    private Integer resTypecode;
+    private Integer resClass;
 
-    private String resType;
-
-    private Integer resBorrowable;
+    private Integer resType;
 
     public Integer getResId() {
         return resId;
@@ -115,35 +113,27 @@ public class Res {
         this.resScrapdate = resScrapdate;
     }
 
-    public String getResState() {
+    public Integer getResState() {
         return resState;
     }
 
-    public void setResState(String resState) {
-        this.resState = resState == null ? null : resState.trim();
+    public void setResState(Integer resState) {
+        this.resState = resState;
     }
 
-    public Integer getResTypecode() {
-        return resTypecode;
+    public Integer getResClass() {
+        return resClass;
     }
 
-    public void setResTypecode(Integer resTypecode) {
-        this.resTypecode = resTypecode;
+    public void setResClass(Integer resClass) {
+        this.resClass = resClass;
     }
 
-    public String getResType() {
+    public Integer getResType() {
         return resType;
     }
 
-    public void setResType(String resType) {
-        this.resType = resType == null ? null : resType.trim();
-    }
-
-    public Integer getResBorrowable() {
-        return resBorrowable;
-    }
-
-    public void setResBorrowable(Integer resBorrowable) {
-        this.resBorrowable = resBorrowable;
+    public void setResType(Integer resType) {
+        this.resType = resType;
     }
 }

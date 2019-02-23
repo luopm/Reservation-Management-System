@@ -9,18 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ResMapper {
 
-    int deleteByPrimaryKey(Integer resId);
-
-    int insert(Res record);
-
-    int insertSelective(Res record);
-
-    Res selectByPrimaryKey(Integer resId);
-
-    int updateByPrimaryKeySelective(Res record);
-
-    int updateByPrimaryKey(Res record);
-
     List<Res> getResList(Res res);
 
     int updateRes(Res res);
