@@ -48,3 +48,12 @@
     display: flex;
     justify-content: space-between;
 }
+
+/*详情界面input*/
+.zte-form-item-content{
+    width: 50%;
+}
+
+#home-head-right{
+    background: dodgerblue;
+}

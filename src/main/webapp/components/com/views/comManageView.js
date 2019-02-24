@@ -143,16 +143,16 @@ define(['hbs!../template/comManage.html',
                     $.unblockUI();
                     if(result && result.resultCode==1){
                         if(result.resultObject.list!=null  && result.resultObject.list != ""  ){
-                            that.$("#ComList").grid({
+                            var $comGrid = that.$("#ComList").grid({
                                 data: result.resultObject.list,
                                 height: 'auto',
                                 colModel:[
-                                    {name:'comCode',   label:'企业编号',    width: 80,  sortable: false},
-                                    {name:'comName',    label:'企业名称',  width: 120, sortable: false},
-                                    {name:'comAccount',   label:'企业关联账户',    width: 120, sortable: false},
-                                    {name:'comTel',   label:'企业电话',      width: 120, sortable: false},
-                                    {name:'comEmail',   label:'企业邮箱',      width: 120, sortable: false},
-                                    {name:'comState', label:'企业状态',  width: 120, sortable: false,
+                                    {name:'comCode',    label:'企业编号',     width: 80,  sortable: false, hidden:true},
+                                    {name:'comName',    label:'企业名称',     width: 120, sortable: false},
+                                    {name:'comAccount', label:'企业关联账户', width: 120, sortable: false},
+                                    {name:'comTel',     label:'企业电话',     width: 120, sortable: false},
+                                    {name:'comEmail',   label:'企业邮箱',     width: 120, sortable: false},
+                                    {name:'comState',   label:'企业状态',     width: 120, sortable: false,
                                         formatter: function (cellval, opts, rowdata, _act) {
                                             var result = '';
                                             switch (cellval) {
@@ -193,13 +193,13 @@ define(['hbs!../template/comManage.html',
                                             }
                                             return result;
                                     }},
-                                    {name:'comCreateddate',label:'企业注册时间',width: 120, sortable: false}
+                                    {name:'comCreateddate',label:'企业注册时间',width: 120, sortable: false, hidden:true}
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
-                                    if (iCol == 0 && cellcontent != null){
+                                    if (iCol == 1 ){
                                         fish.popupView({
                                             url:"components/com/views/comView",
-                                            viewOption:{comCode:cellcontent},
+                                            viewOption:{comCode:$comGrid.grid("getRowData",rowid).comCode},
                                             width:"40%",
                                             callback: function (popup,view) {
                                             },

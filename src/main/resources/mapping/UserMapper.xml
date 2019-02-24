@@ -13,26 +13,29 @@
     <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
     <result column="user_state" property="userState" jdbcType="INTEGER" />
     <result column="user_createddate" property="userCreateddate" jdbcType="TIMESTAMP" />
+    <result column="user_comcode" property="userComcode" jdbcType="VARCHAR" />
+    <result column="user_comname" property="userComname" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
     user_id, user_account, user_password, user_name, user_face, user_idcard, user_type, 
-    user_phone, user_email, user_state, user_createddate
+    user_phone, user_email, user_state, user_createddate, user_comcode, user_comname
   </sql>
   <sql id="UserInfo_Column_List" >
     user_id, user_account, user_name, user_idcard, user_type,
-    user_phone, user_email, user_state, user_createddate
+    user_phone, user_email, user_state, user_createddate, user_comcode, user_comname
   </sql>
 
   <insert id="addUser" parameterType="com.luopm.reservationmanagement.Model.User" >
     insert into user_info (user_id, user_account, user_password,
       user_name, user_face, user_idcard,
       user_type, user_phone, user_email,
-      user_state, user_createddate)
+      user_state, user_createddate, user_comcode, user_comname)
     values (#{userId,jdbcType=INTEGER}, #{userAccount,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
       #{userName,jdbcType=VARCHAR}, #{userFace,jdbcType=VARCHAR}, #{userIdcard,jdbcType=VARCHAR},
       #{userType,jdbcType=INTEGER}, #{userPhone,jdbcType=INTEGER}, #{userEmail,jdbcType=VARCHAR},
-      #{userState,jdbcType=INTEGER}, #{userCreateddate,jdbcType=TIMESTAMP})
+      #{userState,jdbcType=INTEGER}, #{userCreateddate,jdbcType=TIMESTAMP}, #{userComcode,jdbcType=VARCHAR},
+      #{userComname,jdbcType=VARCHAR})
   </insert>
   <delete id="deleteUser" parameterType="com.luopm.reservationmanagement.Model.User" >
     delete from user_info
@@ -66,7 +69,13 @@
         user_state = #{userState,jdbcType=INTEGER},
       </if>
       <if test="userCreateddate != null" >
-        user_createddate = #{userCreateddate,jdbcType=TIMESTAMP}
+        user_createddate = #{userCreateddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userComcode != null" >
+        user_comcode = #{userComcode,jdbcType=VARCHAR},
+      </if>
+      <if test="userComname != null" >
+        user_comname = #{userComname,jdbcType=VARCHAR}
       </if>
     </set>
     where user_account = #{userAccount,jdbcType=VARCHAR}
@@ -105,7 +114,7 @@
       and user_idcard like #{userIdcardLike,jdbcType=VARCHAR}
     </if>
     <if test="userType != null" >
-      and user_type = #{userType,jdbcType=INTEGER}
+      and user_type > #{userType,jdbcType=INTEGER}
     </if>
     <if test="userPhone != null" >
       <bind name="userPhoneLike" value="'%' + userPhone + '%'" />
@@ -120,6 +129,14 @@
     </if>
     <if test="userCreateddate != null" >
       and user_createddate >= #{userCreateddate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="userComcode != null" >
+      <bind name="userComcodeLike" value="'%' + userComcode + '%'" />
+      and user_comcode like #{userComcodeLike,jdbcType=VARCHAR}
+    </if>
+    <if test="userComname != null" >
+      <bind name="userComnameLike" value="'%' + userComname + '%'" />
+      and user_comname like #{userComnameLike,jdbcType=VARCHAR}
     </if>
   </select>
 </mapper>

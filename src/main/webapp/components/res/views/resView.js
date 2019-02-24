@@ -42,9 +42,23 @@ define(['hbs!../template/res.html',
                         {name: '部门级', value: 3}
                     ]
                 });
+                that.$("#resState").combobox({
+                    placeholder: 'Select res State',
+                    dataTextField: 'name',
+                    dataValueField: 'value',
+                    dataSource: [
+                        {name: '正常', value: 1},
+                        {name: '待审核', value: 2},
+                        {name: '借出', value: 3},
+                        {name: '禁用', value: 4},
+                        {name: '报废', value: 5}
+                    ]
+                });
                 // 修改、显示物品信息时引用此页面
                 if (that.options.resCode){
                     that.getResInfo({resCode : that.options.resCode});
+                }else{//新增物品时隐藏所属组织
+                    that.$("#resComnameDiv").hide();
                 }
             },
             // 获取物品信息
@@ -64,6 +78,7 @@ define(['hbs!../template/res.html',
                     var param = that.$('#resFormInfo').form().form("value");
                     param.resEnabledate = new Date(param.resEnabledate);
                     param.resState = 3;//1在库/2借出/3待审核/4禁用/5报废；
+                    param.resType = 10;
                     $.blockUI({message:"请稍后"});
                     resAction.addRes(param, function (result) {
                         $.unblockUI();

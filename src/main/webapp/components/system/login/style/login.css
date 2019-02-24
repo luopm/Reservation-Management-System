@@ -3,6 +3,16 @@
     justify-content: center;
     width: 100%;
 }
-.login{
-    max-width: 400px;
+.loginContent, .registerContent{
+    background: steelblue;
+    border-radius: 5px;
+    position: fixed;
+    top: 20%;
+    right: 15%;
+    padding: 2%;
+}
+/*详情界面input*/
+.loginContent .zte-form-item-content,
+.registerContent .zte-form-item-content{
+    width: 100%;
 }

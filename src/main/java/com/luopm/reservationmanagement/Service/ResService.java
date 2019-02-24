@@ -76,7 +76,7 @@ public class ResService {
             if (resMapper.deleteRes(res) == 1){
                 responseUtil.setResponseUtil(1, "res Delete success !",
                         resDelete, null);
-            }else responseUtil.setResponseUtil(0,"res Delete success !",
+            }else responseUtil.setResponseUtil(0,"res Delete failed !",
                     null,null);
         }catch (Exception e){
             responseUtil.setResultMsg(e.getMessage());

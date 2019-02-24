@@ -34,7 +34,8 @@ define(['hbs!../template/resList.html',
                         {name:"物品价格", value:"resPrice"},
                         {name:"存放地", value:"resLocation"},
                         {name:"物品状态", value:"resState"},
-                        {name:"规格", value:"resStandard"}
+                        {name:"规格", value:"resStandard"},
+                        {name:"物品级别", value:"resType"}
                     ]
                 });
                 that.$('button').click(function(e) {
@@ -78,6 +79,18 @@ define(['hbs!../template/resList.html',
                             suffix: '元',
                             thousandsSeparator: ",", //默认为''
                             numeralThousandsGroupStyle: true,  //默认为false
+                        });
+                    }else if (arr[index].name == "物品级别"){
+                        that.$("#keywordresType").combobox({
+                            placeholder: 'Select Res Type',
+                            dataTextField: 'name',
+                            dataValueField: 'value',
+                            dataSource: [
+                                {name: '企业级', value: 1},
+                                {name: '分公司级', value: 2},
+                                {name: '部门级', value: 3},
+                                {name: '其他', value: 4}
+                            ]
                         });
                     }
                 }
@@ -154,6 +167,24 @@ define(['hbs!../template/resList.html',
                                             }
                                             return result;
                                         }},
+                                    {name:'resType',     label:'物品级别',      width: 80, sortable: false, hidden:true,
+                                        formatter: function (cellval, opts, rowdata, _act) {
+                                            var result = '';
+                                            switch (cellval) {
+                                                case 1 :
+                                                    result = "企业级";
+                                                    break;
+                                                case 2:
+                                                    result = "分公司级";
+                                                    break;
+                                                case 3 :
+                                                    result = "部门级";
+                                                    break;
+                                            }
+                                            return result;
+                                        }},
+                                    {name:'resComcode',  label:'所属组织编号',      width: 80, sortable: false, hidden:true},
+                                    {name:'resComnamne', label:'所属组织',      width: 80, sortable: false}
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
                                     console.log(rowid+" "+ iCol+" " +cellcontent);

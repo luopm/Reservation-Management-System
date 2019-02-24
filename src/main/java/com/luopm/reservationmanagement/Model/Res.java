@@ -33,6 +33,10 @@ public class Res {
 
     private Integer resType;
 
+    private String resComcode;
+
+    private String resComname;
+
     public Integer getResId() {
         return resId;
     }
@@ -136,4 +140,12 @@ public class Res {
     public void setResType(Integer resType) {
         this.resType = resType;
     }
+
+    public String getResComcode(){return resComcode;}
+
+    public void  setResComcode(String resComcode){this.resComcode = resComcode == null ? null : resComcode.trim();}
+
+    public String getResComname(){return resComname;}
+
+    public void setResComname(String resComname){this.resComname = resComname == null ? null : resComname.trim();}
 }

@@ -43,6 +43,9 @@ define(['hbs!../template/Login.html',
                             window.sessionStorage.setItem("User",result.resultObject.userAccount);
                             window.sessionStorage.setItem("Name",result.resultObject.userName);
                             window.sessionStorage.setItem("Able",result.resultObject.userState);
+                            window.sessionStorage.setItem("Lv",result.resultObject.userType);//用户权限等级
+                            window.sessionStorage.setItem("ComCode",result.resultObject.userComcode);//用户所属组织
+                            window.sessionStorage.setItem("ComName",result.resultObject.userComname);//用户所属组织
                             // param.backUrl = "components/res/views/resManageView";
                             that.parentView.requireView({
                                 selector:"#content",

@@ -33,8 +33,8 @@ define(['hbs!../template/register.html',
                 var that = this;
                 var params = that.$('#registerForm').form().form("value");
                 if (params.userAccount != undefined && params.userPassword != undefined){
-                    params.userType = -1; //默认用户类型：普通用户
-                    params.userDisable = -1; //默认用户状态：未审核
+                    params.userType = 10; //默认用户类型：普通用户
+                    params.userType = 2; //默认用户状态：待审核
                     $.blockUI({
                         message: "注册中"
                     });
@@ -45,6 +45,7 @@ define(['hbs!../template/register.html',
                             window.sessionStorage.setItem("User",result.resultObject.userAccount);
                             window.sessionStorage.setItem("Name",result.resultObject.userName);
                             window.sessionStorage.setItem("Able",result.resultObject.userState);
+                            window.sessionStorage.setItem("Lv",result.resultObject.userType);//用户权限等级
                             // param.backUrl = "components/res/views/resManageView";
                             that.parentView.requireView({
                                 selector:"#content",

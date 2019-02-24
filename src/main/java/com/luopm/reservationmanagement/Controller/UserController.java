@@ -40,7 +40,7 @@ public class UserController {
         return userService.update(user);
     }
     @ResponseBody
-    @RequestMapping(value = "/check" )
+    @RequestMapping(value = "/updateUser" )
     public Object check(User user){
         return userService.update(user);
     }

@@ -27,6 +27,7 @@ define(['hbs!../template/com.html',
                     placeholder: 'Select Com State',
                     dataTextField: 'name',
                     dataValueField: 'value',
+                    size: "m",
                     dataSource: [
                         {name: '正常', value: 1},
                         {name: '待审核', value: 2},
@@ -48,7 +49,7 @@ define(['hbs!../template/com.html',
                 });
                 // 修改、显示信息时引用此页面
                 if (that.options.comCode){
-                    that.getUserInfo({comCode:that.options.comCode});
+                    that.getComInfo({comCode:that.options.comCode});
                 }
             },
             getComInfo : function (param) {

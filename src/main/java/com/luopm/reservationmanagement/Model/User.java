@@ -25,6 +25,10 @@ public class User {
 
     private Date userCreateddate;
 
+    private String userComcode;
+
+    private String userComname;
+
     public Integer getUserId() {
         return userId;
     }
@@ -110,4 +114,12 @@ public class User {
     public void setUserCreateddate(Date userCreateddate){
         this.userCreateddate = userCreateddate;
     }
+
+    public String getUserComcode(){return userComcode;}
+
+    public void setUserComcode(String userComcode){this.userComcode = userComcode == null ? null : userComcode.trim();}
+
+    public String getUserComname(){return userComname;}
+
+    public void setUserComname(String userComname){this.userComname = userComname == null ? null : userComname.trim();}
 }

@@ -10,14 +10,7 @@ define(['hbs!../template/userManage.html',
         var UserManageView = fish.View.extend({
             el:false,
             template:tem,
-            events:{
-                'click #UserEnable':'enable',
-                'click #UserDisable':'disable',
-                'click #UserResetPassword':'resetPassword',
-                'click #UserCheckOk':'checkOk',
-                'click #UserCheckNotOk':'checkNotOk',
-                'click #UserResManage':'resManage'
-            },
+            events:{},
             initialize: function () {
                 var that = this;
                 that.searchUser();
@@ -61,6 +54,27 @@ define(['hbs!../template/userManage.html',
                             break;
                         case 'btn8':
                             $select.isValid();
+                            break;
+                        case 'UserEnable':
+                            that.actionBtn(1);
+                            break;
+                        case 'UserDisable':
+                            that.actionBtn(3);
+                            break;
+                        case 'UserResetPassword':
+                            that.actionBtn(666666);
+                            break;
+                        case 'UserCheckOk':
+                            that.actionBtn(1);
+                            break;
+                        case 'UserCheckNotOk':
+                            that.actionBtn(5);
+                            break;
+                        case 'UserResManageAdd':
+                            that.actionBtn(888888);
+                            break;
+                        case 'UserResManageRemove':
+                            that.actionBtn(888889);
                             break;
                     }
                 });
@@ -134,6 +148,7 @@ define(['hbs!../template/userManage.html',
                 var page = {pageSize : (pageSize == null ? 10 : pageSize),
                     pageIndex : (pageNum == null ? 1 : pageNum)};
                 var user = that.$("#userManage_search_condition_form").form().form('value');
+                user.userType = window.sessionStorage.getItem("Lv") == "undefined" ? null : window.sessionStorage.getItem("Lv");
                 var params = {user:user,page:page};
                 $.blockUI({message: '请稍后'});
                 that.$("#UserList").html("");
@@ -151,7 +166,7 @@ define(['hbs!../template/userManage.html',
                                     {name:'userName',    label:'真实身份',  width: 120, sortable: false},
                                     {name:'userPhone',   label:'手机号',    width: 120, sortable: false},
                                     {name:'userEmail',   label:'邮箱',      width: 120, sortable: false},
-                                    {name:'userState', label:'用户状态',  width: 120, sortable: false,
+                                    {name:'userState', label:'用户状态',    width: 120, sortable: false,
                                         formatter: function (cellval, opts, rowdata, _act) {
                                             var result = '';
                                             switch (cellval) {
@@ -173,7 +188,7 @@ define(['hbs!../template/userManage.html',
                                             }
                                             return result;
                                         }},
-                                    {name:'userType', label:'用户类型',  width: 120, sortable: false,
+                                    {name:'userType', label:'用户类型',     width: 120, sortable: false,
                                         formatter: function (cellval, opts, rowdata, _act) {
                                             var result = '';
                                             switch (cellval) {
@@ -195,7 +210,10 @@ define(['hbs!../template/userManage.html',
                                             }
                                             return result;
                                     }},
-                                    {name:'userCreateddate',label:'注册时间',width: 120, sortable: false}
+                                    {name:'userCreateddate',label:'注册时间',width: 120, sortable: false, hidden:true},
+                                    {name:'userComcode',  label:'所属组织编号', width: 80, sortable: false, hidden:true},
+                                    {name:'userComnamne', label:'所属组织',  width: 120, sortable: false}
+
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
                                     if (iCol == 0 && cellcontent != null){
@@ -251,106 +269,37 @@ define(['hbs!../template/userManage.html',
                 if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
                     that.initUserGrid(pageInfo.pages,pageInfo.pageSize);
             },
-            // 生效
-            enable : function () {
+            // 生效/禁用
+            actionBtn : function (code) {
                 var that = this;
-                var param = that.$('#UserList').grid("getSelection");
+                var selRow = that.$('#UserList').grid("getSelection");
+                var param = {userAccount:selRow.userAccount, userType:selRow.userType};
                 param.admin = window.sessionStorage.getItem("User");
-                param.userState = 1;
+                if (param.userAccount == null ){
+                    fish.error("未选中记录");
+                    return false;
+                }else if(window.sessionStorage.getItem("Lv") >= param.userType){
+                    fish.error("权限不足");
+                    return false;
+                }else  if (code == 666666 ){ //重置密码
+                    param.userPassword = 666666;
+                }else if (code == 888888 || code == 888889){ //授权
+                    if (code == 888888)  param.userType -= 1;
+                    else  param.userType += 1;
+                }else{
+                    if (param.userState == 2 && code == 3 && code == 4) { //待审核状态下，禁用和注销
+                        fish.error("请先审核!");
+                        return false;
+                    }
+                    param.userState = code;
+                }
                 $.blockUI({message: '请稍后'});
-                UserAction.ableUser(param, function (result) {
+                UserAction.updateUserInfo(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==1){
-                        fish.success("生效成功");
+                        fish.success("操作成功");
                         that.reloadUsers();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
-            },
-            // 禁用
-            disable : function () {
-                var that = this;
-                var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.sessionStorage.getItem("User");
-                param.userState = 3;
-                $.blockUI({message: '请稍后'});
-                UserAction.ableUser(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("禁用成功");
-                        that.reloadUsers();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
-            },
-            // 重置密码
-            resetPassword : function () {
-                var that = this;
-                var param = that.$('#UserList').grid("getSelection");
-                param.userPassword = 666666;
-                param.admin = window.sessionStorage.getItem("User");
-                $.blockUI({message: '请稍后'});
-                UserAction.resetPassword(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("重置密码成功");
-                        that.reloadUsers();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
-            },
-            // 审核通过
-            checkOk : function () {
-                var that = this;
-                var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.sessionStorage.getItem("User");
-                param.userState = 1;
-                $.blockUI({message: '请稍后'});
-                UserAction.check(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("审核通过");
-                        that.reloadUsers();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
-            },
-            // 未通过
-            checkNotOk : function () {
-                var that = this;
-                var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.sessionStorage.getItem("User");
-                param.userState = 5;
-                $.blockUI({message: '请稍后'});
-                UserAction.check(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("审核未通过");
-                        that.reloadUsers();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
-            },
-            // 授权管理
-            resManage : function () {
-                var that = this;
-                var param = that.$('#UserList').grid("getSelection");
-                param.admin = window.localStorage.getItem("User");
-                param.userType -= 1;
-                $.blockUI({message: '请稍后'});
-                UserAction.resManage(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("授权成功");
-                        that.reloadUsers();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
+                    }else fish.error(result.resultMsg);
                 })
             }
         });

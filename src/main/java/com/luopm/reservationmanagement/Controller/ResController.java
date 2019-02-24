@@ -30,13 +30,8 @@ public class ResController {
         return resService.getResList(pageNum, pageSize, res);
     }
     @ResponseBody
-    @RequestMapping(value = "/ableRes" )
+    @RequestMapping(value = "/updateRes" )
     public Object ableRes(Res res){
-        return resService.updateRes(res);
-    }
-    @ResponseBody
-    @RequestMapping(value = "/outOfUse" )
-    public Object outOfUse(Res res){
         return resService.updateRes(res);
     }
     @ResponseBody

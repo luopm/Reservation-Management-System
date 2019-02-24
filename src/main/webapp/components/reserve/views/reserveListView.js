@@ -146,10 +146,10 @@ define(['hbs!../template/reserveList.html',
                                     {name:'borStartdate',   label:'借用日期',     width: 100, sortable: false},
                                     {name:'borEnddate',     label:'预归还日期',   width: 100, sortable: false},
                                     {name:'borReturndate',  label:'归还日期',     width: 100, sortable: false},
-                                    {name:'borReason',      label:'借用原因',     width: 80, sortable: false},
+                                    {name:'borReason',      label:'借用原因',     width: 80, sortable: false, hidden:true},
                                     {name:'borState',       label:'借用状态',     width: 80, sortable: false},
                                     {name:'borAdmincode',   label:'审批账号',     width: 80, sortable: false, hidden:true},
-                                    {name:'borAdminname',   label:'审批人',       width: 80, sortable: false}
+                                    {name:'borAdminname',   label:'审批人',       width: 80, sortable: false, hidden:true}
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
                                     if (iCol == 1 && cellcontent != null){

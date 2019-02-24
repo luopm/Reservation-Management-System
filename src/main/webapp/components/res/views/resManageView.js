@@ -11,13 +11,7 @@ define(['hbs!../template/resManage.html',
         var ResManageView = fish.View.extend({
             el:false,
             template:tem,
-            events:{
-                'click #resEnable':'enable',
-                'click #resDisable':'disable',
-                'click #OutOfUse':'OutOfUse',
-                'click #addRes':'addRes',
-                'click #deleteRes':'deleteRes',
-            },
+            events:{},
             initialize: function () {
                 var that = this;
                 that.searchRes();
@@ -38,7 +32,8 @@ define(['hbs!../template/resManage.html',
                         {name:"物品价格", value:"resPrice"},
                         {name:"存放地",   value:"resLocation"},
                         {name:"物品状态", value:"resState"},
-                        {name:"物品类型", value:"resTypecode"},
+                        {name:"物品类型", value:"resClass"},
+                        {name:"物品级别", value:"resType"},
                         {name:"采购日期", value:"resEnabledate"},
                     ]
                 });
@@ -63,6 +58,24 @@ define(['hbs!../template/resManage.html',
                         case 'btn8':
                             $select.isValid();
                             break;
+                        case 'resEnable':
+                            that.actionBtn(1);
+                            break;
+                        case 'resDisable':
+                            that.actionBtn(4);
+                            break;
+                        case 'OutOfUse':
+                            that.actionBtn(5);
+                            break;
+                        case 'addRes':
+                            that.addRes();
+                            break;
+                        case 'deleteRes':
+                            that.deleteRes();
+                            break;
+                        case 'editResCom':
+                            that.editResCom();
+                            break;
                     }
                 });
             },
@@ -77,13 +90,25 @@ define(['hbs!../template/resManage.html',
                 that.$("#ResManage_search_condition_form").html(HTML);
                 for (var index in arr){
                     if (arr[index].name == "物品类型"){
-                        that.$("#keywordresTypecode").combobox({
-                            placeholder: 'Select Res Type',
+                        that.$("#keywordresClass").combobox({
+                            placeholder: 'Select Res Class',
                             dataTextField: 'name',
                             dataValueField: 'value',
                             dataSource: [
                                 {name: '可外借', value: 1},
-                                {name: '不可外借', value: 0},
+                                {name: '不可外借', value: 2}
+                            ]
+                        });
+                    }else if (arr[index].name == "物品级别"){
+                        that.$("#keywordresType").combobox({
+                            placeholder: 'Select Res Type',
+                            dataTextField: 'name',
+                            dataValueField: 'value',
+                            dataSource: [
+                                {name: '企业级', value: 1},
+                                {name: '分公司级', value: 2},
+                                {name: '部门级', value: 3},
+                                {name: '其他', value: 4}
                             ]
                         });
                     }else if (arr[index].name == "采购日期"){
@@ -132,7 +157,8 @@ define(['hbs!../template/resManage.html',
                 var that = this;
                 var page = {pageSize : (pageSize == null ? 10 : pageSize),
                     pageIndex : (pageNum == null ? 1 : pageNum)};
-                var res = that.$("#ResManage_search_condition_form").form().form('value');
+                var res = that.$('#ResManage_search_condition_form').form().form("value");
+                res.resComcode = window.sessionStorage.getItem("ComCode") == "undefined" ? null : window.sessionStorage.getItem("ComCode");
                 var params = {res:res,page:page};
                 $.blockUI({message: '请稍后'});
                 that.$("#ResList").html("");
@@ -158,10 +184,10 @@ define(['hbs!../template/resManage.html',
                                                 case 1 :
                                                     result = "正常";
                                                     break;
-                                                case 2:
+                                                case 3:
                                                     result = "借出";
                                                     break;
-                                                case 3 :
+                                                case 2 :
                                                     result = "待审核";
                                                     break;
                                                 case 4:
@@ -173,7 +199,7 @@ define(['hbs!../template/resManage.html',
                                             }
                                             return result;
                                     }},
-                                    {name:'resEnabledate',label:'采购日期',    width: 80, sortable: false},
+                                    {name:'resEnabledate',label:'采购日期',    width: 80, sortable: false, hidden:true},
                                     {name:'resClass',    label:'物品类型',     width: 80, sortable: false,
                                         formatter: function (cellval, opts, rowdata, _act) {
                                             var result = '';
@@ -200,9 +226,15 @@ define(['hbs!../template/resManage.html',
                                                 case 3 :
                                                     result = "部门级";
                                                     break;
+                                                case 10 :
+                                                    result = "其他";
+                                                    break;
                                             }
                                             return result;
-                                        }}
+                                        }},
+                                    {name:'resComcode', label:'所属组织编号', width: 80, sortable: false, hidden:true},
+                                    {name:'resComname', label:'所属组织',     width: 80, sortable: false}
+
                                 ],
                                 onCellSelect : function( e, rowid, iCol, cellcontent ){
                                     console.log(rowid+" "+ iCol+" " +cellcontent);
@@ -259,56 +291,35 @@ define(['hbs!../template/resManage.html',
                 if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
                     that.initResListGrid(pageInfo.pages,pageInfo.pageSize);
             },
-            // 生效
-            enable : function () {
+            // 生效/禁用
+            actionBtn : function (code) {
                 var that = this;
-                var param = that.$('#ResList').grid("getSelection");
-                param.admin = window.sessionStorage.getItem("userAccount");
-                param.resState = 1;
+                var selRow = that.$('#ResList').grid("getSelection");
+                var param = {resCode:selRow.resCode, resType:selRow.resType};
+                param.admin = window.sessionStorage.getItem("User");
+                if (param.resCode == null ){
+                    fish.error("未选中记录");
+                    return false;
+                }else if(window.sessionStorage.getItem("Lv") > param.resType){
+                    fish.error("权限不足");
+                    return false;
+                }else if(code == 888888){
+                    fish.error("权限不足");
+                    return false;
+                }else{
+                    if (param.resState == 2 && code == 3 && code == 4 && code == 5) { //待审核状态下，借出、禁用和报废
+                        fish.error("请先审核!");
+                        return false;
+                    }
+                    param.resState = code;
+                }
                 $.blockUI({message: '请稍后'});
-                resAction.ableRes(param, function (result) {
+                resAction.updateRes(param, function (result) {
                     $.unblockUI();
                     if(result && result.resultCode==1){
-                        fish.success("生效成功");
+                        fish.success("操作成功");
                         that.reloadRes();
-                    }else{
-                        fish.error(result.resMsg);
-                    }
-                })
-            },
-            // 禁用
-            disable : function () {
-                var that = this;
-                var param = that.$('#ResList').grid("getSelection");
-                param.admin = window.sessionStorage.getItem("userAccount");
-                param.resState = 4;
-                $.blockUI({message: '请稍后'});
-                resAction.ableRes(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("禁用成功");
-                        that.reloadRes();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
-                })
-            },
-
-            // 报废
-            OutOfUse : function () {
-                var that = this;
-                var param = that.$('#ResList').grid("getSelection");
-                param.admin = window.sessionStorage.getItem("userAccount");
-                param.resState = 5;
-                $.blockUI({message: '请稍后'});
-                resAction.outOfUse(param, function (result) {
-                    $.unblockUI();
-                    if(result && result.resultCode==1){
-                        fish.success("审核通过");
-                        that.reloadRes();
-                    }else{
-                        fish.error(result.resMsg);
-                    }
+                    }else fish.error(result.resultMsg);
                 })
             },
             // 录入物品
@@ -318,13 +329,11 @@ define(['hbs!../template/resManage.html',
                     url:"components/res/views/resView",
                     viewOption:{},
                     width:"40%",
-                    callback: function (popup,view) {
-                    },
+                    callback: function (popup,view) {},
                     close : function () {
                         that.searchRes();
                     }
                 }).then(function (view) {
-
                 });
             },
             // 删除物品
@@ -338,12 +347,58 @@ define(['hbs!../template/resManage.html',
                     if(result && result.resultCode==1){
                         fish.success("删除成功");
                         that.reloadRes();
-                    }else{
-                        fish.error(result.resMsg);
-                    }
+                    }else fish.error(result.resultMsg);
                 })
+            },
+            editResCom : function () {
+                var that = this;
+                var selRow1 = that.$('#ResList').grid("getSelection");
+                if (selRow1.resCode == null){
+                    fish.error("未选中记录！");
+                    return false;
+                }
+                fish.popupView({
+                    url:"components/com/views/comManageView",
+                    viewOption:{},
+                    width:"60%",
+                    callback: function (popup,view) {},
+                    close : function () {
+                        // that.searchRes();
+                        that.reloadRes();
+                    }
+                }).then(function (view) {
+                    view.$("#comManage_tabs_border>ul>li:nth-of-type(1)").hide();
+                    view.$("#comManage_table_page_1").hide();
+                    view.$(".modal-body").append('<div class="attr-select-footer modal-footer">' +
+                        '<button type="button" class="btn btn-primary confirm_attention_select_btn" id="saveResCom">保存</button>' +
+                        '<button type="button" class="btn btn-default" data-dismiss="modal" >返回</button>' +
+                        '</div>');
+                    view.$("#saveResCom").click(function (e) {
+                        var selRow = view.$('#ComList').grid("getSelection");
+                        var param = {resCode:selRow1.resCode, resComcode:selRow.comCode,
+                            resComname:selRow.comName, resType:selRow.comType};
+                        param.admin = window.sessionStorage.getItem("User");
+                        if (param.resComcode == null || param.resCode == null){
+                            fish.error("未选中记录");
+                            return false;
+                        }else if(window.sessionStorage.getItem("Lv") > selRow.comType){
+                            fish.error("权限不足");
+                            return false;
+                        }else if(selRow.comState != 1){
+                            fish.error("请选择处于正常状态的组织！");
+                            return false;
+                        }
+                        $.blockUI({message: '请稍后'});
+                        resAction.updateRes(param, function (result) {
+                            $.unblockUI();
+                            if(result && result.resultCode==1){
+                                fish.success("操作成功");
+                                view.popup.close();
+                            }else fish.error(result.resultMsg);
+                        })
+                    })
+                });
             }
-
         });
         return ResManageView;
     });

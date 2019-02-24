@@ -29,6 +29,11 @@ define(function () {
            getUserInfo : function (params, success) {
                var result = fish.ajax({type:"POST",url:'UserController/getUserInfo',data:params,success:success});
                return result;
+           },
+           // 获取用户信息
+           updateUserInfo : function (params, success) {
+               var result = fish.ajax({type:"POST",url:'UserController/updateUser',data:params,success:success});
+               return result;
            }
        }
 });
