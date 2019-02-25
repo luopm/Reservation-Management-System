@@ -34,6 +34,26 @@ define(function () {
            updateUserInfo : function (params, success) {
                var result = fish.ajax({type:"POST",url:'UserController/updateUser',data:params,success:success});
                return result;
+           },
+           // 人脸识别登录
+           faceLogin : function (params, success) {
+               var result = fish.ajax({type:"POST",url:'SystemController/FaceLogin',data:params,success:success});
+               return result;
+           },
+           // 增加人脸信息
+           addFace : function (params, success) {
+               var result = fish.ajax({type:"POST",url:'SystemController/AddFace',data:params,success:success});
+               return result;
+           },
+           // 更新人脸信息
+           updateFace : function (params, success) {
+               var result = fish.ajax({type:"POST",url:'SystemController/UpdateFace',data:params,success:success});
+               return result;
+           },
+           // 增加人脸分组
+           addFaceGroup : function (params, success) {
+               var result = fish.ajax({type:"POST",url:'SystemController/AddFaceGroup',data:params,success:success});
+               return result;
            }
        }
 });

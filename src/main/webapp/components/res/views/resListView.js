@@ -126,7 +126,8 @@ define(['hbs!../template/resList.html',
                 var page = {pageSize : (pageSize == null ? 10 : pageSize),
                     pageIndex : (pageNum == null ? 1 : pageNum)};
                 var res = that.$("#ResAbleManage_search_condition_form").form().form('value');
-                res.resTypecode = 1;
+                res.resState = 1;//正常状态
+                res.resClass = 1;//可外借
                 $.blockUI({message: '请稍后'});
                 var params = {res:res,page:page};
                 that.$("#ResAbleList").html("");
@@ -241,7 +242,7 @@ define(['hbs!../template/resList.html',
                 if (pageInfo.pageNum > pageInfo.pages && pageInfo.pages)
                     that.initAbleResListGrid(pageInfo.pages,pageInfo.pageSize);
             },
-            // 生效
+            //借用
             reserve : function () {
                 var that = this;
                 var param = that.$('#ResAbleList').grid("getSelection");
@@ -251,19 +252,34 @@ define(['hbs!../template/resList.html',
                     borUseraccount:window.sessionStorage.getItem("User"),
                     borUsername:window.sessionStorage.getItem("Name")
                 };
+                //人脸识别
                 fish.popupView({
-                    url:"components/reserve/views/reserveView",
-                    viewOption:{reserve:reserve},
-                    width:"40%",
-                    callback: function (popup,view) {
-                    },
+                    url:"components/user/views/userFaceView",
+                    canClose:false,
+                    viewOption:{userAccount:window.sessionStorage.getItem("User")},
                     close : function () {
-                        that.searchAbleRes();
+                        fish.popupView({
+                            url:"components/reserve/views/reserveView",
+                            viewOption:{reserve:reserve},
+                            width:"40%",
+                            callback: function (popup,view) {
+                            },
+                            close : function () {
+                                that.searchAbleRes();
+                            }
+                        }).then(function (view) {
+                            view.$(".borState").hide();
+                            view.$(".borStartdate").hide();
+                        });
+                    },
+                    dismiss:function () {
+                        fish.error("人脸验证未通过");
                     }
                 }).then(function (view) {
-                    view.$(".borState").hide();
-                    view.$(".borStartdate").hide();
+                    view.$("#saveFace").hide();
+                    view.$("#userId").attr("readonly",true);
                 });
+
 
             }
 

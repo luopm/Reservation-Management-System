@@ -22,7 +22,7 @@
     user_phone, user_email, user_state, user_createddate, user_comcode, user_comname
   </sql>
   <sql id="UserInfo_Column_List" >
-    user_id, user_account, user_name, user_idcard, user_type,
+    user_id, user_account, user_name, user_face, user_idcard, user_type,
     user_phone, user_email, user_state, user_createddate, user_comcode, user_comname
   </sql>
 
@@ -114,7 +114,7 @@
       and user_idcard like #{userIdcardLike,jdbcType=VARCHAR}
     </if>
     <if test="userType != null" >
-      and user_type > #{userType,jdbcType=INTEGER}
+      and user_type >= #{userType,jdbcType=INTEGER}
     </if>
     <if test="userPhone != null" >
       <bind name="userPhoneLike" value="'%' + userPhone + '%'" />

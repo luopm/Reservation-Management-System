@@ -11,10 +11,10 @@ define(['hbs!../template/reserveList.html',
             el:false,
             template:tem,
             events:{
-                'click #returnRes':'returnRes',
-                'click #applyLend':'applyLend',
-                'click #checkReserveOK':'checkReserveOK',
-                'click #checkReserveNO' : 'checkReserveNO'
+                // 'click #returnRes':'returnRes',
+                // 'click #applyLend':'applyLend',
+                // 'click #checkReserveOK':'checkReserveOK',
+                // 'click #checkReserveNO' : 'checkReserveNO'
             },
             initialize: function () {
                 var that = this;
@@ -65,6 +65,27 @@ define(['hbs!../template/reserveList.html',
                         case 'btn8':
                             $select.isValid();
                             break;
+                        case 'returnRes':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.returnRes();
+                            });
+                            break;
+                        case 'applyLend':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.applyLend();
+                            });
+                            break;
+                        case 'checkReserveOK':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.checkReserveOK();
+                            });
+                            break;
+                        case 'checkReserveNO':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.checkReserveNO();
+                            });
+                            break;
+
                     }
                 });
             },
@@ -209,11 +230,11 @@ define(['hbs!../template/reserveList.html',
             returnRes : function () {
                 var that = this;
                 var selRow = that.$('#reserveHistoryList').grid("getSelection");
-                if (selRow == {} || selRow == null) {
-                    fish.info("请选中需要归还的物品");
+                if (selRow.borCode == null || selRow.borReturndate != null) {
+                    fish.info("未选中记录或选中已归还记录！");
                     return ;
                 }
-                var param = {borCode: selRow.borCode};
+                var param = {borCode: selRow.borCode, borRescode:selRow.borRescode};
                 param.borReturndate = new Date();
                 $.blockUI({message:"请稍后"});
                 reserveAction.returnRes(param, function (result) {
@@ -221,20 +242,18 @@ define(['hbs!../template/reserveList.html',
                     if (result && result.resultCode == 1){
                         fish.success("归还物品成功！");
                         that.reloadProjects();
-                    }else{
-                        fish.error(result.resultMsg);
-                    }
+                    }else fish.error(result.resultMsg);
                 })
             },
             // 申请转借物品
             applyLend : function () {
                 var that = this;
                 var selRow = that.$('#reserveHistoryList').grid("getSelection");
-                if (selRow == {} || selRow == null) {
-                    fish.info("请选中需要归还的物品");
+                if (selRow.borCode == null || selRow.borReturndate != null) {
+                    fish.info("未选中记录或选中已归还记录！");
                     return ;
                 }
-                var param = {borCode: selRow.borCode};
+                var param = {borCode: selRow.borCode, borRescode:selRow.borRescode};
                 param.borUseraccount = window.sessionStorage.getItem("User");
                 param.borUsername = window.sessionStorage.getItem("Name");
                 $.blockUI({message:"请稍后"});
@@ -251,17 +270,17 @@ define(['hbs!../template/reserveList.html',
             checkReserveOK : function () {
                 var that = this;
                 var selRow = that.$('#reserveHistoryList').grid("getSelection");
-                if (selRow == {} || selRow == null) {
-                    fish.info("请选中需要归还的物品");
+                if (selRow.borCode == null) {
+                    fish.info("请选中需要审核的信息");
                     return ;
                 }
-                var param = {borCode: selRow.borCode};
+                var param = {borCode: selRow.borCode, borRescode:selRow.borRescode};
                 param.borState = "审核通过";
                 //添加审核管理信息
                 param.borAdmincode = window.sessionStorage.getItem("User");
                 param.borAdminname = window.sessionStorage.getItem("Name");
                 $.blockUI({message:"请稍后"});
-                reserveAction.updateReserve(JSON.stringify(param), function (result) {
+                reserveAction.updateReserve(param, function (result) {
                     $.unblockUI();
                     if (result && result.resultCode == 1){
                         fish.success("审核成功！");
@@ -272,11 +291,11 @@ define(['hbs!../template/reserveList.html',
             checkReserveNO : function () {
                 var that = this;
                 var selRow = that.$('#reserveHistoryList').grid("getSelection");
-                if (selRow == {} || selRow == null) {
-                    fish.info("请选中需要归还的物品");
+                if (selRow.borCode == null) {
+                    fish.info("请选中需要审核的信息");
                     return ;
                 }
-                var param = {borCode: selRow.borCode};
+                var param = {borCode: selRow.borCode, borRescode:selRow.borRescode};
                 //添加审核管理信息
                 param.borAdmincode = window.sessionStorage.getItem("User");
                 param.borAdminname = window.sessionStorage.getItem("Name");
@@ -289,6 +308,29 @@ define(['hbs!../template/reserveList.html',
                         that.reloadProjects();
                     }else fish.error(result.resultMsg);
                 })
+            },
+            faceVerify : function (param, success) {
+                var that = this;
+                var selRow = that.$('#reserveHistoryList').grid("getSelection");
+                if (selRow.borCode == null) {
+                    fish.info("请选中需要审核的信息");
+                    return false;
+                }
+                // 人脸验证
+                fish.popupView({
+                    url:"components/user/views/userFaceView",
+                    canClose:false,
+                    viewOption:{userAccount:param},
+                    close : function () {
+                        success();
+                    },
+                    dismiss:function () {
+                        fish.error("人脸验证未通过");
+                    }
+                }).then(function (view) {
+                    view.$("#saveFace").hide();
+                    view.$("#userId").attr("readonly",true);
+                });
             }
         });
         return ReserveListView;

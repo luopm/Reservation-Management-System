@@ -13,10 +13,10 @@ define(['hbs!../template/purchaseList.html',
             pageIndex:1,
             pageSize:10,
             events:{
-                'click #cancelPurchase':'cancelPurchase',
-                'click #addPurchase':'addPurchase',
-                'click #OKPurchase' : 'OKPurchase',
-                'click #NOPurchase' : 'NOPurchase'
+                // 'click #cancelPurchase':'cancelPurchase',
+                // 'click #addPurchase':'addPurchase',
+                // 'click #OKPurchase' : 'OKPurchase',
+                // 'click #NOPurchase' : 'NOPurchase'
             },
             initialize: function () {
                 var that = this;
@@ -65,6 +65,26 @@ define(['hbs!../template/purchaseList.html',
                             break;
                         case 'btn8':
                             $select.isValid();
+                            break;
+                        case 'addPurchase':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.addPurchase();
+                            });
+                            break;
+                        case 'cancelPurchase':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.cancelPurchase();
+                            });
+                            break;
+                        case 'OKPurchase':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.OKPurchase();
+                            });
+                            break;
+                        case 'NOPurchase':
+                            that.faceVerify(window.sessionStorage.getItem("User"),function () {
+                                that.NOPurchase();
+                            });
                             break;
                     }
                 });
@@ -294,6 +314,29 @@ define(['hbs!../template/purchaseList.html',
                         fish.error(result.resultMsg);
                     }
                 })
+            },
+            faceVerify : function (param, success) {
+                // var that = this;
+                // var selRow = that.$('#reserveHistoryList').grid("getSelection");
+                // if (selRow.borCode == null) {
+                //     fish.info("请选中需要审核的信息");
+                //     return false;
+                // }
+                // 人脸验证
+                fish.popupView({
+                    url:"components/user/views/userFaceView",
+                    canClose:false,
+                    viewOption:{userAccount:param},
+                    close : function () {
+                        success();
+                    },
+                    dismiss:function () {
+                        fish.error("人脸验证未通过");
+                    }
+                }).then(function (view) {
+                    view.$("#saveFace").hide();
+                    view.$("#userId").attr("readonly",true);
+                });
             }
         });
         return PurchaseListView;

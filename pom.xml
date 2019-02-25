@@ -92,6 +92,14 @@
             <!--<groupId>com.fasterxml.jackson.module</groupId>-->
             <!--<artifactId>jackson-module-parameter-names</artifactId>-->
         <!--</dependency>-->
+
+        <!--百度人工智能aip-->
+        <dependency>
+            <groupId>com.baidu.aip</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>4.10.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -1,0 +1,38 @@
+<section id="userFace">
+    <div class="pt-wrap">
+        <div class="modal-header" style="margin-bottom: 2px;">
+            <h5 class="modal-title" style="margin-bottom: 14px; font-size: 16px; font-weight: 600;">
+                <div id="userFaceTitle">人脸识别</div>
+                <span style="float: right; font-size: 10px; cursor: pointer;" class="flex-slide" fd="interface-flex1"> </span>
+            </h5>
+        </div>
+        <div class="org-select-body modal-body">
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="form-group search-1 required">
+                        <video width="300px" height="200px"></video>
+                        <!-- 图像画布 -->
+                        <canvas width="200px" height="150px"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="userIdDiv">
+                <div class="col-md-10">
+                    <div class="form-group search-1 required">
+                        <label class="zte-form-item-label" style="width: 160px">用户账号</label>
+                        <div class="zte-form-item-content">
+                            <input name="userId" class="form-control" id="userId" data-rule="required" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="attr-select-footer modal-footer">
+            <button type="button" class="btn btn-primary confirm_attention_select_btn" id="upload">拍照</button>
+            <button type="button" class="btn btn-primary confirm_attention_select_btn" id="faceLogin">验证</button>
+            <button type="button" class="btn btn-primary confirm_attention_select_btn" id="saveFace">确定</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeFace">取消</button>
+        </div>
+    </div>
+</section>

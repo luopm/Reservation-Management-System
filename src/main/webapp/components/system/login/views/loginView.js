@@ -14,7 +14,8 @@ define(['hbs!../template/Login.html',
             events:{
                 'click #loginBtn':'login',
                 'click #registerBtn':'register',
-                'click .findPasswordBtn':'findPassword'
+                'click .findPasswordBtn':'findPassword',
+                'click #faceLoginBtn':'faceLogin'
             },
             initialize: function () {},
             afterRender : function () {
@@ -50,7 +51,6 @@ define(['hbs!../template/Login.html',
                             that.parentView.requireView({
                                 selector:"#content",
                                 url: "components/system/nav/views/homeView",
-                                // url:homeView,
                                 viewOption:{
                                     // backUrl:param.backUrl
                                 }
@@ -59,6 +59,22 @@ define(['hbs!../template/Login.html',
                         }else fish.error("账号或密码错误！");
                     })
                 }else fish.info("请检查输入！");
+            },
+            faceLogin : function () {
+                var that = this;
+                fish.popupView({
+                    url:"components/user/views/userFaceView",
+                    canClose:false,
+                    close : function () {
+                        that.parentView.requireView({
+                            selector:"#content",
+                            url: "components/system/nav/views/homeView",
+                            viewOption:{}
+                        });
+                    }
+                }).then(function (view) {
+                    view.$("#saveFace").hide();
+                })
             },
             // 前往注册页面
             register : function () {

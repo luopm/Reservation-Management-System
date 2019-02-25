@@ -2,7 +2,9 @@ package com.luopm.reservationmanagement.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.luopm.reservationmanagement.Dao.ResMapper;
 import com.luopm.reservationmanagement.Dao.ReserveMapper;
+import com.luopm.reservationmanagement.Model.Res;
 import com.luopm.reservationmanagement.Model.Reserve;
 import com.luopm.reservationmanagement.Model.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class ReserveService {
 
     @Autowired
     private ReserveMapper reserveMapper;
+    @Autowired
+    private ResMapper resMapper;
 
     @Transactional
     public ResponseUtil add(Reserve reserve){
@@ -24,6 +28,10 @@ public class ReserveService {
         reserve.setBorCode(new Date().getTime() + ""); //获取当前毫秒数作为reserveCode
         try {
             if (reserveMapper.addReserve(reserve) >= 1){
+                Res res = new Res();
+                res.setResCode(reserve.getBorRescode());
+                res.setResState(3);//更新物品状态为:3-借出
+                resMapper.updateRes(res);
                 Reserve reserveAdd = reserveMapper.getReserve(reserve);
                 responseUtil.setResponseUtil(1, "add reserve success!",
                         reserveAdd, null);
@@ -56,6 +64,12 @@ public class ReserveService {
         ResponseUtil responseUtil = new ResponseUtil();
         try {
             if (reserveMapper.updateReserve(reserve) == 1){
+                Res res = new Res();
+                res.setResCode(reserve.getBorRescode());
+                if (reserve.getBorState() == "审核未通过" ||
+                        reserve.getBorReturndate() != null) res.setResState(1);//更新物品状态为:1-正常
+                else res.setResState(3);
+                resMapper.updateRes(res);
                 Reserve reserveUpdate = reserveMapper.getReserve(reserve);
                 responseUtil.setResponseUtil(1, "update reserve success!",
                         reserveUpdate, null);

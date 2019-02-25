@@ -76,6 +76,12 @@ define(['hbs!../template/userManage.html',
                         case 'UserResManageRemove':
                             that.actionBtn(888889);
                             break;
+                        case 'addFaceGroup':
+                            that.addFaceGroup();
+                            break;
+                        case 'addUserFace':
+                            that.addUserFace();
+                            break;
                     }
                 });
             },
@@ -301,7 +307,43 @@ define(['hbs!../template/userManage.html',
                         that.reloadUsers();
                     }else fish.error(result.resultMsg);
                 })
+            },
+            addFaceGroup : function () {
+                var that = this;
+                var param = {};
+                param.groupId = "face_group_1";
+                $.blockUI({message: '请稍后'});
+                UserAction.addFaceGroup(param, function (result) {
+                    $.unblockUI();
+                    if (result.error_code == 0) {
+                    // if(result && result.resultCode==1){
+                        fish.success("操作成功");
+                        // that.reloadUsers();
+                    }else fish.error(result.resultMsg);
+                })
+            },
+            addUserFace : function () {
+                var that = this;
+                var selRow = that.$('#UserList').grid("getSelection");
+                if (selRow.userAccount == null ){
+                    fish.error("未选中记录");
+                    return false;
+                }
+                fish.popupView({
+                    url:"components/user/views/userFaceView",
+                    canClose:false,
+                    viewOption:{
+                        userAccount:selRow.userAccount
+                    },
+                    close : function () {
+                        that.reloadUsers();
+                    }
+                }).then(function (view) {
+                    view.$("#userIdDiv").hide();
+                    view.$("#faceLogin").hide();
+                })
             }
+
         });
         return UserManageView;
     });
